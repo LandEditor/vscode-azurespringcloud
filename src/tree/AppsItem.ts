@@ -26,29 +26,23 @@ export default class AppsItem implements ResourceItemBase {
         return await this._children ?? [];
     }
 
-    getTreeItem(): TreeItem {
+    async getTreeItem(): Promise<TreeItem> {
+        const state: string | undefined = (await this.service.properties)?.provisioningState;
+        const description = state?.toLowerCase() === 'succeeded' ? undefined : state;
+        const tier: string = await this.service.isEnterpriseTier() ? 'enterprise' : await this.service.isConsumptionTier() ? 'consumption' : 'other';
+        const contextValue = `azureSpringApps.apps;tier-${tier};`;
         return {
             id: this.id,
             label: this.service.name,
             iconPath: utils.getThemedIconPath('azure-spring-apps'),
-            description: this.description,
-            contextValue: this.contextValue,
+            description: description,
+            contextValue: contextValue,
             collapsibleState: TreeItemCollapsibleState.Collapsed,
         }
     }
 
-    public get contextValue(): string {
-        const tier: string = this.service.isEnterpriseTier() ? 'enterprise' : this.service.isConsumptionTier() ? 'consumption' : 'other';
-        return `azureSpringApps.apps;tier-${tier};`;
-    }
-
     public get id(): string {
         return utils.nonNullProp(this.service, 'id');
-    }
-
-    public get description(): string | undefined {
-        const state: string | undefined = this.service.properties?.provisioningState;
-        return state?.toLowerCase() === 'succeeded' ? undefined : state;
     }
 
     get viewProperties(): ViewPropertiesModel {
