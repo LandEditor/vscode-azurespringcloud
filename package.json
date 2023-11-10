@@ -521,7 +521,7 @@
         "@azure/arm-appplatform": "3.0.0-beta.1",
         "@azure/core-client": "1.7.3",
         "@azure/ms-rest-js": "2.7.0",
-        "@azure/storage-file-share": "12.16.0",
+        "@azure/storage-file-share": "12.17.0",
         "@microsoft/vscode-azext-azureutils": "2.0.2",
         "@microsoft/vscode-azext-utils": "2.1.3",
         "@microsoft/vscode-azureresources-api": "2.1.0",
