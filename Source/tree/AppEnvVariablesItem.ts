@@ -72,19 +72,19 @@ export class AppEnvVariablesItem extends AppSettingsItem {
 					// refresh this node even if create fails because container app provision failure throws an error, but still creates a container app
 					ext.state.notifyChildrenChanged(this.id);
 				}
-			}
+			},
 		);
 		return new AppSettingItem(
 			this,
 			newKey.trim(),
 			newVal.trim(),
-			Object.assign({}, AppEnvVariablesItem._options)
+			Object.assign({}, AppEnvVariablesItem._options),
 		);
 	}
 
 	public async updateSettingValue(
 		node: AppSettingItem,
-		context: IActionContext
+		context: IActionContext,
 	): Promise<string> {
 		const newVal: string = await context.ui.showInputBox({
 			prompt: `Enter value for "${node.key}"`,
@@ -100,7 +100,7 @@ export class AppEnvVariablesItem extends AppSettingsItem {
 
 	public async deleteSettingItem(
 		node: AppSettingItem,
-		context: IActionContext
+		context: IActionContext,
 	): Promise<void> {
 		const tempVars: { [p: string]: string } = { ...(await this.variables) };
 		delete tempVars[node.key.trim()];
@@ -109,7 +109,7 @@ export class AppEnvVariablesItem extends AppSettingsItem {
 
 	public async updateSettingsValue(
 		_context: IActionContext,
-		newVars?: { [p: string]: string }
+		newVars?: { [p: string]: string },
 	): Promise<void> {
 		const deployment: EnhancedDeployment | undefined =
 			await this.parent.app.activeDeployment;
@@ -122,18 +122,18 @@ export class AppEnvVariablesItem extends AppSettingsItem {
 					const updating: string = utils.localize(
 						"updatingEnvVar",
 						'Updating environment variables of "{0}"...',
-						deployment.app.name
+						deployment.app.name,
 					);
 					const updated: string = utils.localize(
 						"updatedEnvVar",
 						"Successfully updated environment variables of {0}.",
-						deployment.app.name
+						deployment.app.name,
 					);
 					await utils.runInBackground(updating, updated, () =>
-						deployment.updateEnvironmentVariables(newVars ?? {})
+						deployment.updateEnvironmentVariables(newVars ?? {}),
 					);
 					void this.refresh();
-				}
+				},
 			);
 		}
 	}
@@ -145,8 +145,8 @@ export class AppEnvVariablesItem extends AppSettingsItem {
 					this,
 					e[0].trim(),
 					(e[1] + "").trim(),
-					Object.assign({}, AppEnvVariablesItem._options)
-				)
+					Object.assign({}, AppEnvVariablesItem._options),
+				),
 		);
 	}
 }

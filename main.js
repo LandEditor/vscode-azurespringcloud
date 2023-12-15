@@ -25,7 +25,7 @@ async function activate(ctx) {
 	return await extension.activateInternal(
 		ctx,
 		perfStats,
-		true /* ignoreBundle */
+		true /* ignoreBundle */,
 	);
 }
 

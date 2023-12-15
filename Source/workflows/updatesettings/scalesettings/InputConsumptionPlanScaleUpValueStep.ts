@@ -31,7 +31,7 @@ export class InputConsumptionPlanScaleUpValueStep extends AzureWizardPromptStep<
 	}
 
 	public async prompt(
-		context: IScaleSettingsUpdateWizardContext
+		context: IScaleSettingsUpdateWizardContext,
 	): Promise<void> {
 		const settings: IScaleSettings =
 			await this.deployment.getScaleSettings();

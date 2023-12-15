@@ -35,13 +35,13 @@ import {
 export async function activateInternal(
 	context: vscode.ExtensionContext,
 	_perfStats: { loadStartTime: number; loadEndTime: number },
-	ignoreBundle?: boolean
+	ignoreBundle?: boolean,
 ): Promise<void> {
 	ext.context = context;
 	ext.ignoreBundle = ignoreBundle;
 	ext.outputChannel = createAzExtOutputChannel(
 		"Azure Spring Apps",
-		ext.prefix
+		ext.prefix,
 	);
 	context.subscriptions.push(ext.outputChannel);
 
@@ -69,11 +69,11 @@ export async function activateInternal(
 			ext.branchDataProvider = new SpringAppsBranchDataProvider();
 			ext.rgApiV2.resources.registerAzureResourceBranchDataProvider(
 				AzExtResourceType.SpringApps,
-				ext.branchDataProvider
+				ext.branchDataProvider,
 			);
 		} else {
 			throw new Error(
-				"Could not find the Azure Resource Groups extension"
+				"Could not find the Azure Resource Groups extension",
 			);
 		}
 	})();

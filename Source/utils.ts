@@ -37,7 +37,7 @@ export interface GenericItemOptions extends IGenericTreeItemOptions {
 }
 
 export function createGenericItem(
-	options: GenericItemOptions
+	options: GenericItemOptions,
 ): ResourceItemBase {
 	let commandArgs = options.commandArgs;
 	const item = {
@@ -50,7 +50,7 @@ export function createGenericItem(
 							title: "",
 							command: options.commandId,
 							arguments: commandArgs,
-						}
+					  }
 					: undefined,
 			};
 		},
@@ -67,14 +67,14 @@ export function createGenericItem(
 export async function runInBackground(
 	doing: string,
 	done: string | null,
-	task: () => Promise<void>
+	task: () => Promise<void>,
 ): Promise<void> {
 	await window.withProgress(
 		{ location: ProgressLocation.Notification, title: doing },
 		async (): Promise<void> => {
 			await task();
 			done && void window.showInformationMessage(done);
-		}
+		},
 	);
 }
 
@@ -84,7 +84,7 @@ export async function runInBackground(
  */
 export function nonNullProp<TSource, TKey extends keyof TSource>(
 	source: TSource,
-	name: TKey
+	name: TKey,
 ): NonNullable<TSource[TKey]> {
 	const value: NonNullable<TSource[TKey]> = <NonNullable<TSource[TKey]>>(
 		source[name]
@@ -97,13 +97,13 @@ export function nonNullProp<TSource, TKey extends keyof TSource>(
  */
 export function nonNullValue<T>(
 	value: T | undefined,
-	propertyNameOrMessage?: string
+	propertyNameOrMessage?: string,
 ): T {
 	if (value === null || value === undefined) {
 		throw new Error(
 			// tslint:disable-next-line:prefer-template
 			"Internal error: Expected value to be neither null nor undefined" +
-				(propertyNameOrMessage ? `: ${propertyNameOrMessage}` : "")
+				(propertyNameOrMessage ? `: ${propertyNameOrMessage}` : ""),
 		);
 	}
 
@@ -120,14 +120,14 @@ export function getThemedIconPath(iconName: string): TreeItemIconPath {
 
 export function showError(commandName: string, error: Error): void {
 	void window.showErrorMessage(
-		`Command "${commandName}" fails. ${error.message}`
+		`Command "${commandName}" fails. ${error.message}`,
 	);
 }
 
 export function createPortalUrl(
 	subscription: AzureSubscription,
 	id: string,
-	options?: OpenInPortalOptions
+	options?: OpenInPortalOptions,
 ): vscode.Uri {
 	const queryPrefix: string =
 		options && options.queryPrefix ? `?${options.queryPrefix}` : "";
@@ -137,11 +137,11 @@ export function createPortalUrl(
 }
 
 export async function loadPackageInfo(
-	context: ExtensionContext
+	context: ExtensionContext,
 ): Promise<void> {
 	const raw = await fs.promises.readFile(
 		context.asAbsolutePath("./package.json"),
-		{ encoding: "utf-8" }
+		{ encoding: "utf-8" },
 	);
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 	const { publisher, name, version, aiKey } = JSON.parse(raw);

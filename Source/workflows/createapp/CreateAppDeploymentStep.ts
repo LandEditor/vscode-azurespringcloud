@@ -13,11 +13,11 @@ export class CreateAppDeploymentStep extends AzureWizardExecuteStep<IAppCreation
 
 	public async execute(
 		context: IAppCreationWizardContext,
-		progress: Progress<{ message?: string; increment?: number }>
+		progress: Progress<{ message?: string; increment?: number }>,
 	): Promise<void> {
 		const message: string = localize(
 			"creatingNewAppDeployment",
-			"Creating default deployment..."
+			"Creating default deployment...",
 		);
 		progress.report({ message });
 
@@ -27,7 +27,7 @@ export class CreateAppDeploymentStep extends AzureWizardExecuteStep<IAppCreation
 		const app: EnhancedApp = context.newApp!;
 		context.newDeployment = await app.createDeployment(
 			EnhancedApp.DEFAULT_DEPLOYMENT,
-			appRuntime
+			appRuntime,
 		);
 		return Promise.resolve(undefined);
 	}

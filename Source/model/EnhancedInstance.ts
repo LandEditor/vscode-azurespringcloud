@@ -24,7 +24,7 @@ export class EnhancedInstance implements DeploymentInstance {
 
 	public constructor(
 		deployment: EnhancedDeployment,
-		resource: DeploymentInstance
+		resource: DeploymentInstance,
 	) {
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		this.name = resource.name!;
@@ -57,8 +57,8 @@ export class EnhancedInstance implements DeploymentInstance {
 			throw new Error(
 				localize(
 					"instanceNotRunning",
-					"Selected instance is not running."
-				)
+					"Selected instance is not running.",
+				),
 			);
 		}
 		await startStreamingLogs(context, this);

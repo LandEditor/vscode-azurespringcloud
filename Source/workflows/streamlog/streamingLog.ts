@@ -26,7 +26,7 @@ export const logStreams: Map<string, ILogStream> = new Map();
 
 export async function startStreamingLogs(
 	context: IActionContext,
-	instance: EnhancedInstance
+	instance: EnhancedInstance,
 ): Promise<ILogStream> {
 	const logStreamId: string = getLogStreamId(instance);
 	const logStream: ILogStream | undefined = logStreams.get(logStreamId);
@@ -36,8 +36,8 @@ export async function startStreamingLogs(
 			localize(
 				"logStreamAlreadyActive",
 				'The log-streaming service for "{0}" is already active.',
-				instance.name
-			)
+				instance.name,
+			),
 		);
 		return logStream;
 	} else {
@@ -47,21 +47,21 @@ export async function startStreamingLogs(
 					localize(
 						"logStreamLabel",
 						"{0} - Log Stream",
-						instance.name
-					)
+						instance.name,
+					),
 			  );
 		ext.context.subscriptions.push(outputChannel);
 		outputChannel.show();
 		outputChannel.appendLine(
 			localize(
 				"connectingToLogStream",
-				"Connecting to log-streaming service..."
-			)
+				"Connecting to log-streaming service...",
+			),
 		);
 		const response: IncomingMessage = await getLogRequest(instance);
 		const newLogStream: ILogStream = createLogStream(
 			outputChannel,
-			response
+			response,
 		);
 		response
 			.on("data", (chunk: Buffer | string) => {
@@ -73,8 +73,8 @@ export async function startStreamingLogs(
 				outputChannel.appendLine(
 					localize(
 						"logStreamError",
-						"Error connecting to log-streaming service:"
-					)
+						"Error connecting to log-streaming service:",
+					),
 				);
 				outputChannel.appendLine(parseError(err).message);
 			})
@@ -90,7 +90,7 @@ export async function startStreamingLogs(
 }
 
 export async function stopStreamingLogs(
-	instance: EnhancedInstance
+	instance: EnhancedInstance,
 ): Promise<void> {
 	const logStreamId: string = getLogStreamId(instance);
 	const logStream: ILogStream | undefined = logStreams.get(logStreamId);
@@ -100,15 +100,15 @@ export async function stopStreamingLogs(
 		await vscode.window.showWarningMessage(
 			localize(
 				"alreadyDisconnected",
-				"The log streaming service is not connected."
-			)
+				"The log streaming service is not connected.",
+			),
 		);
 	}
 }
 
 function createLogStream(
 	outputChannel: vscode.OutputChannel,
-	response: IncomingMessage
+	response: IncomingMessage,
 ): ILogStream {
 	const newLogStream: ILogStream = {
 		dispose: (): void => {
@@ -118,8 +118,8 @@ function createLogStream(
 			outputChannel.appendLine(
 				localize(
 					"logStreamDisconnected",
-					"Disconnected from log-streaming service."
-				)
+					"Disconnected from log-streaming service.",
+				),
 			);
 			newLogStream.isConnected = false;
 		},
@@ -130,7 +130,7 @@ function createLogStream(
 }
 
 async function getLogRequest(
-	instance: EnhancedInstance
+	instance: EnhancedInstance,
 ): Promise<IncomingMessage> {
 	const app: EnhancedApp = instance.deployment.app;
 	const service: EnhancedService = app.service;
@@ -141,10 +141,11 @@ async function getLogRequest(
 			await subContext.credentials.getToken()
 		);
 		// refer to https://github.com/Azure/azure-cli-extensions/blob/main/src/spring/azext_spring/custom.py#L511
-		const url = `https://${(await service.properties)
-			?.fqdn}/proxy/logstream${
-			instance.id
-		}?follow=true&tailLines=300&tenantId=${subscription.tenantId}`;
+		const url = `https://${
+			(await service.properties)?.fqdn
+		}/proxy/logstream${instance.id}?follow=true&tailLines=300&tenantId=${
+			subscription.tenantId
+		}`;
 		const response: AxiosResponse<IncomingMessage> = await axios.get(url, {
 			headers: {
 				Authorization: `Bearer ${token.token}`,
@@ -158,7 +159,7 @@ async function getLogRequest(
 		const encodedCredentials = Buffer.from(credentials).toString("base64");
 		const url = `${(testKeys.primaryTestEndpoint ?? "").replace(
 			".test",
-			""
+			"",
 		)}/api/logstream/apps/${app.name}/instances/${
 			instance.name
 		}?follow=true&tailLines=300`;

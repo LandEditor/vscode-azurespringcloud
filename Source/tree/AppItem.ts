@@ -30,7 +30,7 @@ export class AppItem implements ResourceItemBase {
 
 	constructor(
 		public readonly parent: ServiceItem,
-		public readonly app: EnhancedApp
+		public readonly app: EnhancedApp,
 	) {
 		this._children = this.loadChildren();
 	}
@@ -56,7 +56,7 @@ export class AppItem implements ResourceItemBase {
 	public get portalUrl(): Uri {
 		return utils.createPortalUrl(
 			this.app.service.subscription,
-			this.app.id
+			this.app.id,
 		);
 	}
 
@@ -112,25 +112,25 @@ export class AppItem implements ResourceItemBase {
 						config?.enabled === undefined
 							? "unknown"
 							: config?.enabled
-								? "enabled"
-								: "disabled";
+							  ? "enabled"
+							  : "disabled";
 					const tier: string =
 						(await this.app.service.isEnterpriseTier())
 							? "enterprise"
 							: (await this.app.service.isConsumptionTier())
-								? "consumption"
-								: "other";
+							  ? "consumption"
+							  : "other";
 					const contextValue = `azureSpringApps.app;status-${status};debugging-${debugging};public-${appProperties?.public};tier-${tier};`;
 					this._stateProperties = {
 						iconPath: utils.getThemedIconPath(
-							`app-status-${status}`
+							`app-status-${status}`,
 						),
 						description,
 						contextValue,
 					};
 
 					ext.state.notifyChildrenChanged(this.id);
-				}
+				},
 			);
 		}
 	}
@@ -143,7 +143,7 @@ export class AppItem implements ResourceItemBase {
 			async () => {
 				await this.app.start();
 				await this.refresh();
-			}
+			},
 		);
 	}
 
@@ -155,7 +155,7 @@ export class AppItem implements ResourceItemBase {
 			async () => {
 				await this.app.stop();
 				await this.refresh();
-			}
+			},
 		);
 	}
 
@@ -167,7 +167,7 @@ export class AppItem implements ResourceItemBase {
 			async () => {
 				await this.app.restart();
 				await this.refresh();
-			}
+			},
 		);
 	}
 
@@ -180,7 +180,7 @@ export class AppItem implements ResourceItemBase {
 				await this.app.remove();
 				this.deleted = true;
 				void this.parent.refresh();
-			}
+			},
 		);
 	}
 

@@ -13,7 +13,7 @@ export interface DashboardExtensionApi {
 	registerRemoteBootAppDataProvider(
 		providerName: string,
 		provider: RemoteBootAppDataProvider,
-		options?: RemoteBootAppDataProviderOptions
+		options?: RemoteBootAppDataProviderOptions,
 	);
 	connectRemoteApp: (appData: RemoteBootAppData) => void;
 	disconnectRemoteApp: (appData: RemoteBootAppData) => void;

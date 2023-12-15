@@ -28,35 +28,35 @@ import { StartDebuggingProxyStep } from "./steps/StartDebuggingProxyStep";
 export class DebugController {
 	public static async attachDebugger(
 		context: IActionContext,
-		node: AppInstanceItem
+		node: AppInstanceItem,
 	): Promise<void> {
 		const instance: EnhancedInstance = node.instance;
 		const attaching: string = localize(
 			"attachDebugger",
 			'Attaching debugger to app instance "{0}".',
-			instance.name
+			instance.name,
 		);
 		const attached: string = localize(
 			"attachDebuggerSuccess",
 			'Successfully attached debugger to app instance "{0}".',
-			instance.name
+			instance.name,
 		);
 
 		const config: RemoteDebugging | undefined =
 			await instance.deployment.getDebuggingConfig();
 		if (!config) {
 			void window.showErrorMessage(
-				`Remote debugging is not supported for Azure Spring apps of consumption plan for now.`
+				`Remote debugging is not supported for Azure Spring apps of consumption plan for now.`,
 			);
 			return;
 		}
 		const subContext = createSubscriptionContext(
-			instance.deployment.app.service.subscription
+			instance.deployment.app.service.subscription,
 		);
 		const wizardContext: IRemoteDebuggingContext = Object.assign(
 			context,
 			subContext,
-			{ config }
+			{ config },
 		);
 		const executeSteps: AzureWizardExecuteStep<IRemoteDebuggingContext>[] =
 			[];
@@ -64,7 +64,7 @@ export class DebugController {
 		if (!config?.enabled) {
 			const confirmMsg: string = localize(
 				"confirmRemoteDebug",
-				"Remote debugging should be enabled first before debugging. Do you want to enable it?"
+				"Remote debugging should be enabled first before debugging. Do you want to enable it?",
 			);
 			void enableRemoteDebugging(context, node.parent.parent, confirmMsg);
 			return;
@@ -73,7 +73,7 @@ export class DebugController {
 		executeSteps.push(new StartDebugConfigurationStep(instance));
 		const wizard: AzureWizard<IRemoteDebuggingContext> = new AzureWizard(
 			wizardContext,
-			{ executeSteps, title: attaching }
+			{ executeSteps, title: attaching },
 		);
 		await wizard.execute();
 		const task: () => void = async () => {
@@ -81,7 +81,7 @@ export class DebugController {
 				await window.showInformationMessage(
 					attached,
 					AppItem.ACCESS_PUBLIC_ENDPOINT,
-					AppItem.ACCESS_TEST_ENDPOINT
+					AppItem.ACCESS_TEST_ENDPOINT,
 				);
 			if (action) {
 				const appTreeItem: AppItem = node.parent.parent;

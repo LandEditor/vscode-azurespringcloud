@@ -51,13 +51,13 @@ export class SpringAppsBranchDataProvider
 	}
 
 	async getChildren(
-		element: ResourceItemBase
+		element: ResourceItemBase,
 	): Promise<ResourceItemBase[] | null | undefined> {
 		return (await element.getChildren?.())?.map((child) => {
 			if (child.id) {
 				return ext.state.wrapItemInStateHandling(
 					child as ResourceItemBase & { id: string },
-					() => this.refresh(child)
+					() => this.refresh(child),
 				);
 			}
 			return child;
@@ -70,24 +70,24 @@ export class SpringAppsBranchDataProvider
 			async (context: IActionContext) => {
 				context.errorHandling.rethrow = true;
 				const subContext = createSubscriptionContext(
-					element.subscription
+					element.subscription,
 				);
 				const client: AppPlatformManagementClient = createAzureClient(
 					[context, subContext],
-					AppPlatformManagementClient
+					AppPlatformManagementClient,
 				);
 				const service: EnhancedService = new EnhancedService(
 					client,
 					element.subscription,
-					element
+					element,
 				);
 				return new ServiceItem(service);
-			}
+			},
 		);
 
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		return ext.state.wrapItemInStateHandling(resourceItem!, () =>
-			this.refresh(resourceItem)
+			this.refresh(resourceItem),
 		);
 	}
 
