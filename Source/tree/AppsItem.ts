@@ -41,8 +41,8 @@ export default class AppsItem implements ResourceItemBase {
 		const tier: string = this.service.isEnterpriseTier()
 			? "enterprise"
 			: this.service.isConsumptionTier()
-			  ? "consumption"
-			  : "other";
+				? "consumption"
+				: "other";
 		return `azureSpringApps.apps;tier-${tier};`;
 	}
 

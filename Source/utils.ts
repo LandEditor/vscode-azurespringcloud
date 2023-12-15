@@ -50,7 +50,7 @@ export function createGenericItem(
 							title: "",
 							command: options.commandId,
 							arguments: commandArgs,
-					  }
+						}
 					: undefined,
 			};
 		},

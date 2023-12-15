@@ -276,7 +276,7 @@ export class EnhancedDeployment {
 			: 1;
 		const capacity: number = (await this.app.service.isConsumptionTier())
 			? // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-			  ((await this.properties)?.deploymentSettings?.scale
+				((await this.properties)?.deploymentSettings?.scale
 					?.maxReplicas as number) ?? 0
 			: (await this.properties)?.instances?.length ?? 0;
 		return { cpu, memory, capacity };

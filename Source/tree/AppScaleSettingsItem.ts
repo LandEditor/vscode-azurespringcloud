@@ -81,12 +81,12 @@ export class AppScaleSettingsItem extends AppSettingsItem {
 							new InputConsumptionPlanScaleUpValueStep(
 								deployment
 							),
-					  ]
+						]
 					: [
 							new InputScaleValueStep(deployment, "capacity"),
 							new InputScaleValueStep(deployment, "memory"),
 							new InputScaleValueStep(deployment, "cpu"),
-					  ];
+						];
 			const promptSteps: AzureWizardPromptStep<IScaleSettingsUpdateWizardContext>[] =
 				[];
 			const executeSteps: AzureWizardExecuteStep<IScaleSettingsUpdateWizardContext>[] =

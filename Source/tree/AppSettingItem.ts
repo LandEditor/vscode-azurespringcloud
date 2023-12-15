@@ -41,7 +41,7 @@ export class AppSettingItem implements ResourceItemBase {
 							title: "Toggle Visibility",
 							command: "azureSpringApps.common.toggleVisibility",
 							arguments: [this],
-					  },
+						},
 		};
 	}
 

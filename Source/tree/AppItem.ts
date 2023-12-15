@@ -112,14 +112,14 @@ export class AppItem implements ResourceItemBase {
 						config?.enabled === undefined
 							? "unknown"
 							: config?.enabled
-							  ? "enabled"
-							  : "disabled";
+								? "enabled"
+								: "disabled";
 					const tier: string =
 						(await this.app.service.isEnterpriseTier())
 							? "enterprise"
 							: (await this.app.service.isConsumptionTier())
-							  ? "consumption"
-							  : "other";
+								? "consumption"
+								: "other";
 					const contextValue = `azureSpringApps.app;status-${status};debugging-${debugging};public-${appProperties?.public};tier-${tier};`;
 					this._stateProperties = {
 						iconPath: utils.getThemedIconPath(
