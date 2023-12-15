@@ -2,7 +2,7 @@
 	"name": "vscode-azurespringcloud",
 	"displayName": "Azure Spring Apps",
 	"version": "0.0.1",
-	"private": "false",
+	"private": false,
 	"description": "%azureSpringApps.description%",
 	"homepage": "https://github.com/CodeEditorLand/CodeEditorLand#readme",
 	"bugs": {
