@@ -50,13 +50,13 @@ export class EnhancedDeployment {
 				`
                         Keys must start with a letter or an underscore(_).
                         Keys may only contain letters, numbers, periods(.), and underscores(_).
-                    `,
+                    `
 			);
 		} else if (v.trim().length > 4000) {
 			return localize(
 				"maxLength",
 				`The maximum length is {0} characters.`,
-				4000,
+				4000
 			);
 		}
 		return undefined;
@@ -69,7 +69,7 @@ export class EnhancedDeployment {
 			return localize(
 				"maxLength",
 				`The maximum length is {0} characters.`,
-				4000,
+				4000
 			);
 		}
 		return undefined;
@@ -89,8 +89,8 @@ export class EnhancedDeployment {
 			.then(
 				(instances) =>
 					instances?.map(
-						(instance) => new EnhancedInstance(this, instance),
-					) ?? [],
+						(instance) => new EnhancedInstance(this, instance)
+					) ?? []
 			);
 	}
 
@@ -98,8 +98,8 @@ export class EnhancedDeployment {
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		return this.instances.then((s) =>
 			s.reduce((prev, current) =>
-				prev.startTime! > current.startTime! ? prev : current,
-			),
+				prev.startTime! > current.startTime! ? prev : current
+			)
 		);
 	}
 
@@ -112,13 +112,13 @@ export class EnhancedDeployment {
 			this.app.service.resourceGroup,
 			this.app.service.name,
 			this.app.name,
-			this.name,
+			this.name
 		);
 		return Promise.all([this._remote]).then(() => this);
 	}
 
 	public async updateArtifactPath(
-		relativePathOrBuildId: string,
+		relativePathOrBuildId: string
 	): Promise<void> {
 		let properties: DeploymentResourceProperties | undefined;
 		if (await this.app.service.isEnterpriseTier()) {
@@ -134,17 +134,17 @@ export class EnhancedDeployment {
 			};
 		}
 		ext.outputChannel.appendLog(
-			`[Deployment] update artifact path of deployment (${this.name}) to ${relativePathOrBuildId}.`,
+			`[Deployment] update artifact path of deployment (${this.name}) to ${relativePathOrBuildId}.`
 		);
 		this._remote = this.client.deployments.beginUpdateAndWait(
 			this.app.service.resourceGroup,
 			this.app.service.name,
 			this.app.name,
 			this.name || EnhancedDeployment.DEFAULT_DEPLOYMENT_NAME,
-			{ properties },
+			{ properties }
 		);
 		ext.outputChannel.appendLog(
-			`[Deployment] artifact path of deployment (${this.name}) is updated.`,
+			`[Deployment] artifact path of deployment (${this.name}) is updated.`
 		);
 	}
 
@@ -175,17 +175,17 @@ export class EnhancedDeployment {
 			};
 		}
 		ext.outputChannel.appendLog(
-			`[Deployment] update scale settings of deployment (${this.name}).`,
+			`[Deployment] update scale settings of deployment (${this.name}).`
 		);
 		this._remote = this.client.deployments.beginUpdateAndWait(
 			this.app.service.resourceGroup,
 			this.app.service.name,
 			this.app.name,
 			this.name,
-			resource,
+			resource
 		);
 		ext.outputChannel.appendLog(
-			`[Deployment] scale settings of deployment (${this.name}) is updated.`,
+			`[Deployment] scale settings of deployment (${this.name}) is updated.`
 		);
 	}
 
@@ -193,7 +193,7 @@ export class EnhancedDeployment {
 		[p: string]: string;
 	}): Promise<void> {
 		ext.outputChannel.appendLog(
-			`[Deployment] update environment variables of deployment (${this.name}).`,
+			`[Deployment] update environment variables of deployment (${this.name}).`
 		);
 		this._remote = this.client.deployments.beginUpdateAndWait(
 			this.app.service.resourceGroup,
@@ -202,10 +202,10 @@ export class EnhancedDeployment {
 			this.name,
 			{
 				properties: { deploymentSettings: { environmentVariables } },
-			},
+			}
 		);
 		ext.outputChannel.appendLog(
-			`[Deployment] environment variables of deployment (${this.name}) is updated.`,
+			`[Deployment] environment variables of deployment (${this.name}) is updated.`
 		);
 	}
 
@@ -220,7 +220,7 @@ export class EnhancedDeployment {
 
 	public async updateJvmOptions(jvmOptions: string): Promise<void> {
 		ext.outputChannel.appendLog(
-			`[Deployment] update JVM options of deployment (${this.name}).`,
+			`[Deployment] update JVM options of deployment (${this.name}).`
 		);
 		if (await this.app.service.isEnterpriseTier()) {
 			const environmentVariables: { [p: string]: string } =
@@ -236,7 +236,7 @@ export class EnhancedDeployment {
 					properties: {
 						deploymentSettings: { environmentVariables },
 					},
-				},
+				}
 			);
 		} else {
 			this._remote = this.client.deployments.beginUpdateAndWait(
@@ -251,11 +251,11 @@ export class EnhancedDeployment {
 							jvmOptions,
 						},
 					},
-				},
+				}
 			);
 		}
 		ext.outputChannel.appendLog(
-			`[Deployment] JVM options of deployment (${this.name}) is updated.`,
+			`[Deployment] JVM options of deployment (${this.name}) is updated.`
 		);
 	}
 
@@ -276,7 +276,7 @@ export class EnhancedDeployment {
 			: 1;
 		const capacity: number = (await this.app.service.isConsumptionTier())
 			? // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-			  ((await this.properties)?.deploymentSettings?.scale
+				((await this.properties)?.deploymentSettings?.scale
 					?.maxReplicas as number) ?? 0
 			: (await this.properties)?.instances?.length ?? 0;
 		return { cpu, memory, capacity };
@@ -290,15 +290,15 @@ export class EnhancedDeployment {
 			this.app.service.resourceGroup,
 			this.app.service.name,
 			this.app.name,
-			this.name,
+			this.name
 		);
 	}
 
 	public async enableDebugging(
-		port: number = 5005,
+		port: number = 5005
 	): Promise<RemoteDebugging> {
 		ext.outputChannel.appendLog(
-			`[Deployment] enable remote debugging of deployment (${this.name}).`,
+			`[Deployment] enable remote debugging of deployment (${this.name}).`
 		);
 		return this.client.deployments.beginEnableRemoteDebuggingAndWait(
 			this.app.service.resourceGroup,
@@ -307,19 +307,19 @@ export class EnhancedDeployment {
 			this.name,
 			{
 				remoteDebuggingPayload: { port },
-			},
+			}
 		);
 	}
 
 	public async disableDebugging(): Promise<void> {
 		ext.outputChannel.appendLog(
-			`[Deployment] disable remote debugging of deployment (${this.name}).`,
+			`[Deployment] disable remote debugging of deployment (${this.name}).`
 		);
 		await this.client.deployments.beginDisableRemoteDebuggingAndWait(
 			this.app.service.resourceGroup,
 			this.app.service.name,
 			this.app.name,
-			this.name,
+			this.name
 		);
 	}
 }

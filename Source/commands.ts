@@ -46,112 +46,112 @@ import { DebugController } from "./workflows/remotedebugging/DebugController";
 export function registerCommands(): void {
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.common.refresh",
-		refreshNode,
+		refreshNode
 	);
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.common.toggleVisibility",
-		toggleVisibility,
+		toggleVisibility
 	);
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.apps.createInPortal",
-		createServiceInPortal,
+		createServiceInPortal
 	);
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.app.create",
-		createSpringApp,
+		createSpringApp
 	);
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.apps.delete",
-		deleteService,
+		deleteService
 	);
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.apps.openLiveView",
-		openAppsLiveView,
+		openAppsLiveView
 	);
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.apps.openAppAccelerator",
-		openAppAccelerator,
+		openAppAccelerator
 	);
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.app.openPublicEndpoint",
-		openPublicEndpoint,
+		openPublicEndpoint
 	);
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.app.openTestEndpoint",
-		openTestEndpoint,
+		openTestEndpoint
 	);
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.app.assignEndpoint",
-		assignEndpoint,
+		assignEndpoint
 	);
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.app.unassignEndpoint",
-		unassignEndpoint,
+		unassignEndpoint
 	);
 	registerCommandWithTelemetryWrapper("azureSpringApps.app.start", startApp);
 	registerCommandWithTelemetryWrapper("azureSpringApps.app.stop", stopApp);
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.app.restart",
-		restartApp,
+		restartApp
 	);
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.app.delete",
-		deleteApp,
+		deleteApp
 	);
 	registerCommandWithTelemetryWrapper("azureSpringApps.app.deploy", deploy);
 	registerCommandWithTelemetryWrapper("azureSpringApps.app.scale", scale);
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.app.openLiveView",
-		openAppLiveView,
+		openAppLiveView
 	);
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.app.enableRemoteDebugging",
-		enableRemoteDebugging,
+		enableRemoteDebugging
 	);
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.app.disableRemoteDebugging",
-		disableRemoteDebugging,
+		disableRemoteDebugging
 	);
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.app.instance.startRemoteDebugging",
-		startRemoteDebugging,
+		startRemoteDebugging
 	);
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.app.instance.startStreamingLog",
-		startStreamingLogs,
+		startStreamingLogs
 	);
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.app.instance.stopStreamingLog",
-		stopStreamingLogs,
+		stopStreamingLogs
 	);
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.app.settings.add",
-		addSetting,
+		addSetting
 	);
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.app.settings.edit",
-		editSettings,
+		editSettings
 	);
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.app.setting.edit",
-		editSetting,
+		editSetting
 	);
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.app.setting.delete",
-		deleteSetting,
+		deleteSetting
 	);
 	// Suppress "Report an Issue" button for all errors in favor of the command
 	registerErrorHandler((c) => (c.errorHandling.suppressReportIssue = true));
 	registerReportIssueCommand("springApps.reportIssue");
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.file.deploy",
-		deployFromFile,
+		deployFromFile
 	);
 }
 
 function registerCommandWithTelemetryWrapper(
 	commandId: string,
-	callback: CommandCallback,
+	callback: CommandCallback
 ): void {
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 	const callbackWithTroubleshooting: CommandCallback = (
@@ -172,26 +172,26 @@ function registerCommandWithTelemetryWrapper(
 		})();
 	registerCommandWithTreeNodeUnwrapping(
 		commandId,
-		callbackWithTroubleshooting,
+		callbackWithTroubleshooting
 	);
 }
 
 async function refreshNode(
 	_context: IActionContext,
-	node: ResourceItemBase,
+	node: ResourceItemBase
 ): Promise<void> {
 	await node.refresh();
 }
 
 export async function createServiceInPortal(
-	_context: IActionContext,
+	_context: IActionContext
 ): Promise<void> {
 	await openUrl("https://portal.azure.com/#create/Microsoft.AppPlatform");
 }
 
 export async function createSpringApp(
 	context: IActionContext,
-	n?: ServiceItem,
+	n?: ServiceItem
 ): Promise<void> {
 	const item: ServiceItem = await getAppsItem(context, n);
 	await createApp(context, item);
@@ -199,31 +199,31 @@ export async function createSpringApp(
 
 export async function deleteService(
 	context: IActionContext,
-	n?: ServiceItem,
+	n?: ServiceItem
 ): Promise<void> {
 	const item: ServiceItem = await getAppsItem(context, n);
 	const service: EnhancedService = item.service;
 	await context.ui.showWarningMessage(
 		`Are you sure to delete "${item.service.name}"?`,
 		{ modal: true },
-		DialogResponses.deleteResponse,
+		DialogResponses.deleteResponse
 	);
 	const deleting: string = utils.localize(
 		"deletingSpringCLoudService",
 		'Deleting Azure Spring Apps "{0}"...',
-		service.name,
+		service.name
 	);
 	const deleted: string = utils.localize(
 		"deletedSpringCloudService",
 		'Successfully deleted Azure Spring Apps "{0}".',
-		service.name,
+		service.name
 	);
 	await utils.runInBackground(deleting, deleted, () => item.remove(context));
 }
 
 export async function openAppsLiveView(
 	context: IActionContext,
-	n?: ServiceItem,
+	n?: ServiceItem
 ): Promise<void> {
 	const item: ServiceItem = await getAppsItem(context, n);
 	const service: EnhancedService = item.service;
@@ -234,11 +234,11 @@ export async function openAppsLiveView(
 		const response = await context.ui.showWarningMessage(
 			`Application Live View of Spring Apps "${service.name}" is not enabled or publicly accessible.`,
 			{ modal: true },
-			DialogResponses.learnMore,
+			DialogResponses.learnMore
 		);
 		if (response === DialogResponses.learnMore) {
 			return openUrl(
-				"https://learn.microsoft.com/en-us/azure/spring-apps/how-to-use-application-live-view?tabs=Portal",
+				"https://learn.microsoft.com/en-us/azure/spring-apps/how-to-use-application-live-view?tabs=Portal"
 			);
 		}
 		return;
@@ -251,7 +251,7 @@ export async function openAppsLiveView(
 
 export async function openAppLiveView(
 	context: IActionContext,
-	n?: AppItem,
+	n?: AppItem
 ): Promise<void> {
 	const item: AppItem = await getAppItem(context, n);
 	const app: EnhancedApp = item.app;
@@ -262,11 +262,11 @@ export async function openAppLiveView(
 		const response = await context.ui.showWarningMessage(
 			`Application Live View of Spring Apps "${app.service.name}" is not enabled or publicly accessible.`,
 			{ modal: true },
-			DialogResponses.learnMore,
+			DialogResponses.learnMore
 		);
 		if (response === DialogResponses.learnMore) {
 			return openUrl(
-				"https://learn.microsoft.com/en-us/azure/spring-apps/how-to-use-application-live-view?tabs=Portal",
+				"https://learn.microsoft.com/en-us/azure/spring-apps/how-to-use-application-live-view?tabs=Portal"
 			);
 		}
 		return;
@@ -279,7 +279,7 @@ export async function openAppLiveView(
 
 export async function openAppAccelerator(
 	context: IActionContext,
-	n?: ServiceItem,
+	n?: ServiceItem
 ): Promise<void> {
 	const item: ServiceItem = await getAppsItem(context, n);
 	const service: EnhancedService = item.service;
@@ -290,23 +290,23 @@ export async function openAppAccelerator(
 		const response = await context.ui.showWarningMessage(
 			`Application Accelerator of Spring Apps "${service.name}"  is not enabled or publicly accessible.`,
 			{ modal: true },
-			DialogResponses.learnMore,
+			DialogResponses.learnMore
 		);
 		if (response === DialogResponses.learnMore) {
 			return openUrl(
-				"https://learn.microsoft.com/en-us/azure/spring-apps/how-to-use-accelerator?tabs=Portal",
+				"https://learn.microsoft.com/en-us/azure/spring-apps/how-to-use-accelerator?tabs=Portal"
 			);
 		}
 		return;
 	}
 	let acceleratorExt = vscode.extensions.getExtension(
-		"vmware.tanzu-app-accelerator",
+		"vmware.tanzu-app-accelerator"
 	);
 	if (!acceleratorExt) {
 		await context.ui.showWarningMessage(
 			`This feature depends on extension "Tanzu App Accelerator" provided by VMWare, do you want to install it?`,
 			{ modal: true },
-			DialogResponses.yes,
+			DialogResponses.yes
 		);
 		const installing = 'Installing extension "Tanzu App Accelerator".';
 		const installed =
@@ -315,22 +315,22 @@ export async function openAppAccelerator(
 			// install directly
 			await vscode.commands.executeCommand(
 				"workbench.extensions.installExtension",
-				"vmware.tanzu-app-accelerator",
+				"vmware.tanzu-app-accelerator"
 			);
 			// void vscode.commands.executeCommand('workbench.extensions.action.installExtensions', 'vmware.tanzu-app-accelerator');
 			acceleratorExt = vscode.extensions.getExtension(
-				"vmware.tanzu-app-accelerator",
+				"vmware.tanzu-app-accelerator"
 			);
 			let rounds: number = 0;
 			while (!acceleratorExt && rounds++ < 15) {
 				await utils.wait(1000);
 				acceleratorExt = vscode.extensions.getExtension(
-					"vmware.tanzu-app-accelerator",
+					"vmware.tanzu-app-accelerator"
 				);
 			}
 			if (!acceleratorExt) {
 				throw new Error(
-					'"Tanzu App Accelerator" is not ready, try later please.',
+					'"Tanzu App Accelerator" is not ready, try later please.'
 				);
 			}
 		});
@@ -342,7 +342,7 @@ export async function openAppAccelerator(
 			.update(
 				"tanzuApplicationPlatformGuiUrl",
 				config.guiUrl,
-				vscode.ConfigurationTarget.Global,
+				vscode.ConfigurationTarget.Global
 			);
 		config.authClientId &&
 			(await vscode.workspace
@@ -350,7 +350,7 @@ export async function openAppAccelerator(
 				.update(
 					"authClientId",
 					config.authClientId,
-					vscode.ConfigurationTarget.Global,
+					vscode.ConfigurationTarget.Global
 				));
 		config.authIssuerUrl &&
 			(await vscode.workspace
@@ -358,20 +358,20 @@ export async function openAppAccelerator(
 				.update(
 					"authIssuerUrl",
 					config.authIssuerUrl,
-					vscode.ConfigurationTarget.Global,
+					vscode.ConfigurationTarget.Global
 				));
 		await vscode.commands.executeCommand(
-			"tanzu-app-accelerator.AcceleratorList.focus",
+			"tanzu-app-accelerator.AcceleratorList.focus"
 		);
 		await vscode.commands.executeCommand(
-			"tanzu-app-accelerator.refreshAccelerators",
+			"tanzu-app-accelerator.refreshAccelerators"
 		);
 	}
 }
 
 export async function openPublicEndpoint(
 	context: IActionContext,
-	n?: AppItem,
+	n?: AppItem
 ): Promise<void> {
 	const item: AppItem = await getAppItem(context, n);
 	const app: EnhancedApp = item.app;
@@ -379,7 +379,7 @@ export async function openPublicEndpoint(
 		await context.ui.showWarningMessage(
 			`App "${app.name}" is not publicly accessible. Do you want to assign it a public endpoint?`,
 			{ modal: true },
-			DialogResponses.yes,
+			DialogResponses.yes
 		);
 		await assignEndpoint(context, item);
 	}
@@ -391,13 +391,13 @@ export async function openPublicEndpoint(
 
 export async function openTestEndpoint(
 	context: IActionContext,
-	n?: AppItem,
+	n?: AppItem
 ): Promise<void> {
 	const item: AppItem = await getAppItem(context, n);
 	const app: EnhancedApp = item.app;
 	if (await app.service.isConsumptionTier()) {
 		void window.showErrorMessage(
-			`Test endpoint is not supported for Azure Spring apps of consumption plan for now.`,
+			`Test endpoint is not supported for Azure Spring apps of consumption plan for now.`
 		);
 		return;
 	}
@@ -409,7 +409,7 @@ export async function openTestEndpoint(
 
 export async function assignEndpoint(
 	context: IActionContext,
-	n?: AppItem,
+	n?: AppItem
 ): Promise<void> {
 	const item: AppItem = await getAppItem(context, n);
 	const app: EnhancedApp = item.app;
@@ -422,7 +422,7 @@ export async function assignEndpoint(
 
 export async function unassignEndpoint(
 	context: IActionContext,
-	n?: AppItem,
+	n?: AppItem
 ): Promise<void> {
 	const item: AppItem = await getAppItem(context, n);
 	const app: EnhancedApp = item.app;
@@ -435,7 +435,7 @@ export async function unassignEndpoint(
 
 export async function startApp(
 	context: IActionContext,
-	n?: AppItem,
+	n?: AppItem
 ): Promise<void> {
 	const item: AppItem = await getAppItem(context, n);
 	await item.start();
@@ -443,7 +443,7 @@ export async function startApp(
 
 export async function stopApp(
 	context: IActionContext,
-	n?: AppItem,
+	n?: AppItem
 ): Promise<void> {
 	const item: AppItem = await getAppItem(context, n);
 	await item.stop();
@@ -451,7 +451,7 @@ export async function stopApp(
 
 export async function restartApp(
 	context: IActionContext,
-	n?: AppItem,
+	n?: AppItem
 ): Promise<void> {
 	const item: AppItem = await getAppItem(context, n);
 	await item.restart();
@@ -459,31 +459,31 @@ export async function restartApp(
 
 export async function deleteApp(
 	context: IActionContext,
-	n?: AppItem,
+	n?: AppItem
 ): Promise<void> {
 	const item: AppItem = await getAppItem(context, n);
 	const app: EnhancedApp = item.app;
 	await context.ui.showWarningMessage(
 		`Are you sure to delete "${app.name}"?`,
 		{ modal: true },
-		DialogResponses.deleteResponse,
+		DialogResponses.deleteResponse
 	);
 	const deleting: string = utils.localize(
 		"deletingSpringCLoudApp",
 		'Deleting Spring app "{0}"...',
-		app.name,
+		app.name
 	);
 	const deleted: string = utils.localize(
 		"deletedSpringCLoudApp",
 		'Successfully deleted Spring app "{0}".',
-		app.name,
+		app.name
 	);
 	await utils.runInBackground(deleting, deleted, () => item.remove());
 }
 
 export async function deploy(
 	context: IActionContext,
-	n?: AppItem,
+	n?: AppItem
 ): Promise<void> {
 	const item: AppItem = await getAppItem(context, n);
 	const defaultUri: Uri | undefined = await getTargetOrWorkspacePath();
@@ -505,7 +505,7 @@ export async function deploy(
 export async function deployFromFile(
 	context: IActionContext,
 	defaultUri?: Uri,
-	_arg2?: Uri[],
+	_arg2?: Uri[]
 ): Promise<void> {
 	let jarFile: Uri | undefined = undefined;
 	defaultUri = defaultUri ?? (await getTargetOrWorkspacePath());
@@ -533,7 +533,7 @@ export async function deployFromFile(
 
 export async function scale(
 	context: IActionContext,
-	n?: AppItem,
+	n?: AppItem
 ): Promise<void> {
 	const item: AppItem = await getAppItem(context, n);
 	await ext.state.runWithTemporaryDescription(item.id, "Updating...", () => {
@@ -544,7 +544,7 @@ export async function scale(
 export async function enableRemoteDebugging(
 	context: IActionContext,
 	n?: AppItem,
-	confirmation?: string,
+	confirmation?: string
 ): Promise<AppItem> {
 	const item: AppItem = await getAppItem(context, n);
 	let result: MessageItem | undefined;
@@ -554,7 +554,7 @@ export async function enableRemoteDebugging(
 			confirmation,
 			{ modal: true },
 			actionResponse,
-			DialogResponses.learnMore,
+			DialogResponses.learnMore
 		);
 		if (result === DialogResponses.learnMore) {
 			void openUrl("https://aka.ms/asa-remotedebug");
@@ -571,7 +571,7 @@ export async function enableRemoteDebugging(
 					await item.app.activeDeployment;
 				if (!deployment) {
 					void window.showWarningMessage(
-						`Failed to enable remote debugging for app "${item.app.name}", because it has no active deployment.`,
+						`Failed to enable remote debugging for app "${item.app.name}", because it has no active deployment.`
 					);
 					return;
 				}
@@ -584,7 +584,7 @@ export async function enableRemoteDebugging(
 						await window.showInformationMessage(
 							msg,
 							"Start Debugging",
-							"Learn More",
+							"Learn More"
 						);
 					if (action === "Learn More") {
 						void openUrl("https://aka.ms/asa-remotedebug");
@@ -593,14 +593,14 @@ export async function enableRemoteDebugging(
 					}
 				})();
 			});
-		},
+		}
 	);
 	return item;
 }
 
 export async function disableRemoteDebugging(
 	context: IActionContext,
-	n?: AppItem,
+	n?: AppItem
 ): Promise<AppItem> {
 	const item: AppItem = await getAppItem(context, n);
 	const doing: string = `Disabling remote debugging for app "${item.app.name}".`;
@@ -614,7 +614,7 @@ export async function disableRemoteDebugging(
 					await item.app.activeDeployment;
 				if (!deployment) {
 					void window.showWarningMessage(
-						`Disable Remote Debugging: App "${item.app.name}" has no active deployment.`,
+						`Disable Remote Debugging: App "${item.app.name}" has no active deployment.`
 					);
 					return;
 				}
@@ -622,28 +622,28 @@ export async function disableRemoteDebugging(
 				await item.refresh();
 				ext.state.notifyChildrenChanged(item.id);
 			});
-		},
+		}
 	);
 	return item;
 }
 
 export async function startRemoteDebugging(
 	context: IActionContext,
-	n?: ResourceItemBase,
+	n?: ResourceItemBase
 ): Promise<void> {
 	const item: AppInstanceItem = await getInstanceItem(context, n);
 	const description = utils.localize(
 		"startRemoteDebugging",
-		"Attaching debugger...",
+		"Attaching debugger..."
 	);
 	await ext.state.runWithTemporaryDescription(item.id, description, () =>
-		DebugController.attachDebugger(context, item),
+		DebugController.attachDebugger(context, item)
 	);
 }
 
 export async function startStreamingLogs(
 	context: IActionContext,
-	n?: AppInstanceItem,
+	n?: AppInstanceItem
 ): Promise<void> {
 	const item: AppInstanceItem = await getInstanceItem(context, n);
 	const doing: string = `Starting log streaming for instance "${item.instance.name}".`;
@@ -656,7 +656,7 @@ export async function startStreamingLogs(
 
 export async function stopStreamingLogs(
 	context: IActionContext,
-	n?: AppInstanceItem,
+	n?: AppInstanceItem
 ): Promise<void> {
 	const item: AppInstanceItem = await getInstanceItem(context, n);
 	const doing: string = `Stopping log streaming for instance "${item.instance.name}".`;
@@ -669,7 +669,7 @@ export async function stopStreamingLogs(
 
 export async function viewInstanceProperties(
 	context: IActionContext,
-	n?: AppInstanceItem,
+	n?: AppInstanceItem
 ): Promise<void> {
 	const item: AppInstanceItem = await getInstanceItem(context, n);
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -680,56 +680,56 @@ export async function viewInstanceProperties(
 
 export async function toggleVisibility(
 	context: IActionContext,
-	item: AppSettingItem | AppSettingsItem,
+	item: AppSettingItem | AppSettingsItem
 ): Promise<void> {
 	await item.toggleVisibility(context);
 }
 
 export async function addSetting(
 	context: IActionContext,
-	item: AppEnvVariablesItem | AppJvmOptionsItem,
+	item: AppEnvVariablesItem | AppJvmOptionsItem
 ): Promise<void> {
 	await item.createChild(context);
 }
 
 export async function editSettings(
 	context: IActionContext,
-	item: AppSettingsItem,
+	item: AppSettingsItem
 ): Promise<void> {
 	const description = utils.localize("editing", "Editing...");
 	await ext.state.runWithTemporaryDescription(item.id, description, () =>
-		item.updateSettingsValue(context),
+		item.updateSettingsValue(context)
 	);
 }
 
 export async function editSetting(
 	context: IActionContext,
-	item: AppSettingItem,
+	item: AppSettingItem
 ): Promise<void> {
 	const description = utils.localize("editing", "Editing...");
 	await ext.state.runWithTemporaryDescription(item.id, description, () =>
-		item.updateValue(context),
+		item.updateValue(context)
 	);
 }
 
 export async function deleteSetting(
 	context: IActionContext,
-	item: AppSettingItem,
+	item: AppSettingItem
 ): Promise<void> {
 	await context.ui.showWarningMessage(
 		`Are you sure to delete "${item.key || item.value}"?`,
 		{ modal: true },
-		DialogResponses.deleteResponse,
+		DialogResponses.deleteResponse
 	);
 	const description = utils.localize("deleting", "Deleting...");
 	await ext.state.runWithTemporaryDescription(item.id, description, () =>
-		item.remove(context),
+		item.remove(context)
 	);
 }
 
 async function getAppsItem(
 	context: IActionContext,
-	item?: ResourceItemBase,
+	item?: ResourceItemBase
 ): Promise<ServiceItem> {
 	if (item instanceof ServiceItem) {
 		return item;
@@ -739,7 +739,7 @@ async function getAppsItem(
 
 async function getAppItem(
 	context: IActionContext,
-	item?: ResourceItemBase,
+	item?: ResourceItemBase
 ): Promise<AppItem> {
 	if (item instanceof AppItem) {
 		return item;
@@ -749,7 +749,7 @@ async function getAppItem(
 
 async function getInstanceItem(
 	context: IActionContext,
-	item?: ResourceItemBase,
+	item?: ResourceItemBase
 ): Promise<AppInstanceItem> {
 	if (item instanceof AppInstanceItem) {
 		return item;

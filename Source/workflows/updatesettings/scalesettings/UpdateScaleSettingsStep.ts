@@ -19,7 +19,7 @@ export class UpdateScaleSettingsStep extends AzureWizardExecuteStep<IScaleSettin
 
 	public async execute(
 		context: IScaleSettingsUpdateWizardContext,
-		progress: Progress<{ message?: string; increment?: number }>,
+		progress: Progress<{ message?: string; increment?: number }>
 	): Promise<void> {
 		const o: IScaleSettings = await this.deployment.getScaleSettings();
 		const n: IScaleSettings = context.newSettings;
@@ -31,7 +31,7 @@ export class UpdateScaleSettingsStep extends AzureWizardExecuteStep<IScaleSettin
 			progress.report({
 				message: localize(
 					"noScaleSettingChanged",
-					"No setting is changed",
+					"No setting is changed"
 				),
 			});
 			return Promise.resolve(undefined);
@@ -39,7 +39,7 @@ export class UpdateScaleSettingsStep extends AzureWizardExecuteStep<IScaleSettin
 		const message: string = localize(
 			"updatingScaleSetting",
 			'Updating scale settings of "{0}"...',
-			this.deployment.app.name,
+			this.deployment.app.name
 		);
 		progress.report({ message });
 		await this.deployment.updateScaleSettings(context.newSettings);

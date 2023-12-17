@@ -19,12 +19,12 @@ export class StartDebugConfigurationStep extends AzureWizardExecuteStep<IRemoteD
 
 	public async execute(
 		context: IRemoteDebuggingContext,
-		progress: Progress<{ message?: string; increment?: number }>,
+		progress: Progress<{ message?: string; increment?: number }>
 	): Promise<void> {
 		const message: string = localize(
 			"startDebugger",
 			'Attaching debugger to instance "{0}"...',
-			this.instance.name,
+			this.instance.name
 		);
 		ext.outputChannel.appendLog(message);
 		progress.report({ message });
@@ -45,12 +45,12 @@ export class StartDebugConfigurationStep extends AzureWizardExecuteStep<IRemoteD
 				localize(
 					"startDebuggerSuccess",
 					'Successfully attached debugger to instance "{0}".',
-					this.instance.name,
-				),
+					this.instance.name
+				)
 			);
 		} else {
 			throw new Error(
-				`Failed to attach debugger to instance "${this.instance.name}".`,
+				`Failed to attach debugger to instance "${this.instance.name}".`
 			);
 		}
 		this.disposeProxyAtTermination(context);
@@ -69,7 +69,7 @@ export class StartDebugConfigurationStep extends AzureWizardExecuteStep<IRemoteD
 					}
 					listener.dispose();
 				}
-			},
+			}
 		);
 	}
 }

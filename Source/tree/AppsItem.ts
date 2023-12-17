@@ -41,8 +41,8 @@ export default class AppsItem implements ResourceItemBase {
 		const tier: string = this.service.isEnterpriseTier()
 			? "enterprise"
 			: this.service.isConsumptionTier()
-			  ? "consumption"
-			  : "other";
+				? "consumption"
+				: "other";
 		return `azureSpringApps.apps;tier-${tier};`;
 	}
 
@@ -80,7 +80,7 @@ export default class AppsItem implements ResourceItemBase {
 				await this.service.remove();
 				this._deleted = true;
 				ext.branchDataProvider.refresh();
-			},
+			}
 		);
 	}
 
@@ -93,7 +93,7 @@ export default class AppsItem implements ResourceItemBase {
 					await this.service.refresh();
 					void this.reloadChildren();
 					ext.state.notifyChildrenChanged(this.id);
-				},
+				}
 			);
 		}
 	}

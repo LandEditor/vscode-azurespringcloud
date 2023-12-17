@@ -90,19 +90,19 @@ export class AppJvmOptionsItem extends AppSettingsItem {
 					// refresh this node even if create fails because container app provision failure throws an error, but still creates a container app
 					ext.state.notifyChildrenChanged(this.id);
 				}
-			},
+			}
 		);
 		return new AppSettingItem(
 			this,
 			"".trim(),
 			newVal.trim(),
-			Object.assign({}, AppJvmOptionsItem._options),
+			Object.assign({}, AppJvmOptionsItem._options)
 		);
 	}
 
 	public async updateSettingValue(
 		node: AppSettingItem,
-		context: IActionContext | ICreateChildImplContext,
+		context: IActionContext | ICreateChildImplContext
 	): Promise<string> {
 		const newVal: string = await context.ui.showInputBox({
 			prompt: "Update JVM option:",
@@ -119,7 +119,7 @@ export class AppJvmOptionsItem extends AppSettingsItem {
 
 	public async deleteSettingItem(
 		node: AppSettingItem,
-		context: IActionContext,
+		context: IActionContext
 	): Promise<void> {
 		const tempOptions: string[] = [...(await this.options)];
 		const index: number = tempOptions.indexOf(node.value);
@@ -129,7 +129,7 @@ export class AppJvmOptionsItem extends AppSettingsItem {
 
 	public async updateSettingsValue(
 		context: IActionContext,
-		newJvmOptions?: string[],
+		newJvmOptions?: string[]
 	): Promise<void> {
 		const deployment: EnhancedDeployment | undefined =
 			await this.parent.app.activeDeployment;
@@ -137,23 +137,23 @@ export class AppJvmOptionsItem extends AppSettingsItem {
 			const updating: string = localize(
 				"updatingJvmOptions",
 				'Updating JVM options of "{0}"',
-				deployment.app.name,
+				deployment.app.name
 			);
 			const updated: string = localize(
 				"updatedJvmOptions",
 				'Successfully updated JVM options of "{0}".',
-				deployment.app.name,
+				deployment.app.name
 			);
 
 			const subContext = createSubscriptionContext(
-				this.parent.app.subscription,
+				this.parent.app.subscription
 			);
 			const wizardContext: IJvmOptionsUpdateWizardContext = Object.assign(
 				context,
 				subContext,
 				{
 					newJvmOptions: newJvmOptions?.join(" "),
-				},
+				}
 			);
 
 			const promptSteps: AzureWizardPromptStep<IJvmOptionsUpdateWizardContext>[] =
@@ -172,7 +172,7 @@ export class AppJvmOptionsItem extends AppSettingsItem {
 			await ext.state.runWithTemporaryDescription(
 				this.id,
 				"Updating...",
-				() => wizard.execute(),
+				() => wizard.execute()
 			);
 			void window.showInformationMessage(updated);
 			void this.refresh();
@@ -198,8 +198,8 @@ export class AppJvmOptionsItem extends AppSettingsItem {
 						this,
 						"".trim(),
 						option.trim().trim(),
-						Object.assign({}, AppJvmOptionsItem._options),
-					),
+						Object.assign({}, AppJvmOptionsItem._options)
+					)
 			);
 		})();
 	}

@@ -21,7 +21,7 @@ const entries = Object.keys(packageJSON.dependencies).map((name, idx) => {
 	console.log(name);
 	// url
 	const manifestFile = require(
-		path.join(__dirname, "..", "node_modules", name, "package.json"),
+		path.join(__dirname, "..", "node_modules", name, "package.json")
 	);
 	let url = manifestFile.repository?.url ?? manifestFile.repository;
 	console.log(url, "\t", formatRepositoryUrl(url));
@@ -43,7 +43,7 @@ const entries = Object.keys(packageJSON.dependencies).map((name, idx) => {
 });
 
 const depsWithLicense = entries.filter(
-	(e) => e.name !== undefined && e.license !== undefined,
+	(e) => e.name !== undefined && e.license !== undefined
 );
 
 const toc =

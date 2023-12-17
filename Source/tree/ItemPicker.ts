@@ -30,60 +30,60 @@ export interface PickItemOptions {
 export async function pickApps(
 	context: IActionContext,
 	startingNode?: ResourceItemBase,
-	options?: PickItemOptions,
+	options?: PickItemOptions
 ): Promise<ServiceItem> {
 	return await runQuickPickWizard(
 		context,
 		{
 			promptSteps: getPickAppsSteps(
 				ext.rgApiV2.resources.azureResourceTreeDataProvider,
-				startingNode,
+				startingNode
 			),
 			title: options?.title,
 		},
-		startingNode,
+		startingNode
 	);
 }
 
 export async function pickApp(
 	context: IActionContext,
 	startingNode?: ResourceItemBase,
-	options?: PickItemOptions,
+	options?: PickItemOptions
 ): Promise<AppItem> {
 	return await runQuickPickWizard(
 		context,
 		{
 			promptSteps: getPickAppSteps(
 				ext.rgApiV2.resources.azureResourceTreeDataProvider,
-				startingNode,
+				startingNode
 			),
 			title: options?.title,
 		},
-		startingNode,
+		startingNode
 	);
 }
 
 export async function pickAppInstance(
 	context: IActionContext,
 	startingNode?: ResourceItemBase,
-	options?: PickItemOptions,
+	options?: PickItemOptions
 ): Promise<AppInstanceItem> {
 	return await runQuickPickWizard(
 		context,
 		{
 			promptSteps: getPickInstanceSteps(
 				ext.rgApiV2.resources.azureResourceTreeDataProvider,
-				startingNode,
+				startingNode
 			),
 			title: options?.title,
 		},
-		startingNode,
+		startingNode
 	);
 }
 
 function getPickAppsSteps(
 	tdp: vscode.TreeDataProvider<unknown>,
-	startingNode?: ResourceItemBase,
+	startingNode?: ResourceItemBase
 ): AzureWizardPromptStep<AzureResourceQuickPickWizardContext>[] {
 	if (startingNode instanceof ServiceItem) {
 		return [];
@@ -102,14 +102,14 @@ function getPickAppsSteps(
 			},
 			{
 				placeHolder: localize("selectSpringApps", "Select Spring Apps"),
-			},
+			}
 		),
 	];
 }
 
 function getPickAppSteps(
 	tdp: vscode.TreeDataProvider<unknown>,
-	startingNode?: ResourceItemBase,
+	startingNode?: ResourceItemBase
 ): AzureWizardPromptStep<AzureResourceQuickPickWizardContext>[] {
 	if (startingNode instanceof AppItem) {
 		return [];
@@ -126,16 +126,16 @@ function getPickAppSteps(
 				placeHolder: localize("selectApp", "Select Spring App"),
 				noPicksMessage: localize(
 					"noApps",
-					"Selected Spring Apps has no apps",
+					"Selected Spring Apps has no apps"
 				),
-			},
+			}
 		),
 	];
 }
 
 function getPickInstanceSteps(
 	tdp: vscode.TreeDataProvider<unknown>,
-	startingNode?: ResourceItemBase,
+	startingNode?: ResourceItemBase
 ): AzureWizardPromptStep<AzureResourceQuickPickWizardContext>[] {
 	return [
 		...getPickAppSteps(tdp, startingNode),
@@ -154,13 +154,13 @@ function getPickInstanceSteps(
 			{
 				placeHolder: localize(
 					"selectInstance",
-					"Select Spring App instance",
+					"Select Spring App instance"
 				),
 				noPicksMessage: localize(
 					"noInstances",
-					"Selected Spring App has no running instances",
+					"Selected Spring App has no running instances"
 				),
-			},
+			}
 		),
 	];
 }

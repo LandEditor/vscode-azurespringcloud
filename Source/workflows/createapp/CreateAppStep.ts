@@ -18,12 +18,12 @@ export class CreateAppStep extends AzureWizardExecuteStep<IAppCreationWizardCont
 
 	public async execute(
 		context: IAppCreationWizardContext,
-		progress: Progress<{ message?: string; increment?: number }>,
+		progress: Progress<{ message?: string; increment?: number }>
 	): Promise<void> {
 		const message: string = localize(
 			"creatingNewApp",
 			'Creating and provisioning new app "{0}"...',
-			context.newAppName,
+			context.newAppName
 		);
 		progress.report({ message });
 		const appName: string = nonNullProp(context, "newAppName");
