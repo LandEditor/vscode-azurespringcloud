@@ -3,6 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
+import * as path from "path";
 import {
 	gulp_installAzureAccount,
 	gulp_installResourceGroups,
@@ -10,7 +11,6 @@ import {
 } from "@microsoft/vscode-azext-dev";
 import * as fse from "fs-extra";
 import * as gulp from "gulp";
-import * as path from "path";
 
 declare let exports: { [key: string]: unknown };
 
@@ -26,14 +26,12 @@ async function prepareForWebpack(): Promise<void> {
 async function listIcons(): Promise<void> {
 	const rootPath: string = path.join(__dirname, "resources", "providers");
 	const subDirs: string[] = (await fse.readdir(rootPath)).filter((dir) =>
-		dir.startsWith("microsoft.")
+		dir.startsWith("microsoft."),
 	);
 	// tslint:disable-next-line: no-constant-condition
 	while (true) {
 		const subDir: string | undefined = subDirs.pop();
-		if (!subDir) {
-			break;
-		} else {
+		if (subDir) {
 			const subDirPath: string = path.join(rootPath, subDir);
 			const paths: string[] = await fse.readdir(subDirPath);
 			for (const p of paths) {
@@ -44,6 +42,8 @@ async function listIcons(): Promise<void> {
 					subDirs.push(subPath);
 				}
 			}
+		} else {
+			break;
 		}
 	}
 }
@@ -53,20 +53,20 @@ async function cleanReadme(): Promise<void> {
 	let data: string = (await fse.readFile(readmePath)).toString();
 	data = data.replace(
 		/<!-- region exclude-from-marketplace -->.*?<!-- endregion exclude-from-marketplace -->/gis,
-		""
+		"",
 	);
 	await fse.writeFile(readmePath, data);
 }
 
 exports["webpack-dev"] = gulp.series(prepareForWebpack, () =>
-	gulp_webpack("development")
+	gulp_webpack("development"),
 );
 exports["webpack-prod"] = gulp.series(prepareForWebpack, () =>
-	gulp_webpack("production")
+	gulp_webpack("production"),
 );
 exports.preTest = gulp.series(
 	gulp_installAzureAccount,
-	gulp_installResourceGroups
+	gulp_installResourceGroups,
 );
 exports.listIcons = listIcons;
 exports.cleanReadme = cleanReadme;

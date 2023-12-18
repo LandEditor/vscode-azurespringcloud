@@ -9,7 +9,7 @@ import { IScaleSettingsUpdateWizardContext } from "./IScaleSettingsUpdateWizardC
 
 export class InputScaleValueStep extends AzureWizardPromptStep<IScaleSettingsUpdateWizardContext> {
 	// refer https://github.com/microsoft/vscode-azuretools/issues/789
-	public supportsDuplicateSteps: boolean = true;
+	public supportsDuplicateSteps = true;
 	private readonly key: string;
 	private readonly deployment: EnhancedDeployment;
 
@@ -22,12 +22,12 @@ export class InputScaleValueStep extends AzureWizardPromptStep<IScaleSettingsUpd
 	}
 
 	public async prompt(
-		context: IScaleSettingsUpdateWizardContext
+		context: IScaleSettingsUpdateWizardContext,
 	): Promise<void> {
 		const prompt: string = localize(
 			"numberInputPrompt",
 			'Enter new value of "{0}".',
-			IScaleSettings.LABELS[this.key]
+			IScaleSettings.LABELS[this.key],
 		);
 		const settings: IScaleSettings =
 			await this.deployment.getScaleSettings();
@@ -39,7 +39,7 @@ export class InputScaleValueStep extends AzureWizardPromptStep<IScaleSettingsUpd
 					value,
 					validateInput: this.validateInput,
 				})
-			).trim()
+			).trim(),
 		);
 		return Promise.resolve(undefined);
 	}
@@ -64,13 +64,13 @@ export class InputScaleValueStep extends AzureWizardPromptStep<IScaleSettingsUpd
 				if (tier === "Basic") {
 					return localize(
 						"invalidBasicCPU",
-						"Each app instance can have only 0.5 or 1 vCPU for Basic pricing tier"
+						"Each app instance can have only 0.5 or 1 vCPU for Basic pricing tier",
 					);
 				} else {
 					return localize(
 						"invalidScaleSettingValue",
 						"The value can only be 0.5 or an integer between 1 and {0}",
-						scope.max
+						scope.max,
 					);
 				}
 			}
@@ -84,7 +84,7 @@ export class InputScaleValueStep extends AzureWizardPromptStep<IScaleSettingsUpd
 				return localize(
 					"invalidScaleSettingValue",
 					"The value can only be 0.5 or an integer between 1 and {0}",
-					scope.max
+					scope.max,
 				);
 			}
 		} else {
@@ -97,7 +97,7 @@ export class InputScaleValueStep extends AzureWizardPromptStep<IScaleSettingsUpd
 					"invalidCapacitySettingValue",
 					"The value can only be an integer between {0} and {1}",
 					scope.min,
-					scope.max
+					scope.max,
 				);
 			}
 		}

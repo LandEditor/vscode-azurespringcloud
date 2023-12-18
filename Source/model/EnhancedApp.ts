@@ -96,7 +96,7 @@ export class EnhancedApp {
 			this.service.resourceGroup,
 			this.service.name,
 			this.name,
-			activeDeploymentName
+			activeDeploymentName,
 		);
 		ext.outputChannel.appendLog(`[App] app ${this.name} is started.`);
 	}
@@ -113,7 +113,7 @@ export class EnhancedApp {
 			this.service.resourceGroup,
 			this.service.name,
 			this.name,
-			activeDeploymentName
+			activeDeploymentName,
 		);
 		ext.outputChannel.appendLog(`[App] app ${this.name} is stopped.`);
 	}
@@ -130,7 +130,7 @@ export class EnhancedApp {
 			this.service.resourceGroup,
 			this.service.name,
 			this.name,
-			activeDeploymentName
+			activeDeploymentName,
 		);
 		ext.outputChannel.appendLog(`[App] app ${this.name} is restarted.`);
 	}
@@ -140,7 +140,7 @@ export class EnhancedApp {
 		await this.client.apps.beginDeleteAndWait(
 			this.service.resourceGroup,
 			this.service.name,
-			this.name
+			this.name,
 		);
 		ext.outputChannel.appendLog(`[App] app ${this.name} is deleted.`);
 	}
@@ -149,11 +149,11 @@ export class EnhancedApp {
 		this._remote = this.client.apps.get(
 			this.service.resourceGroup,
 			this.service.name,
-			this.name
+			this.name,
 		);
 		this._activeDeployment = this.loadActiveDeployment();
 		return Promise.all([this._remote, this._activeDeployment]).then(
-			() => this
+			() => this,
 		);
 	}
 
@@ -163,7 +163,7 @@ export class EnhancedApp {
 			this.client.deployments.list(
 				this.service.resourceGroup,
 				this.service.name,
-				this.name
+				this.name,
 			);
 		for await (const deployment of pagedResources) {
 			deployments.push(deployment);
@@ -180,12 +180,12 @@ export class EnhancedApp {
 			this.client.deployments.list(
 				this.service.resourceGroup,
 				this.service.name,
-				this.name
+				this.name,
 			);
 		for await (const deploymentResource of deploymentResources) {
 			if (deploymentResource.properties?.active) {
 				activeDeployment = Promise.resolve(
-					new EnhancedDeployment(this, deploymentResource)
+					new EnhancedDeployment(this, deploymentResource),
 				);
 				break;
 			}
@@ -195,7 +195,7 @@ export class EnhancedApp {
 
 	public async setActiveDeployment(deploymentName: string): Promise<void> {
 		ext.outputChannel.appendLog(
-			`[App] setting (${deploymentName}) as the new active deployment of app (${this.name}).`
+			`[App] setting (${deploymentName}) as the new active deployment of app (${this.name}).`,
 		);
 		this._remote = this.client.apps.beginSetActiveDeploymentsAndWait(
 			this.service.resourceGroup,
@@ -203,21 +203,21 @@ export class EnhancedApp {
 			this.name,
 			{
 				activeDeploymentNames: [deploymentName],
-			}
+			},
 		);
 		this._activeDeployment = this.loadActiveDeployment();
 		ext.outputChannel.appendLog(
-			`[App] (${deploymentName}) is set as new active deployment of app (${this.name}).`
+			`[App] (${deploymentName}) is set as new active deployment of app (${this.name}).`,
 		);
 	}
 
 	public async createDeployment(
 		name: string,
-		runtime?: KnownSupportedRuntimeValue
+		runtime?: KnownSupportedRuntimeValue,
 	): Promise<EnhancedDeployment> {
 		let source: UserSourceInfoUnion | undefined;
 		ext.outputChannel.appendLog(
-			`[Deployment] creating deployment (${name}) of app (${this.name}).`
+			`[Deployment] creating deployment (${name}) of app (${this.name}).`,
 		);
 		if (await this.service.isEnterpriseTier()) {
 			source = { type: "BuildResult", buildResultId: "<default>" };
@@ -256,40 +256,40 @@ export class EnhancedApp {
 						tier: "Standard",
 						name: "S0",
 					},
-				}
+				},
 			);
 		ext.outputChannel.appendLog(
-			`[Deployment] new deployment (${name}) of app (${this.name}) is created.`
+			`[Deployment] new deployment (${name}) of app (${this.name}) is created.`,
 		);
 		return new EnhancedDeployment(this, deployment);
 	}
 
 	public async startDeployment(name: string): Promise<void> {
 		ext.outputChannel.appendLog(
-			`[Deployment] starting deployment (${name}) of app (${this.name}).`
+			`[Deployment] starting deployment (${name}) of app (${this.name}).`,
 		);
 		await this.client.deployments.beginStartAndWait(
 			this.service.resourceGroup,
 			this.service.name,
 			this.name,
-			name
+			name,
 		);
 		ext.outputChannel.appendLog(
-			`[Deployment] deployment (${name}) of app (${this.name}) is started.`
+			`[Deployment] deployment (${name}) of app (${this.name}) is started.`,
 		);
 	}
 
 	public async getTestKeys(): Promise<TestKeys> {
 		return await this.client.services.listTestKeys(
 			this.service.resourceGroup,
-			this.service.name
+			this.service.name,
 		);
 	}
 
 	public async getTestEndpoint(): Promise<string | undefined> {
 		if (await this.service.isConsumptionTier()) {
 			throw new Error(
-				`Test endpoint is not supported for apps of consumption plan.`
+				`Test endpoint is not supported for apps of consumption plan.`,
 			);
 		}
 		const testKeys: TestKeys | undefined = await this.getTestKeys();
@@ -312,7 +312,7 @@ export class EnhancedApp {
 			this.name,
 			{
 				properties: { public: isPublic },
-			}
+			},
 		);
 		ext.outputChannel.appendLog(`[App] app (${this.name}) is set public.`);
 	}
@@ -326,7 +326,7 @@ export class EnhancedApp {
 		return this.client.apps.getResourceUploadUrl(
 			this.service.resourceGroup,
 			this.service.name,
-			this.name
+			this.name,
 		);
 	}
 
@@ -342,21 +342,21 @@ export class EnhancedApp {
 			throw new Error(`faild to get upload url of app ${this.name}.`);
 		}
 		ext.outputChannel.appendLog(
-			`[App] uploading artifact (${path}) to app ${this.name}.`
+			`[App] uploading artifact (${path}) to app ${this.name}.`,
 		);
 		const fileClient: ShareFileClient = new ShareFileClient(
 			uploadDefinition.uploadUrl,
-			new AnonymousCredential()
+			new AnonymousCredential(),
 		);
 		await fileClient.uploadFile(path);
 		ext.outputChannel.appendLog(
-			`[App] artifact (${path}) is uploaded to app ${this.name}.`
+			`[App] artifact (${path}) is uploaded to app ${this.name}.`,
 		);
 		return uploadDefinition.relativePath;
 	}
 
 	public async enqueueBuild(
-		relativePath: string
+		relativePath: string,
 	): Promise<string | undefined> {
 		const build: Build =
 			await this.client.buildServiceOperations.createOrUpdateBuild(
@@ -370,7 +370,7 @@ export class EnhancedApp {
 						agentPool: `${this.service.id}/buildservices/${EnhancedApp.DEFAULT_TANZU_COMPONENT_NAME}/agentPools/${EnhancedApp.DEFAULT_TANZU_COMPONENT_NAME}`,
 						relativePath,
 					},
-				}
+				},
 			);
 		const buildResultId: string | undefined =
 			build.properties?.triggeredBuildResult?.id;
@@ -386,7 +386,7 @@ export class EnhancedApp {
 					this.service.name,
 					EnhancedApp.DEFAULT_TANZU_COMPONENT_NAME,
 					this.name,
-					buildResultName!
+					buildResultName!,
 				);
 			status = result.properties?.provisioningState;
 			if (status === "Succeeded") {
@@ -394,7 +394,7 @@ export class EnhancedApp {
 			} else if (status === "Queuing" || status === "Building") {
 				if (Date.now() - start > 60000 * 60) {
 					throw new Error(
-						`Build timeout for buildId: ${buildResultId}`
+						`Build timeout for buildId: ${buildResultId}`,
 					);
 				}
 				// tslint:disable-next-line no-string-based-set-timeout

@@ -16,23 +16,23 @@ import {
 	RemoteBootAppDataProviderOptions,
 } from "./api";
 
-let inited: boolean = false;
+let inited = false;
 
 export async function initialize(
-	context: vscode.ExtensionContext
+	context: vscode.ExtensionContext,
 ): Promise<void> {
 	if (inited) {
 		return;
 	}
 
 	const dashboardExt = vscode.extensions.getExtension<DashboardExtensionApi>(
-		"vscjava.vscode-spring-boot-dashboard"
+		"vscjava.vscode-spring-boot-dashboard",
 	);
 	if (dashboardExt) {
 		await vscode.commands.executeCommand(
 			"setContext",
 			"spring.dashboard:enabled",
-			true
+			true,
 		);
 
 		const provider = new AzureSpringAppsProvider(context);
@@ -47,7 +47,7 @@ export async function initialize(
 				api.registerRemoteBootAppDataProvider(
 					"Azure",
 					provider,
-					options
+					options,
 				);
 				inited = true;
 			}
@@ -72,14 +72,14 @@ export async function initialize(
 					const choice = await vscode.window.showWarningMessage(
 						`App "${app.name}" is not publicly accessible. Do you want to assign it a public endpoint?`,
 						{ modal: true },
-						"Yes"
+						"Yes",
 					);
 					if (!choice) {
 						return;
 					}
 					await vscode.commands.executeCommand(
 						"azureSpringApps.app.assignEndpoint",
-						appNode
+						appNode,
 					);
 					endpoint = await app.getPublicEndpoint();
 				}
@@ -94,7 +94,7 @@ export async function initialize(
 					}
 					await vscode.commands.executeCommand("spring.apps.focus");
 				}
-			}
+			},
 		);
 
 		// APIs only available after dashboard is activated.
@@ -116,13 +116,13 @@ class AzureSpringAppsProvider implements RemoteBootAppDataProvider {
 				context.extensionUri,
 				"resources",
 				"dark",
-				"app.svg"
+				"app.svg",
 			),
 			light: vscode.Uri.joinPath(
 				context.extensionUri,
 				"resources",
 				"light",
-				"app.svg"
+				"app.svg",
 			),
 		};
 		this.onDidChangeDataEmitter = new vscode.EventEmitter<void>();
@@ -142,7 +142,7 @@ class AzureSpringAppsProvider implements RemoteBootAppDataProvider {
 	}
 
 	public async toRemoteBootAppData(
-		appNode: AppItem
+		appNode: AppItem,
 	): Promise<RemoteBootAppData | undefined> {
 		const app = appNode.app;
 		const url = (await app.properties)?.url;
@@ -164,7 +164,7 @@ class AzureSpringAppsProvider implements RemoteBootAppDataProvider {
 
 async function waitUntilDashboardActivated(
 	dashboardExt: vscode.Extension<DashboardExtensionApi>,
-	pollingIntervalMillis: number
+	pollingIntervalMillis: number,
 ) {
 	return new Promise<void>((resolve) => {
 		if (dashboardExt.isActive) {

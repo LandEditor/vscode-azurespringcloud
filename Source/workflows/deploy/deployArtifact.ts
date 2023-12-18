@@ -20,7 +20,7 @@ import { ValidateRuntimeStep } from "./ValidateRuntimeStep";
 export async function deployArtifact(
 	context: IActionContext,
 	item: AppItem,
-	artifactPath: string
+	artifactPath: string,
 ): Promise<void> {
 	const app: EnhancedApp = item.app;
 	const deployment: EnhancedDeployment | undefined =
@@ -31,17 +31,17 @@ export async function deployArtifact(
 	const deploying: string = utils.localize(
 		"deploying",
 		'Deploying artifact to "{0}".',
-		app.name
+		app.name,
 	);
 	const deployed: string = utils.localize(
 		"deployed",
 		'Successfully deployed artifact to "{0}".',
-		app.name
+		app.name,
 	);
 	const wizardContext: IAppDeploymentWizardContext = Object.assign(
 		context,
 		createSubscriptionContext(app.service.subscription),
-		{ app }
+		{ app },
 	);
 	const executeSteps: AzureWizardExecuteStep<IAppDeploymentWizardContext>[] =
 		[];
@@ -58,17 +58,17 @@ export async function deployArtifact(
 	executeSteps.push(new OpenLogStreamStep(deployment));
 	const wizard: AzureWizard<IAppDeploymentWizardContext> = new AzureWizard(
 		wizardContext,
-		{ executeSteps, title: deploying }
+		{ executeSteps, title: deploying },
 	);
 	const description = utils.localize("deploying", "Deploying...");
 	await ext.state.runWithTemporaryDescription(app.id, description, () =>
-		wizard.execute()
+		wizard.execute(),
 	);
 	const task: () => void = async () => {
 		const action: string | undefined = await window.showInformationMessage(
 			deployed,
 			AppItem.ACCESS_PUBLIC_ENDPOINT,
-			AppItem.ACCESS_TEST_ENDPOINT
+			AppItem.ACCESS_TEST_ENDPOINT,
 		);
 		if (action) {
 			return action === AppItem.ACCESS_PUBLIC_ENDPOINT

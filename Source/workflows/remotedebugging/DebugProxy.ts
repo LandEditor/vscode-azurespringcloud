@@ -3,9 +3,9 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { createSubscriptionContext } from "@microsoft/vscode-azext-utils";
 import { EventEmitter } from "events";
-import { createServer, Server, Socket } from "net";
+import { Server, Socket, createServer } from "net";
+import { createSubscriptionContext } from "@microsoft/vscode-azext-utils";
 import * as websocket from "websocket";
 import { ext } from "../../extensionVariables";
 import { EnhancedDeployment } from "../../model/EnhancedDeployment";
@@ -18,7 +18,7 @@ export class DebugProxy extends EventEmitter {
 	private _server: Server | undefined;
 	private _wsclient: websocket.client | undefined;
 	private _wsconnection: websocket.connection | undefined;
-	private _messagesRead: number = 0;
+	private _messagesRead = 0;
 
 	constructor(instance: EnhancedInstance, port: number) {
 		super();
@@ -28,24 +28,22 @@ export class DebugProxy extends EventEmitter {
 	}
 
 	public start(serverPort: number): void {
-		if (!this._server) {
-			this.emit("error", new Error("Proxy server is not started."));
-		} else {
+		if (this._server) {
 			this._server.on("connection", (socket: Socket) => {
 				if (this._wsclient) {
 					ext.outputChannel.appendLog(
-						`[Proxy Server] The server is already connected. Rejected connection from "${socket.remoteAddress}:${socket.remotePort}"`
+						`[Proxy Server] The server is already connected. Rejected connection from "${socket.remoteAddress}:${socket.remotePort}"`,
 					);
 					this.emit(
 						"error",
 						new Error(
-							`[Proxy Server] The server is already connected. Rejected connection from "${socket.remoteAddress}:${socket.remotePort}"`
-						)
+							`[Proxy Server] The server is already connected. Rejected connection from "${socket.remoteAddress}:${socket.remotePort}"`,
+						),
 					);
 					socket.destroy();
 				} else {
 					ext.outputChannel.appendLog(
-						`[Proxy Server] client connected ${socket.remoteAddress}:${socket.remotePort}`
+						`[Proxy Server] client connected ${socket.remoteAddress}:${socket.remotePort}`,
 					);
 					socket.pause();
 
@@ -55,13 +53,13 @@ export class DebugProxy extends EventEmitter {
 						"connect",
 						(connection: websocket.connection) => {
 							ext.outputChannel.appendLog(
-								"[WebSocket] client connected"
+								"[WebSocket] client connected",
 							);
 							this._wsconnection = connection;
 
 							connection.on("close", () => {
 								ext.outputChannel.appendLog(
-									"[WebSocket] client closed"
+									"[WebSocket] client closed",
 								);
 								this.dispose();
 								socket.destroy();
@@ -70,7 +68,7 @@ export class DebugProxy extends EventEmitter {
 
 							connection.on("error", (err: Error) => {
 								ext.outputChannel.appendLog(
-									`[WebSocket] ${err}`
+									`[WebSocket] ${err}`,
 								);
 								this.dispose();
 								socket.destroy();
@@ -91,10 +89,10 @@ export class DebugProxy extends EventEmitter {
 											msg.binaryData.slice(1);
 										if (channel === 1) {
 											const err: Error = new Error(
-												data.toString()
+												data.toString(),
 											);
 											ext.outputChannel.appendLog(
-												`[WebSocket] Received an error: ${err}`
+												`[WebSocket] Received an error: ${err}`,
 											);
 											this.dispose();
 											socket.destroy();
@@ -104,10 +102,10 @@ export class DebugProxy extends EventEmitter {
 											socket.write(data);
 										}
 									}
-								}
+								},
 							);
 							socket.resume();
-						}
+						},
 					);
 
 					this._wsclient.on("connectFailed", (err: Error) => {
@@ -122,14 +120,14 @@ export class DebugProxy extends EventEmitter {
 							const channel: Buffer = Buffer.from([0]);
 							// ext.outputChannel.appendLog(`[Proxy Server] Sent: ${data.toString()}`);
 							this._wsconnection.send(
-								Buffer.concat([channel, data])
+								Buffer.concat([channel, data]),
 							);
 						}
 					});
 
 					socket.on("end", () => {
 						ext.outputChannel.appendLog(
-							`[Proxy Server] client disconnected ${socket.remoteAddress}:${socket.remotePort}`
+							`[Proxy Server] client disconnected ${socket.remoteAddress}:${socket.remotePort}`,
 						);
 						this.dispose();
 						this.emit("end");
@@ -148,7 +146,7 @@ export class DebugProxy extends EventEmitter {
 
 			this._server.on("listening", () => {
 				ext.outputChannel.appendLog(
-					`[Proxy Server] start listening at ${this.port}`
+					`[Proxy Server] start listening at ${this.port}`,
 				);
 				this.emit("start");
 			});
@@ -158,6 +156,8 @@ export class DebugProxy extends EventEmitter {
 				port: this.port,
 				backlog: 1,
 			});
+		} else {
+			this.emit("error", new Error("Proxy server is not started."));
 		}
 	}
 
@@ -179,7 +179,7 @@ export class DebugProxy extends EventEmitter {
 	private async connect(serverPort: number): Promise<void> {
 		const deployment: EnhancedDeployment = this._instance.deployment;
 		const subContext = createSubscriptionContext(
-			deployment.app.service.subscription
+			deployment.app.service.subscription,
 		);
 		const credential: { token: string } = <{ token: string }>(
 			await subContext.credentials.getToken()
@@ -191,7 +191,7 @@ export class DebugProxy extends EventEmitter {
 			(await deployment.app.properties)?.fqdn ?? "unknown-host";
 		const url: string = `wss://${fqdn}/api/remoteDebugging/apps/${appName}/deployments/${deploymentName}/instances/${instanceName}?port=${serverPort}`;
 		ext.outputChannel.appendLog(
-			`[Proxy Server] connecting server "${url}"`
+			`[Proxy Server] connecting server "${url}"`,
 		);
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		this._wsclient!.connect(url, undefined, undefined, {

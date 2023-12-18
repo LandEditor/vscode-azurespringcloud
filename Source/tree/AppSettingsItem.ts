@@ -43,16 +43,16 @@ export abstract class AppSettingsItem implements ResourceItemBase {
 
 	public abstract updateSettingValue(
 		node: AppSettingItem,
-		context: IActionContext
+		context: IActionContext,
 	): Promise<string>;
 
 	public abstract updateSettingsValue(
-		context: IActionContext
+		context: IActionContext,
 	): Promise<unknown>;
 
 	public abstract deleteSettingItem(
 		node: AppSettingItem,
-		context: IActionContext
+		context: IActionContext,
 	): Promise<void>;
 
 	abstract readonly id: string;

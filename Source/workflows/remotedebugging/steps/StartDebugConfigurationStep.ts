@@ -2,14 +2,14 @@
 // Licensed under the MIT license.
 
 import { AzureWizardExecuteStep } from "@microsoft/vscode-azext-utils";
-import { debug, DebugSession, Disposable, Progress } from "vscode";
+import { DebugSession, Disposable, Progress, debug } from "vscode";
 import { ext } from "../../../extensionVariables";
 import { EnhancedInstance } from "../../../model/EnhancedInstance";
 import { localize } from "../../../utils";
 import { IRemoteDebuggingContext } from "./IRemoteDebuggingContext";
 
 export class StartDebugConfigurationStep extends AzureWizardExecuteStep<IRemoteDebuggingContext> {
-	public priority: number = 145;
+	public priority = 145;
 	private readonly instance: EnhancedInstance;
 
 	constructor(instance: EnhancedInstance) {
@@ -19,12 +19,12 @@ export class StartDebugConfigurationStep extends AzureWizardExecuteStep<IRemoteD
 
 	public async execute(
 		context: IRemoteDebuggingContext,
-		progress: Progress<{ message?: string; increment?: number }>
+		progress: Progress<{ message?: string; increment?: number }>,
 	): Promise<void> {
 		const message: string = localize(
 			"startDebugger",
 			'Attaching debugger to instance "{0}"...',
-			this.instance.name
+			this.instance.name,
 		);
 		ext.outputChannel.appendLog(message);
 		progress.report({ message });
@@ -45,12 +45,12 @@ export class StartDebugConfigurationStep extends AzureWizardExecuteStep<IRemoteD
 				localize(
 					"startDebuggerSuccess",
 					'Successfully attached debugger to instance "{0}".',
-					this.instance.name
-				)
+					this.instance.name,
+				),
 			);
 		} else {
 			throw new Error(
-				`Failed to attach debugger to instance "${this.instance.name}".`
+				`Failed to attach debugger to instance "${this.instance.name}".`,
 			);
 		}
 		this.disposeProxyAtTermination(context);
@@ -69,7 +69,7 @@ export class StartDebugConfigurationStep extends AzureWizardExecuteStep<IRemoteD
 					}
 					listener.dispose();
 				}
-			}
+			},
 		);
 	}
 }

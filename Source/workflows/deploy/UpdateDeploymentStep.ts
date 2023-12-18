@@ -8,7 +8,7 @@ import { localize } from "../../utils";
 import { IAppDeploymentWizardContext } from "./IAppDeploymentWizardContext";
 
 export class UpdateDeploymentStep extends AzureWizardExecuteStep<IAppDeploymentWizardContext> {
-	public priority: number = 140;
+	public priority = 140;
 	private readonly deployment: EnhancedDeployment;
 
 	constructor(deployment: EnhancedDeployment) {
@@ -18,16 +18,16 @@ export class UpdateDeploymentStep extends AzureWizardExecuteStep<IAppDeploymentW
 
 	public async execute(
 		context: IAppDeploymentWizardContext,
-		progress: Progress<{ message?: string; increment?: number }>
+		progress: Progress<{ message?: string; increment?: number }>,
 	): Promise<void> {
 		const message: string = localize(
 			"updateDeployment",
-			"Updating deployment..."
+			"Updating deployment...",
 		);
 		progress.report({ message });
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		await this.deployment.updateArtifactPath(
-			context.relativePathOrBuildResultId!
+			context.relativePathOrBuildResultId!,
 		);
 	}
 

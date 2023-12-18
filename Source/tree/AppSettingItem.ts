@@ -17,13 +17,13 @@ export interface IOptions {
 }
 
 export class AppSettingItem implements ResourceItemBase {
-	public static contextValue: string = "azureSpringApps.app.setting";
+	public static contextValue = "azureSpringApps.app.setting";
 
 	public constructor(
 		public readonly parent: AppSettingsItem,
 		public readonly key: string,
 		public readonly value: string,
-		public readonly options: IOptions = { deletable: true }
+		public readonly options: IOptions = { deletable: true },
 	) {}
 
 	public getTreeItem(): vscode.TreeItem | Thenable<vscode.TreeItem> {
@@ -41,7 +41,7 @@ export class AppSettingItem implements ResourceItemBase {
 							title: "Toggle Visibility",
 							command: "azureSpringApps.common.toggleVisibility",
 							arguments: [this],
-						},
+					  },
 		};
 	}
 
@@ -91,7 +91,7 @@ export class AppSettingItem implements ResourceItemBase {
 
 	public async toggleVisibility(
 		_context: IActionContext,
-		hidden?: boolean
+		hidden?: boolean,
 	): Promise<void> {
 		this.options.hidden = hidden ?? !this.options.hidden;
 		ext.state.notifyChildrenChanged(this.id);

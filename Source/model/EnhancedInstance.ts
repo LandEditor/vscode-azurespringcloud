@@ -5,8 +5,8 @@ import { DeploymentInstance } from "@azure/arm-appplatform";
 import { IActionContext } from "@microsoft/vscode-azext-utils";
 import { localize } from "vscode-nls";
 import {
-	getLogStreamId,
 	ILogStream,
+	getLogStreamId,
 	logStreams,
 	startStreamingLogs,
 	stopStreamingLogs,
@@ -24,7 +24,7 @@ export class EnhancedInstance implements DeploymentInstance {
 
 	public constructor(
 		deployment: EnhancedDeployment,
-		resource: DeploymentInstance
+		resource: DeploymentInstance,
 	) {
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		this.name = resource.name!;
@@ -57,8 +57,8 @@ export class EnhancedInstance implements DeploymentInstance {
 			throw new Error(
 				localize(
 					"instanceNotRunning",
-					"Selected instance is not running."
-				)
+					"Selected instance is not running.",
+				),
 			);
 		}
 		await startStreamingLogs(context, this);

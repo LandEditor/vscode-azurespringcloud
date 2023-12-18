@@ -23,7 +23,7 @@ export class InputAppNameStep extends AzureNameStep<IAppCreationWizardContext> {
 	public async prompt(context: IAppCreationWizardContext): Promise<void> {
 		const prompt: string = localize(
 			"appNamePrompt",
-			"Enter a globally unique name for the new Spring app."
+			"Enter a globally unique name for the new Spring app.",
 		);
 		context.newAppName = (
 			await context.ui.showInputBox({
@@ -40,7 +40,7 @@ export class InputAppNameStep extends AzureNameStep<IAppCreationWizardContext> {
 
 	protected async isRelatedNameAvailable(
 		_context: IAppCreationWizardContext,
-		_name: string
+		_name: string,
 	): Promise<boolean> {
 		return false;
 	}
@@ -50,7 +50,15 @@ export class InputAppNameStep extends AzureNameStep<IAppCreationWizardContext> {
 		if (!name) {
 			return localize("emptyName", "The name is required.");
 		}
-		if (!InputAppNameStep.VALID_NAME_REGEX.test(name)) {
+		if (InputAppNameStep.VALID_NAME_REGEX.test(name)) {
+			const apps: EnhancedApp[] = await this.service.getApps();
+			if (!apps.every((app) => app.name !== name)) {
+				return localize(
+					"existAppName",
+					"App with this name already exists.",
+				);
+			}
+		} else {
 			return localize(
 				"invalidName",
 				`
@@ -58,16 +66,8 @@ export class InputAppNameStep extends AzureNameStep<IAppCreationWizardContext> {
                     The first character must be a letter.
                     The last character must be a letter or number.
                     The value must be between 4 and 32 characters long.
-                `
+                `,
 			);
-		} else {
-			const apps: EnhancedApp[] = await this.service.getApps();
-			if (!apps.every((app) => app.name !== name)) {
-				return localize(
-					"existAppName",
-					"App with this name already exists."
-				);
-			}
 		}
 		return undefined;
 	}

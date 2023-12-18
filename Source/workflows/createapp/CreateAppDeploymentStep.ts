@@ -9,15 +9,15 @@ import { localize } from "../../utils";
 import { IAppCreationWizardContext } from "./IAppCreationWizardContext";
 
 export class CreateAppDeploymentStep extends AzureWizardExecuteStep<IAppCreationWizardContext> {
-	public priority: number = 140;
+	public priority = 140;
 
 	public async execute(
 		context: IAppCreationWizardContext,
-		progress: Progress<{ message?: string; increment?: number }>
+		progress: Progress<{ message?: string; increment?: number }>,
 	): Promise<void> {
 		const message: string = localize(
 			"creatingNewAppDeployment",
-			"Creating default deployment..."
+			"Creating default deployment...",
 		);
 		progress.report({ message });
 
@@ -27,7 +27,7 @@ export class CreateAppDeploymentStep extends AzureWizardExecuteStep<IAppCreation
 		const app: EnhancedApp = context.newApp!;
 		context.newDeployment = await app.createDeployment(
 			EnhancedApp.DEFAULT_DEPLOYMENT,
-			appRuntime
+			appRuntime,
 		);
 		return Promise.resolve(undefined);
 	}

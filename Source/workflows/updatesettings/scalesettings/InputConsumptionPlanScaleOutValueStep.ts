@@ -9,7 +9,7 @@ import { IScaleSettingsUpdateWizardContext } from "./IScaleSettingsUpdateWizardC
 
 export class InputConsumptionPlanScaleOutValueStep extends AzureWizardPromptStep<IScaleSettingsUpdateWizardContext> {
 	// refer https://github.com/microsoft/vscode-azuretools/issues/789
-	public supportsDuplicateSteps: boolean = true;
+	public supportsDuplicateSteps = true;
 	private readonly deployment: EnhancedDeployment;
 
 	constructor(deployment: EnhancedDeployment) {
@@ -20,7 +20,7 @@ export class InputConsumptionPlanScaleOutValueStep extends AzureWizardPromptStep
 	}
 
 	public async prompt(
-		context: IScaleSettingsUpdateWizardContext
+		context: IScaleSettingsUpdateWizardContext,
 	): Promise<void> {
 		const prompt: string = `Enter new value of "Max replicas" that'll be deployed in response to a trigger event.`;
 		const settings: IScaleSettings =
@@ -33,7 +33,7 @@ export class InputConsumptionPlanScaleOutValueStep extends AzureWizardPromptStep
 					value,
 					validateInput: this.validateInput,
 				})
-			).trim()
+			).trim(),
 		);
 		return Promise.resolve(undefined);
 	}
@@ -51,7 +51,7 @@ export class InputConsumptionPlanScaleOutValueStep extends AzureWizardPromptStep
 				"invalidCapacitySettingValue",
 				"The value can only be an integer between {0} and {1}",
 				1,
-				30
+				30,
 			);
 		}
 		return undefined;

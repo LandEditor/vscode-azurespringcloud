@@ -26,7 +26,7 @@ export class EnhancedService {
 	public constructor(
 		client: AppPlatformManagementClient,
 		subscription: AzureSubscription,
-		resource: ServiceResource
+		resource: ServiceResource,
 	) {
 		this.client = client;
 		this.subscription = subscription;
@@ -66,7 +66,7 @@ export class EnhancedService {
 					properties: {
 						public: false,
 					},
-				}
+				},
 			);
 		ext.outputChannel.appendLog(`[App] app (${this.name}) is created.`);
 		return new EnhancedApp(this, app);
@@ -76,7 +76,7 @@ export class EnhancedService {
 		const apps: AppResource[] = [];
 		const pagedApps: AsyncIterable<AppResource> = this.client.apps.list(
 			this.resourceGroup,
-			this.name
+			this.name,
 		);
 		for await (const app of pagedApps) {
 			apps.push(app);
@@ -89,7 +89,7 @@ export class EnhancedService {
 			const portal = await this.client.devToolPortals.get(
 				this.resourceGroup,
 				this.name,
-				"default"
+				"default",
 			);
 			if (portal.properties?.public) {
 				return portal;
@@ -140,7 +140,7 @@ export class EnhancedService {
 						},
 						public: true,
 					},
-				}
+				},
 			);
 		await this._devToolsPortal;
 	}
@@ -183,7 +183,7 @@ export class EnhancedService {
 		this._remote = this.client.services.get(this.resourceGroup, this.name);
 		this._devToolsPortal = this.initDevTools();
 		return Promise.all([this._remote, this._devToolsPortal]).then(
-			() => this
+			() => this,
 		);
 	}
 
@@ -191,7 +191,7 @@ export class EnhancedService {
 		ext.outputChannel.appendLog(`[Apps] deleting apps (${this.name}).`);
 		await this.client.services.beginDeleteAndWait(
 			this.resourceGroup,
-			this.name
+			this.name,
 		);
 		ext.outputChannel.appendLog(`[Apps] apps (${this.name}) is deleted.`);
 	}

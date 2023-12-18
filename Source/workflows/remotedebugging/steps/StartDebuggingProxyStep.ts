@@ -13,7 +13,7 @@ import { DebugProxy } from "../DebugProxy";
 import { IRemoteDebuggingContext } from "./IRemoteDebuggingContext";
 
 export class StartDebuggingProxyStep extends AzureWizardExecuteStep<IRemoteDebuggingContext> {
-	public priority: number = 140;
+	public priority = 140;
 	private readonly instance: EnhancedInstance;
 
 	constructor(instance: EnhancedInstance) {
@@ -23,13 +23,13 @@ export class StartDebuggingProxyStep extends AzureWizardExecuteStep<IRemoteDebug
 
 	public async execute(
 		context: IRemoteDebuggingContext,
-		progress: Progress<{ message?: string; increment?: number }>
+		progress: Progress<{ message?: string; increment?: number }>,
 	): Promise<void> {
 		const proxyPort: number = await findFreePort();
 		const message: string = localize(
 			"startDebuggingProxy",
 			'Starting debugging proxy at port "{0}"...',
-			proxyPort
+			proxyPort,
 		);
 		ext.outputChannel.appendLog(message);
 		progress.report({ message });
@@ -49,8 +49,8 @@ export class StartDebuggingProxyStep extends AzureWizardExecuteStep<IRemoteDebug
 			localize(
 				"startDebuggingProxySuccess",
 				'Successfully started debugging proxy at port "{0}".',
-				proxyPort
-			)
+				proxyPort,
+			),
 		);
 	}
 

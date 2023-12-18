@@ -5,25 +5,25 @@ import {
 	AzureWizard,
 	AzureWizardExecuteStep,
 	AzureWizardPromptStep,
-	createSubscriptionContext,
 	IActionContext,
+	createSubscriptionContext,
 } from "@microsoft/vscode-azext-utils";
 import { TreeItem, TreeItemCollapsibleState, window } from "vscode";
 import { ext } from "../extensionVariables";
 import { IScaleSettings } from "../model";
 import { EnhancedDeployment } from "../model/EnhancedDeployment";
 import { getThemedIconPath, localize } from "../utils";
+import { IScaleSettingsUpdateWizardContext } from "../workflows/updatesettings/scalesettings/IScaleSettingsUpdateWizardContext";
 import { InputConsumptionPlanScaleOutValueStep } from "../workflows/updatesettings/scalesettings/InputConsumptionPlanScaleOutValueStep";
 import { InputConsumptionPlanScaleUpValueStep } from "../workflows/updatesettings/scalesettings/InputConsumptionPlanScaleUpValueStep";
 import { InputScaleValueStep } from "../workflows/updatesettings/scalesettings/InputScaleValueStep";
-import { IScaleSettingsUpdateWizardContext } from "../workflows/updatesettings/scalesettings/IScaleSettingsUpdateWizardContext";
 import { UpdateScaleSettingsStep } from "../workflows/updatesettings/scalesettings/UpdateScaleSettingsStep";
 import { AppItem } from "./AppItem";
 import { AppSettingItem, IOptions } from "./AppSettingItem";
 import { AppSettingsItem } from "./AppSettingsItem";
 
 export class AppScaleSettingsItem extends AppSettingsItem {
-	public static contextValue: string = "azureSpringApps.app.scaleSettings";
+	public static contextValue = "azureSpringApps.app.scaleSettings";
 	private static readonly _options: IOptions = {
 		contextValue: "azureSpringApps.app.scaleSetting",
 	};
@@ -48,7 +48,7 @@ export class AppScaleSettingsItem extends AppSettingsItem {
 
 	public async updateSettingsValue(
 		context: IActionContext,
-		key?: string
+		key?: string,
 	): Promise<string> {
 		const deployment: EnhancedDeployment | undefined =
 			await this.parent.app.activeDeployment;
@@ -56,19 +56,19 @@ export class AppScaleSettingsItem extends AppSettingsItem {
 			const scaling: string = localize(
 				"scaling",
 				'Scaling "{0}"',
-				deployment.app.name
+				deployment.app.name,
 			);
 			const scaled: string = localize(
 				"scaled",
 				'Successfully scaled "{0}".',
-				deployment.app.name
+				deployment.app.name,
 			);
 
 			const newSettings: IScaleSettings = {
 				...(await deployment.getScaleSettings()),
 			};
 			const subContext = createSubscriptionContext(
-				this.parent.app.subscription
+				this.parent.app.subscription,
 			);
 			const wizardContext: IScaleSettingsUpdateWizardContext =
 				Object.assign(context, subContext, { newSettings });
@@ -76,31 +76,31 @@ export class AppScaleSettingsItem extends AppSettingsItem {
 				(await this.parent.app.service.isConsumptionTier())
 					? [
 							new InputConsumptionPlanScaleOutValueStep(
-								deployment
+								deployment,
 							),
 							new InputConsumptionPlanScaleUpValueStep(
-								deployment
+								deployment,
 							),
-						]
+					  ]
 					: [
 							new InputScaleValueStep(deployment, "capacity"),
 							new InputScaleValueStep(deployment, "memory"),
 							new InputScaleValueStep(deployment, "cpu"),
-						];
+					  ];
 			const promptSteps: AzureWizardPromptStep<IScaleSettingsUpdateWizardContext>[] =
 				[];
 			const executeSteps: AzureWizardExecuteStep<IScaleSettingsUpdateWizardContext>[] =
 				[];
-			if (!key) {
-				promptSteps.push(...steps);
-			} else {
+			if (key) {
 				if (await this.parent.app.service.isConsumptionTier()) {
 					promptSteps.push(steps[key === "capacity" ? 0 : 1]);
 				} else {
 					promptSteps.push(
-						steps[["capacity", "memory", "cpu"].indexOf(key)]
+						steps[["capacity", "memory", "cpu"].indexOf(key)],
 					);
 				}
+			} else {
+				promptSteps.push(...steps);
 			}
 			executeSteps.push(new UpdateScaleSettingsStep(deployment));
 			const wizard: AzureWizard<IScaleSettingsUpdateWizardContext> =
@@ -113,7 +113,7 @@ export class AppScaleSettingsItem extends AppSettingsItem {
 			await ext.state.runWithTemporaryDescription(
 				this.id,
 				"Scaling...",
-				() => wizard.execute()
+				() => wizard.execute(),
 			);
 			void window.showInformationMessage(scaled);
 			void this.parent.refresh();
@@ -124,14 +124,14 @@ export class AppScaleSettingsItem extends AppSettingsItem {
 
 	public async updateSettingValue(
 		node: AppSettingItem,
-		context: IActionContext
+		context: IActionContext,
 	): Promise<string> {
 		return this.updateSettingsValue(context, node.key);
 	}
 
 	public async deleteSettingItem(
 		_node: AppSettingItem,
-		_context: IActionContext
+		_context: IActionContext,
 	): Promise<void> {
 		throw new Error("Scale settings can not be deleted.");
 	}
@@ -152,14 +152,14 @@ export class AppScaleSettingsItem extends AppSettingsItem {
 				`${settings.capacity}`.trim(),
 				Object.assign(
 					{ label: capacityLabel },
-					AppScaleSettingsItem._options
-				)
+					AppScaleSettingsItem._options,
+				),
 			),
 			new AppSettingItem(
 				this,
 				"cpu",
 				`${settings.cpu}`.trim(),
-				Object.assign({ label: "vCPU" }, AppScaleSettingsItem._options)
+				Object.assign({ label: "vCPU" }, AppScaleSettingsItem._options),
 			),
 			new AppSettingItem(
 				this,
@@ -167,8 +167,8 @@ export class AppScaleSettingsItem extends AppSettingsItem {
 				`${settings.memory}`.trim(),
 				Object.assign(
 					{ label: "Memory/GB" },
-					AppScaleSettingsItem._options
-				)
+					AppScaleSettingsItem._options,
+				),
 			),
 		];
 	}

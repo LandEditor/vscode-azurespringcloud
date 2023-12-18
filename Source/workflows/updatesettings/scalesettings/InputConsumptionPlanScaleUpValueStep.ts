@@ -12,7 +12,7 @@ import { IScaleSettingsUpdateWizardContext } from "./IScaleSettingsUpdateWizardC
 
 export class InputConsumptionPlanScaleUpValueStep extends AzureWizardPromptStep<IScaleSettingsUpdateWizardContext> {
 	// refer https://github.com/microsoft/vscode-azuretools/issues/789
-	public supportsDuplicateSteps: boolean = true;
+	public supportsDuplicateSteps = true;
 	private readonly deployment: EnhancedDeployment;
 	private picks: IAzureQuickPickItem<[number, number]>[] = [
 		{ label: "vCPU: 0.25, Memory: 512Mi", data: [0.25, 0.5] },
@@ -31,7 +31,7 @@ export class InputConsumptionPlanScaleUpValueStep extends AzureWizardPromptStep<
 	}
 
 	public async prompt(
-		context: IScaleSettingsUpdateWizardContext
+		context: IScaleSettingsUpdateWizardContext,
 	): Promise<void> {
 		const settings: IScaleSettings =
 			await this.deployment.getScaleSettings();

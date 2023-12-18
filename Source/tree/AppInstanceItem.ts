@@ -15,7 +15,7 @@ export class AppInstanceItem implements ResourceItemBase {
 
 	public constructor(
 		public readonly parent: AppInstancesItem,
-		public readonly instance: EnhancedInstance
+		public readonly instance: EnhancedInstance,
 	) {}
 
 	get viewProperties(): ViewPropertiesModel {

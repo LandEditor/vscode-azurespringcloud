@@ -8,7 +8,7 @@ import { localize } from "../../utils";
 import { IAppDeploymentWizardContext } from "./IAppDeploymentWizardContext";
 
 export class UploadArtifactStep extends AzureWizardExecuteStep<IAppDeploymentWizardContext> {
-	public priority: number = 135;
+	public priority = 135;
 	private readonly app: EnhancedApp;
 	private readonly artifactPath: string;
 
@@ -20,21 +20,21 @@ export class UploadArtifactStep extends AzureWizardExecuteStep<IAppDeploymentWiz
 
 	public async execute(
 		context: IAppDeploymentWizardContext,
-		progress: Progress<{ message?: string; increment?: number }>
+		progress: Progress<{ message?: string; increment?: number }>,
 	): Promise<void> {
 		const message: string = localize(
 			"uploadingArtifact",
 			'Uploading artifact "{0}" to Azure...',
-			this.artifactPath
+			this.artifactPath,
 		);
 		progress.report({ message });
 		context.relativePathOrBuildResultId = await this.app.uploadArtifact(
-			this.artifactPath
+			this.artifactPath,
 		);
 		if (await this.app?.service.isEnterpriseTier()) {
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			context.relativePathOrBuildResultId = await this.app.enqueueBuild(
-				context.relativePathOrBuildResultId!
+				context.relativePathOrBuildResultId!,
 			);
 		}
 	}

@@ -78,7 +78,7 @@ export default class ServiceItem implements ResourceItemBase {
 				await this.service.remove();
 				this._deleted = true;
 				ext.branchDataProvider.refresh();
-			}
+			},
 		);
 	}
 
@@ -102,13 +102,13 @@ export default class ServiceItem implements ResourceItemBase {
 					const tier: string = (await this.service.isEnterpriseTier())
 						? "enterprise"
 						: (await this.service.isConsumptionTier())
-							? "consumption"
-							: "other";
+						  ? "consumption"
+						  : "other";
 					const contextValue = `azureSpringApps.apps;tier-${tier};`;
 					this._stateProperties = { description, contextValue };
 
 					ext.state.notifyChildrenChanged(this.id);
-				}
+				},
 			);
 		}
 	}

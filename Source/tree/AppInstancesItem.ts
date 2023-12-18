@@ -10,11 +10,11 @@ import { AppItem } from "./AppItem";
 import { ResourceItemBase } from "./SpringAppsBranchDataProvider";
 
 export class AppInstancesItem implements ResourceItemBase {
-	public static contextValue: string = "azureSpringApps.app.instances";
+	public static contextValue = "azureSpringApps.app.instances";
 	public readonly contextValue: string = AppInstancesItem.contextValue;
 	public readonly childTypeLabel: string = localize(
 		"appInstance",
-		"Spring App Instance"
+		"Spring App Instance",
 	);
 	public readonly label: string = "App Instances";
 
@@ -30,9 +30,9 @@ export class AppInstancesItem implements ResourceItemBase {
 						(instance) =>
 							new AppInstanceItem(
 								this,
-								new EnhancedInstance(deployment, instance)
-							)
-					) ?? []
+								new EnhancedInstance(deployment, instance),
+							),
+					) ?? [],
 			);
 		}
 		return [];
