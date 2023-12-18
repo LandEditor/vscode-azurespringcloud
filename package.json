@@ -500,7 +500,7 @@
 		"@types/fs-extra": "11.0.4",
 		"@types/gulp": "4.0.17",
 		"@types/mocha": "10.0.6",
-		"@types/node": "20.10.4",
+		"@types/node": "20.10.5",
 		"@types/request": "2.48.12",
 		"@types/vscode": "1.85.0",
 		"@types/websocket": "1.0.10",
