@@ -72,7 +72,7 @@ export class AppSettingItem implements ResourceItemBase {
 	}
 
 	public get description(): string {
-		return this.options.hidden ? `Click to view.` : ``;
+		return this.options.hidden ? "Click to view." : "";
 	}
 
 	public get deletable(): boolean {

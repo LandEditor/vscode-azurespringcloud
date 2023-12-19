@@ -228,8 +228,10 @@ export async function openAppsLiveView(
 	const item: ServiceItem = await getAppsItem(context, n);
 	const service: EnhancedService = item.service;
 	if (
-		!(await service.isDevToolsPublic()) ||
-		!(await service.isLiveViewEnabled())
+		!(
+			(await service.isDevToolsPublic()) &&
+			(await service.isLiveViewEnabled())
+		)
 	) {
 		const response = await context.ui.showWarningMessage(
 			`Application Live View of Spring Apps "${service.name}" is not enabled or publicly accessible.`,
@@ -256,8 +258,10 @@ export async function openAppLiveView(
 	const item: AppItem = await getAppItem(context, n);
 	const app: EnhancedApp = item.app;
 	if (
-		!(await app.service.isDevToolsPublic()) ||
-		!(await app.service.isLiveViewEnabled())
+		!(
+			(await app.service.isDevToolsPublic()) &&
+			(await app.service.isLiveViewEnabled())
+		)
 	) {
 		const response = await context.ui.showWarningMessage(
 			`Application Live View of Spring Apps "${app.service.name}" is not enabled or publicly accessible.`,
@@ -284,8 +288,10 @@ export async function openAppAccelerator(
 	const item: ServiceItem = await getAppsItem(context, n);
 	const service: EnhancedService = item.service;
 	if (
-		!(await service.isDevToolsPublic()) ||
-		!(await service.isAppAcceleratorEnabled())
+		!(
+			(await service.isDevToolsPublic()) &&
+			(await service.isAppAcceleratorEnabled())
+		)
 	) {
 		const response = await context.ui.showWarningMessage(
 			`Application Accelerator of Spring Apps "${service.name}"  is not enabled or publicly accessible.`,
@@ -397,7 +403,7 @@ export async function openTestEndpoint(
 	const app: EnhancedApp = item.app;
 	if (await app.service.isConsumptionTier()) {
 		void window.showErrorMessage(
-			`Test endpoint is not supported for Azure Spring apps of consumption plan for now.`,
+			"Test endpoint is not supported for Azure Spring apps of consumption plan for now.",
 		);
 		return;
 	}
@@ -509,7 +515,9 @@ export async function deployFromFile(
 ): Promise<void> {
 	let jarFile: Uri | undefined = undefined;
 	defaultUri = defaultUri ?? (await getTargetOrWorkspacePath());
-	if (!defaultUri || !defaultUri.fsPath.endsWith(".jar")) {
+	if (defaultUri?.fsPath.endsWith(".jar")) {
+		jarFile = defaultUri;
+	} else {
 		const options: OpenDialogOptions = {
 			defaultUri,
 			canSelectMany: false,
@@ -520,8 +528,6 @@ export async function deployFromFile(
 		};
 		const fileUri: Uri[] | undefined = await window.showOpenDialog(options);
 		jarFile = fileUri ? fileUri[0] : undefined;
-	} else {
-		jarFile = defaultUri;
 	}
 
 	if (jarFile) {

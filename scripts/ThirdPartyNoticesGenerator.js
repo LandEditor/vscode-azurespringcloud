@@ -1,7 +1,9 @@
 const fs = require("fs");
 const path = require("path");
 const formatRepositoryUrl = (url) => {
-	if (!url) return url;
+	if (!url) {
+		return url;
+	}
 	url = url.replace(/\/$/, "");
 	url = url.replace(/\.git$/, "");
 	url = url.replace(/^git:github\.com:/, "https://github.com/");
@@ -46,12 +48,11 @@ const depsWithLicense = entries.filter(
 	(e) => e.name !== undefined && e.license !== undefined,
 );
 
-const toc =
-	depsWithLicense
-		.map((dep, idx) => {
-			return `${idx + 1}. ${dep.name} (${dep.url})`;
-		})
-		.join("\n") + "\n";
+const toc = `${depsWithLicense
+	.map((dep, idx) => {
+		return `${idx + 1}. ${dep.name} (${dep.url})`;
+	})
+	.join("\n")}\n`;
 
 const licenses = depsWithLicense
 	.map((dep) => {

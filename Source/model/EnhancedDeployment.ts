@@ -43,7 +43,7 @@ export class EnhancedDeployment {
 
 	public static validateKey(v: string): string | undefined {
 		if (!v.trim()) {
-			return localize("emptyEnvVarKey", `The key can not be empty.`);
+			return localize("emptyEnvVarKey", "The key can not be empty.");
 		} else if (!EnhancedDeployment.VALID_ENV_VAR_KEY.test(v)) {
 			return localize(
 				"invalidEnvVarKey",
@@ -55,7 +55,7 @@ export class EnhancedDeployment {
 		} else if (v.trim().length > 4000) {
 			return localize(
 				"maxLength",
-				`The maximum length is {0} characters.`,
+				"The maximum length is {0} characters.",
 				4000,
 			);
 		}
@@ -64,11 +64,11 @@ export class EnhancedDeployment {
 
 	public static validateVal(v: string): string | undefined {
 		if (!v.trim()) {
-			return localize("emptyEnvVarVal", `The value can not be empty.`);
+			return localize("emptyEnvVarVal", "The value can not be empty.");
 		} else if (v.trim().length > 4000) {
 			return localize(
 				"maxLength",
-				`The maximum length is {0} characters.`,
+				"The maximum length is {0} characters.",
 				4000,
 			);
 		}
@@ -167,7 +167,7 @@ export class EnhancedDeployment {
 		};
 		if (await this.app.service.isConsumptionTier()) {
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			resource.properties!.deploymentSettings!.scale = {
+			resource.properties?.deploymentSettings!.scale = {
 				minReplicas:
 					(await this.properties)?.deploymentSettings?.scale
 						?.minReplicas ?? 1,

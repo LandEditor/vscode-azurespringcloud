@@ -68,8 +68,9 @@ export class AppItem implements ResourceItemBase {
 		if (this._stateProperties === undefined) {
 			void this.refresh();
 			this._stateProperties = {
-				iconPath: utils.getThemedIconPath(`app-status-loading`),
-				contextValue: `azureSpringApps.app;status-loading;debugging-disabled;public-false;tier-other;`,
+				iconPath: utils.getThemedIconPath("app-status-loading"),
+				contextValue:
+					"azureSpringApps.app;status-loading;debugging-disabled;public-false;tier-other;",
 				description: "loading",
 			};
 		}

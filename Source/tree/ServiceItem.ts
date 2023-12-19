@@ -31,7 +31,7 @@ export default class ServiceItem implements ResourceItemBase {
 		if (this._stateProperties === undefined) {
 			void this.refresh();
 			this._stateProperties = {
-				contextValue: `azureSpringApps.apps;tier-other;`,
+				contextValue: "azureSpringApps.apps;tier-other;",
 			};
 		}
 		return {

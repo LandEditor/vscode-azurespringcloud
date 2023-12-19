@@ -65,8 +65,7 @@ export async function initialize(
 				let endpoint: string | undefined =
 					await app.getPublicEndpoint();
 				if (
-					!(await app.properties)?.public ||
-					!endpoint ||
+					!((await app.properties)?.public && endpoint) ||
 					endpoint.toLowerCase() === "none"
 				) {
 					const choice = await vscode.window.showWarningMessage(

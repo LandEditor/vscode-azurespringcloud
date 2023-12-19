@@ -46,7 +46,7 @@ export class DebugController {
 			await instance.deployment.getDebuggingConfig();
 		if (!config) {
 			void window.showErrorMessage(
-				`Remote debugging is not supported for Azure Spring apps of consumption plan for now.`,
+				"Remote debugging is not supported for Azure Spring apps of consumption plan for now.",
 			);
 			return;
 		}

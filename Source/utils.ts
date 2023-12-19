@@ -102,8 +102,9 @@ export function nonNullValue<T>(
 	if (value === null || value === undefined) {
 		throw new Error(
 			// tslint:disable-next-line:prefer-template
-			"Internal error: Expected value to be neither null nor undefined" +
-				(propertyNameOrMessage ? `: ${propertyNameOrMessage}` : ""),
+			`Internal error: Expected value to be neither null nor undefined${
+				propertyNameOrMessage ? `: ${propertyNameOrMessage}` : ""
+			}`,
 		);
 	}
 
@@ -129,8 +130,9 @@ export function createPortalUrl(
 	id: string,
 	options?: OpenInPortalOptions,
 ): vscode.Uri {
-	const queryPrefix: string =
-		options && options.queryPrefix ? `?${options.queryPrefix}` : "";
+	const queryPrefix: string = options?.queryPrefix
+		? `?${options.queryPrefix}`
+		: "";
 	const url: string = `${subscription.environment.portalUrl}/${queryPrefix}#@${subscription.tenantId}/resource${id}`;
 
 	return vscode.Uri.parse(url);

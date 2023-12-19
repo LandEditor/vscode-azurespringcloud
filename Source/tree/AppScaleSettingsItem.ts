@@ -18,7 +18,6 @@ import { InputConsumptionPlanScaleOutValueStep } from "../workflows/updatesettin
 import { InputConsumptionPlanScaleUpValueStep } from "../workflows/updatesettings/scalesettings/InputConsumptionPlanScaleUpValueStep";
 import { InputScaleValueStep } from "../workflows/updatesettings/scalesettings/InputScaleValueStep";
 import { UpdateScaleSettingsStep } from "../workflows/updatesettings/scalesettings/UpdateScaleSettingsStep";
-import { AppItem } from "./AppItem";
 import { AppSettingItem, IOptions } from "./AppSettingItem";
 import { AppSettingsItem } from "./AppSettingsItem";
 
@@ -31,10 +30,6 @@ export class AppScaleSettingsItem extends AppSettingsItem {
 	public readonly contextValue: string = AppScaleSettingsItem.contextValue;
 	public readonly label: string = "Scale Settings";
 	public readonly id: string = `${this.parent.id}/scaleSettings`;
-
-	public constructor(parent: AppItem) {
-		super(parent);
-	}
 
 	public getTreeItem(): TreeItem | Thenable<TreeItem> {
 		return {

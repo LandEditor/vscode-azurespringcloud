@@ -38,7 +38,8 @@ export class InputConsumptionPlanScaleUpValueStep extends AzureWizardPromptStep<
 		const current = this.picks.find((p) => p.data[1] === settings.memory);
 		current && (current.description = "current");
 
-		const placeHolder: string = `Scale your application by selecting one of the following combinations of the vCPU and memory allocation.`;
+		const placeHolder: string =
+			"Scale your application by selecting one of the following combinations of the vCPU and memory allocation.";
 		const options: IAzureQuickPickOptions = { placeHolder };
 		const selection: [number, number] = (
 			await context.ui.showQuickPick(this.picks, options)

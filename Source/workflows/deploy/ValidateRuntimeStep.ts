@@ -137,7 +137,7 @@ export class ValidateRuntimeStep extends AzureWizardExecuteStep<IAppDeploymentWi
 		for await (let l of rl) {
 			if (l.startsWith(" ")) {
 				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-				l = lines.pop()!.concat(l.substring(1));
+				l = lines.pop()?.concat(l.substring(1));
 			}
 			lines.push(l);
 		}

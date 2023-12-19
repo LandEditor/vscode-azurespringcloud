@@ -30,7 +30,7 @@ export async function startStreamingLogs(
 ): Promise<ILogStream> {
 	const logStreamId: string = getLogStreamId(instance);
 	const logStream: ILogStream | undefined = logStreams.get(logStreamId);
-	if (logStream && logStream.isConnected) {
+	if (logStream?.isConnected) {
 		logStream.outputChannel.show();
 		void context.ui.showWarningMessage(
 			localize(
@@ -94,7 +94,7 @@ export async function stopStreamingLogs(
 ): Promise<void> {
 	const logStreamId: string = getLogStreamId(instance);
 	const logStream: ILogStream | undefined = logStreams.get(logStreamId);
-	if (logStream && logStream.isConnected) {
+	if (logStream?.isConnected) {
 		logStream.dispose();
 	} else {
 		await vscode.window.showWarningMessage(

@@ -44,7 +44,7 @@ export class AppEnvVariablesItem extends AppSettingsItem {
 				(await deployment?.properties)?.deploymentSettings
 					?.environmentVariables ?? {};
 			if (!rawEnvVars.JAVA_OPTS) {
-				delete rawEnvVars.JAVA_OPTS;
+				rawEnvVars.JAVA_OPTS = undefined;
 			}
 			return rawEnvVars;
 		})();
@@ -144,7 +144,7 @@ export class AppEnvVariablesItem extends AppSettingsItem {
 				new AppSettingItem(
 					this,
 					e[0].trim(),
-					(e[1] + "").trim(),
+					`${e[1]}`.trim(),
 					Object.assign({}, AppEnvVariablesItem._options),
 				),
 		);

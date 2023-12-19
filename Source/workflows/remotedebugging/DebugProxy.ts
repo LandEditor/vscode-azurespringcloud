@@ -78,7 +78,7 @@ export class DebugProxy extends EventEmitter {
 							connection.on(
 								"message",
 								(msg: websocket.Message) => {
-									this._messagesRead = this._messagesRead + 1;
+									this._messagesRead += 1;
 									if (
 										this._messagesRead > 2 &&
 										"binaryData" in msg
@@ -194,7 +194,7 @@ export class DebugProxy extends EventEmitter {
 			`[Proxy Server] connecting server "${url}"`,
 		);
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-		this._wsclient!.connect(url, undefined, undefined, {
+		this._wsclient?.connect(url, undefined, undefined, {
 			Upgrade: "websocket",
 			Connection: "Upgrade",
 			Authorization: `Bearer ${credential.token}`,

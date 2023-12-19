@@ -181,9 +181,9 @@ export class AppJvmOptionsItem extends AppSettingsItem {
 
 	public async validateJvmOption(v: string): Promise<string | undefined> {
 		if (!v.trim()) {
-			return `Enter a value.`;
+			return "Enter a value.";
 		} else if (!AppJvmOptionsItem.JVM_OPTION_PATTERN.test(v)) {
-			return `Invalid JVM option.`;
+			return "Invalid JVM option.";
 		} else if ((await this.options).includes(v)) {
 			return `${v} is already set`;
 		}

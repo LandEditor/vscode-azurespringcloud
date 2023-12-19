@@ -289,7 +289,7 @@ export class EnhancedApp {
 	public async getTestEndpoint(): Promise<string | undefined> {
 		if (await this.service.isConsumptionTier()) {
 			throw new Error(
-				`Test endpoint is not supported for apps of consumption plan.`,
+				"Test endpoint is not supported for apps of consumption plan.",
 			);
 		}
 		const testKeys: TestKeys | undefined = await this.getTestKeys();
