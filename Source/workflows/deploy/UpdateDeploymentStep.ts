@@ -8,30 +8,23 @@ import { localize } from "../../utils";
 import { IAppDeploymentWizardContext } from "./IAppDeploymentWizardContext";
 
 export class UpdateDeploymentStep extends AzureWizardExecuteStep<IAppDeploymentWizardContext> {
-	public priority = 140;
-	private readonly deployment: EnhancedDeployment;
 
-	constructor(deployment: EnhancedDeployment) {
-		super();
-		this.deployment = deployment;
-	}
+    public priority: number = 140;
+    private readonly deployment: EnhancedDeployment;
 
-	public async execute(
-		context: IAppDeploymentWizardContext,
-		progress: Progress<{ message?: string; increment?: number }>,
-	): Promise<void> {
-		const message: string = localize(
-			"updateDeployment",
-			"Updating deployment...",
-		);
-		progress.report({ message });
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-		await this.deployment.updateArtifactPath(
-			context.relativePathOrBuildResultId!,
-		);
-	}
+    constructor(deployment: EnhancedDeployment) {
+        super();
+        this.deployment = deployment;
+    }
 
-	public shouldExecute(_context: IAppDeploymentWizardContext): boolean {
-		return true;
-	}
+    public async execute(context: IAppDeploymentWizardContext, progress: Progress<{ message?: string; increment?: number }>): Promise<void> {
+        const message: string = localize('updateDeployment', 'Updating deployment...');
+        progress.report({ message });
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        await this.deployment.updateArtifactPath(context.relativePathOrBuildResultId!);
+    }
+
+    public shouldExecute(_context: IAppDeploymentWizardContext): boolean {
+        return true;
+    }
 }
