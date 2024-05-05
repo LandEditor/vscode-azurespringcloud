@@ -4,32 +4,34 @@
 	"version": "0.0.1",
 	"private": false,
 	"description": "%azureSpringApps.description%",
-	"homepage": "https://github.com/CodeEditorLand/Foundation#readme",
+	"keywords": [
+		"land"
+	],
+	"homepage": "HTTPS://GitHub.Com/CodeEditorLand/LandAzureSpringCloud#readme",
 	"bugs": {
-		"url": "https://github.com/CodeEditorLand/Foundation/issues"
+		"url": "HTTPS://GitHub.Com/CodeEditorLand/LandAzureSpringCloud/issues"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/CodeEditorLand/Foundation.git"
+		"url": "git+HTTPS://github.com/CodeEditorLand/LandAzureSpringCloud.git"
 	},
 	"license": "SEE LICENSE IN LICENSE",
 	"author": {
-		"name": "Playform",
-		"email": "Hello@Playform.Cloud",
-		"url": "https://playform.cloud"
+		"name": "🌆 — Land —",
+		"email": "Land@PlayForm.Cloud",
+		"url": "HTTPS://Land.PlayForm.Cloud"
 	},
 	"type": "module",
 	"main": "./main.js",
 	"scripts": {
+		"Document": "Document 'Source/**/*.ts'",
 		"all": "npm i && npm run lint && npm test",
 		"build": "tsc",
 		"cleanReadme": "gulp cleanReadme",
 		"compile": "tsc -watch",
 		"listIcons": "gulp listIcons",
-		"package": "vsce package",
 		"package:pre-release": "vsce package --pre-release",
-		"prepublishOnly": "TypeScriptESBuild 'Source/**/*.ts'",
-		"vscode:prepublish": "npm run webpack-prod",
+		"prepublishOnly": "Build 'Source/**/*.ts'",
 		"webpack": "npm run build && gulp webpack-dev",
 		"webpack-prod": "npm run build && gulp webpack-prod",
 		"webpack-profile": "webpack --profile --json --mode production > webpack-stats.json && echo Use http://webpack.github.io/analyse to analyze the stats"
@@ -478,45 +480,23 @@
 		"onCommand:azureSpringApps.file.deploy"
 	],
 	"dependencies": {
-		"@azure/arm-appplatform": "^3.0.0-beta.1",
-		"@azure/core-client": "^1.7.2",
-		"@azure/ms-rest-js": "^2.7.0",
-		"@azure/storage-file-share": "^12.14.0",
-		"@microsoft/vscode-azext-azureutils": "^2.0.2",
-		"@microsoft/vscode-azext-utils": "^2.1.0",
-		"@microsoft/vscode-azureresources-api": "^2.1.0",
-		"axios": "^1.3.6",
-		"node-stream-zip": "^1.15.0",
-		"vscode-extension-telemetry-wrapper": "^0.13.3",
-		"vscode-nls": "^5.2.0",
-		"websocket": "^1.0.34"
+		"axios": "1.6.8",
+		"node-stream-zip": "1.15.0",
+		"websocket": "1.0.34"
 	},
 	"devDependencies": {
-		"@microsoft/vscode-azext-dev": "^0.1.4",
-		"@types/fs-extra": "^8.1.1",
-		"@types/gulp": "^4.0.9",
-		"@types/mocha": "^8.2.2",
-		"@types/node": "^16.0.0",
-		"@types/request": "^2.48.4",
-		"@types/vscode": "1.76.0",
-		"@types/websocket": "^1.0.5",
-		"@vscode/vsce": "^2.19.0",
-		"fs-extra": "^11.1.1",
-		"glob": "^7.1.6",
-		"gulp": "^4.0.2",
-		"json": "^11.0.0",
-		"mocha": "^10.0.0",
-		"mocha-junit-reporter": "^2.0.0",
-		"mocha-multi-reporters": "^1.5.1",
-		"ts-node": "^10.9.1",
-		"typescript": "^4.9.4",
-		"typescript-esbuild": "0.4.5",
-		"vscode-test": "^1.5.2",
-		"webpack": "^5.76.0",
-		"webpack-cli": "^4.10.0"
+		"@playform/build": "0.0.7",
+		"@playform/document": "0.0.6",
+		"@types/fs-extra": "11.0.4",
+		"@types/node": "20.12.7",
+		"@types/request": "2.48.12",
+		"@types/websocket": "1.0.10",
+		"fs-extra": "11.2.0",
+		"glob": "10.3.12",
+		"json": "11.0.0"
 	},
 	"optionalDependencies": {
-		"fsevents": "^2.3.2"
+		"fsevents": "2.3.3"
 	},
 	"extensionDependencies": [
 		"ms-azuretools.vscode-azureresourcegroups",
