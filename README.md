@@ -17,7 +17,7 @@ create, manage and deploy apps to an Azure Spring Apps instance.
 > popular services, $200 free credit and 25+ always free services 👉
 > [Start Free](https://azure.microsoft.com/free/open-source).
 
-## Installation
+## 🚀 Installation
 
 1. Download and install the
    [Azure Spring Apps extension](https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-azurespringcloud)
