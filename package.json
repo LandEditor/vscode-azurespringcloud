@@ -446,19 +446,19 @@
 		}
 	},
 	"dependencies": {
-		"axios": "^1.7.0",
-		"node-stream-zip": "^1.15.0",
-		"websocket": "^1.0.34"
+		"axios": "1.7.5",
+		"node-stream-zip": "1.15.0",
+		"websocket": "1.0.35"
 	},
 	"description": "%azureSpringApps.description%",
 	"devDependencies": {
-		"@types/fs-extra": "^8.1.1",
-		"@types/node": "^16.0.0",
-		"@types/request": "^2.48.4",
-		"@types/websocket": "^1.0.5",
-		"fs-extra": "^11.1.1",
-		"glob": "^7.1.6",
-		"json": "^11.0.0"
+		"@types/fs-extra": "11.0.4",
+		"@types/node": "22.5.1",
+		"@types/request": "2.48.12",
+		"@types/websocket": "1.0.10",
+		"fs-extra": "11.2.0",
+		"glob": "11.0.0",
+		"json": "11.0.0"
 	},
 	"displayName": "Azure Spring Apps",
 	"extensionDependencies": [
@@ -472,7 +472,7 @@
 	"main": "./main.js",
 	"name": "vscode-azurespringcloud",
 	"optionalDependencies": {
-		"fsevents": "^2.3.2"
+		"fsevents": "2.3.3"
 	},
 	"preview": true,
 	"scripts": {
