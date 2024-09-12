@@ -1,0 +1,24 @@
+steps:
+  - task: NodeTool@0
+    displayName: "Use Node 16.x"
+    inputs:
+      versionSpec: 16.x
+  - task: Npm@1
+    displayName: "npm ci"
+    inputs:
+      command: ci
+  - task: Npm@1
+    displayName: "Lint"
+    inputs:
+      command: custom
+      customCommand: run lint
+  - task: Npm@1
+    displayName: "cleanReadme"
+    inputs:
+      command: custom
+      customCommand: run cleanReadme
+  - task: Bash@3
+    displayName: Replace AI Key
+    inputs:
+      targetType: inline
+      script: npx json@9.0.6 -I -f package.json -e "this.aiKey=\"$(AI_KEY)\""
