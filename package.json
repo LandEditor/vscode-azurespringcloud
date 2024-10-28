@@ -453,7 +453,7 @@
 	"description": "%azureSpringApps.description%",
 	"devDependencies": {
 		"@types/fs-extra": "11.0.4",
-		"@types/node": "22.7.9",
+		"@types/node": "22.8.1",
 		"@types/request": "2.48.12",
 		"@types/websocket": "1.0.10",
 		"fs-extra": "11.2.0",
