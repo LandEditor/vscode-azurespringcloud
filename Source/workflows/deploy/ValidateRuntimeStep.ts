@@ -35,18 +35,22 @@ export class ValidateRuntimeStep extends AzureWizardExecuteStep<IAppDeploymentWi
 			this.artifactPath,
 		);
 		progress.report({ message });
+
 		const versionStr = (await this.deployment.runtimeVersion)?.split(
 			/[\s\_]/,
 		)?.[1];
+
 		if (!versionStr) {
 			void context.ui.showWarningMessage(
 				`Skip runtime version check because getting runtime version of target app ${this.deployment.app.name} failed.`,
 			);
+
 			return;
 		}
 		const artifactVersion: number = await this.getClassByteCodeVersion(
 			this.artifactPath,
 		);
+
 		if (parseInt(versionStr) < artifactVersion - 44) {
 			throw new Error(`The bytecode version of artifact (${this.artifactPath}) is "${artifactVersion} (Java ${artifactVersion - 44})",
             which is incompatible with the runtime "Java ${versionStr}" of the target app (${this.deployment.app.name}).
@@ -70,6 +74,7 @@ export class ValidateRuntimeStep extends AzureWizardExecuteStep<IAppDeploymentWi
 		const manifestEntry: ZipEntry | undefined = await zip.entry(
 			"META-INF/MANIFEST.MF",
 		);
+
 		if (!manifestEntry) {
 			throw new Error(
 				`invalid jar file: ${jarFilePath}, \`META-INF/MANIFEST.MF\` is not found.`,
@@ -77,6 +82,7 @@ export class ValidateRuntimeStep extends AzureWizardExecuteStep<IAppDeploymentWi
 		}
 		const manifestStream: NodeJS.ReadableStream =
 			await zip.stream(manifestEntry);
+
 		const manifest: { [key: string]: string } =
 			await this.readManifest(manifestStream);
 		(manifestStream as ReadStream).destroy();
@@ -85,12 +91,14 @@ export class ValidateRuntimeStep extends AzureWizardExecuteStep<IAppDeploymentWi
 		const mainClass: string | undefined = manifest["Main-Class"]
 			?.replace(/\./g, "/")
 			?.concat(".class");
+
 		if (!mainClass) {
 			throw new Error(
 				`invalid jar file: ${jarFilePath}, \`Main-Class\` is not found in \`META-INF/MANIFEST.MF\`.`,
 			);
 		}
 		const mainClassEntry: ZipEntry | undefined = await zip.entry(mainClass);
+
 		if (!mainClassEntry) {
 			throw new Error(
 				`invalid jar file: ${jarFilePath}, the specified \`Main-Class: ${manifest["Main-Class"]}\` is not found.`,
@@ -106,9 +114,11 @@ export class ValidateRuntimeStep extends AzureWizardExecuteStep<IAppDeploymentWi
 		]?.concat(
 			manifest["Start-Class"]?.replace(/\./g, "/").concat(".class"),
 		);
+
 		if (startClass) {
 			const startClassEntry: ZipEntry | undefined =
 				await zip.entry(startClass);
+
 			if (!startClassEntry) {
 				throw new Error(
 					`invalid jar file: ${jarFilePath}, the specified \`Start-Class: ${manifest["Start-Class"]}\` is not found.`,
@@ -119,6 +129,7 @@ export class ValidateRuntimeStep extends AzureWizardExecuteStep<IAppDeploymentWi
 			)
 				.slice(6, 8)
 				.readUInt16BE();
+
 			return Math.max(startClassVersion, mainClassVersion);
 		}
 		return mainClassVersion;
@@ -128,10 +139,12 @@ export class ValidateRuntimeStep extends AzureWizardExecuteStep<IAppDeploymentWi
 		manifestFileStream: NodeJS.ReadableStream,
 	): Promise<{ [key: string]: string }> {
 		const lines: string[] = [];
+
 		const rl: Interface = readline.createInterface({
 			input: manifestFileStream,
 			crlfDelay: Infinity,
 		});
+
 		for await (let l of rl) {
 			if (l.startsWith(" ")) {
 				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -140,10 +153,12 @@ export class ValidateRuntimeStep extends AzureWizardExecuteStep<IAppDeploymentWi
 			lines.push(l);
 		}
 		rl.close();
+
 		return lines
 			.map((l) => l.split(": "))
 			.reduce((json, splits) => {
 				json[splits[0]] = splits[1];
+
 				return json;
 			}, {});
 	}

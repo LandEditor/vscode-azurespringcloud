@@ -58,6 +58,7 @@ export class EnhancedService {
 
 	public async createApp(name: string): Promise<EnhancedApp> {
 		ext.outputChannel.appendLog(`[App] creating app (${this.name}).`);
+
 		const app: AppResource =
 			await this.client.apps.beginCreateOrUpdateAndWait(
 				this.resourceGroup,
@@ -70,15 +71,18 @@ export class EnhancedService {
 				},
 			);
 		ext.outputChannel.appendLog(`[App] app (${this.name}) is created.`);
+
 		return new EnhancedApp(this, app);
 	}
 
 	public async getApps(): Promise<EnhancedApp[]> {
 		const apps: AppResource[] = [];
+
 		const pagedApps: AsyncIterable<AppResource> = this.client.apps.list(
 			this.resourceGroup,
 			this.name,
 		);
+
 		for await (const app of pagedApps) {
 			apps.push(app);
 		}
@@ -92,6 +96,7 @@ export class EnhancedService {
 				this.name,
 				"default",
 			);
+
 			if (portal.properties?.public) {
 				return portal;
 			}
@@ -102,6 +107,7 @@ export class EnhancedService {
 	public async getLiveViewUrl(): Promise<string | undefined> {
 		const devToolsPortal: DevToolPortalResource | undefined =
 			await this._devToolsPortal;
+
 		if (devToolsPortal && (await this.isLiveViewEnabled())) {
 			return `https://${devToolsPortal.properties?.url}/${devToolsPortal.properties?.features?.applicationLiveView?.route}`;
 		}
@@ -114,9 +120,12 @@ export class EnhancedService {
 	> {
 		const devToolsPortal: DevToolPortalResource | undefined =
 			await this._devToolsPortal;
+
 		if (devToolsPortal && (await this.isAppAcceleratorEnabled())) {
 			const ssoProperties = devToolsPortal?.properties?.ssoProperties;
+
 			const url = ssoProperties?.metadataUrl;
+
 			return {
 				authClientId: ssoProperties?.clientId,
 				authIssuerUrl: url?.substring(0, url.indexOf("/.well-known")),
@@ -149,6 +158,7 @@ export class EnhancedService {
 	public async isLiveViewEnabled(): Promise<boolean> {
 		const devToolsPortal: DevToolPortalResource | undefined =
 			await this._devToolsPortal;
+
 		return (
 			devToolsPortal?.properties?.features?.applicationLiveView?.state?.toLowerCase() ===
 			"enabled"
@@ -158,6 +168,7 @@ export class EnhancedService {
 	public async isAppAcceleratorEnabled(): Promise<boolean> {
 		const devToolsPortal: DevToolPortalResource | undefined =
 			await this._devToolsPortal;
+
 		return (
 			devToolsPortal?.properties?.features?.applicationAccelerator?.state?.toLowerCase() ===
 			"enabled"
@@ -167,12 +178,14 @@ export class EnhancedService {
 	public async isDevToolsPublic(): Promise<boolean> {
 		const devToolsPortal: DevToolPortalResource | undefined =
 			await this._devToolsPortal;
+
 		return devToolsPortal?.properties?.public ?? false;
 	}
 
 	public async isDevToolsRunning(): Promise<boolean> {
 		const devToolsPortal: DevToolPortalResource | undefined =
 			await this._devToolsPortal;
+
 		return (
 			(devToolsPortal?.properties?.instances?.length ?? 0) > 0 &&
 			devToolsPortal?.properties?.instances?.[0].status?.toLowerCase() ===
@@ -183,6 +196,7 @@ export class EnhancedService {
 	public async refresh(): Promise<EnhancedService> {
 		this._remote = this.client.services.get(this.resourceGroup, this.name);
 		this._devToolsPortal = this.initDevTools();
+
 		return Promise.all([this._remote, this._devToolsPortal]).then(
 			() => this,
 		);

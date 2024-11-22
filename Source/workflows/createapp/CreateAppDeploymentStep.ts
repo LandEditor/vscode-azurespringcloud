@@ -30,6 +30,7 @@ export class CreateAppDeploymentStep extends AzureWizardExecuteStep<IAppCreation
 			EnhancedApp.DEFAULT_DEPLOYMENT,
 			appRuntime,
 		);
+
 		return Promise.resolve(undefined);
 	}
 

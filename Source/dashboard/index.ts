@@ -29,6 +29,7 @@ export async function initialize(
 	const dashboardExt = vscode.extensions.getExtension<DashboardExtensionApi>(
 		"vscjava.vscode-spring-boot-dashboard",
 	);
+
 	if (dashboardExt) {
 		await vscode.commands.executeCommand(
 			"setContext",
@@ -37,12 +38,14 @@ export async function initialize(
 		);
 
 		const provider = new AzureSpringAppsProvider(context);
+
 		const options: RemoteBootAppDataProviderOptions = {
 			iconPath: new vscode.ThemeIcon("azure"),
 		};
 
 		const ensureProviderRegistered = async () => {
 			await waitUntilDashboardActivated(dashboardExt, 5000);
+
 			if (!inited) {
 				const api = dashboardExt.exports;
 				api.registerRemoteBootAppDataProvider(
@@ -63,8 +66,10 @@ export async function initialize(
 				}
 
 				const app = appNode.app;
+
 				let endpoint: string | undefined =
 					await app.getPublicEndpoint();
+
 				if (
 					!(await app.properties)?.public ||
 					!endpoint ||
@@ -75,6 +80,7 @@ export async function initialize(
 						{ modal: true },
 						"Yes",
 					);
+
 					if (!choice) {
 						return;
 					}
@@ -90,6 +96,7 @@ export async function initialize(
 					await provider.addAppData(appNode);
 					// connect right now
 					const appData = await provider.toRemoteBootAppData(appNode);
+
 					if (appData) {
 						dashboardExt.exports.connectRemoteApp(appData);
 					}
@@ -110,6 +117,7 @@ class AzureSpringAppsProvider implements RemoteBootAppDataProvider {
 	onDidChangeDataEmitter: vscode.EventEmitter<void>;
 
 	onDidChangeData: vscode.Event<void>;
+
 	constructor(context: vscode.ExtensionContext) {
 		this.store = new Map();
 		this.iconPathForApps = {
@@ -136,6 +144,7 @@ class AzureSpringAppsProvider implements RemoteBootAppDataProvider {
 
 	public async addAppData(appNode: AppItem) {
 		const appData = await this.toRemoteBootAppData(appNode);
+
 		if (appData) {
 			this.store.set(appData.name, appData);
 			this.onDidChangeDataEmitter.fire();
@@ -146,11 +155,16 @@ class AzureSpringAppsProvider implements RemoteBootAppDataProvider {
 		appNode: AppItem,
 	): Promise<RemoteBootAppData | undefined> {
 		const app = appNode.app;
+
 		const url = (await app.properties)?.url;
+
 		if (url) {
 			const uri = vscode.Uri.parse(url);
+
 			const host = uri.authority;
+
 			const jmxurl = uri.with({ path: "/actuator" }).toString();
+
 			return {
 				name: app.name,
 				host,

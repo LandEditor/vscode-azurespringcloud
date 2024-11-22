@@ -49,6 +49,7 @@ export class AppItem implements ResourceItemBase {
 			label: this.app.name,
 			getData: async () => {
 				const r = await this.app.remote;
+
 				return r.properties ?? {};
 			},
 		};
@@ -97,30 +98,39 @@ export class AppItem implements ResourceItemBase {
 					this._children = this.loadChildren();
 
 					const appProperties = await this.app.properties;
+
 					const deployment: EnhancedDeployment | undefined =
 						await this.app.activeDeployment;
+
 					const runtimeVersion = deployment?.runtimeVersion;
+
 					const config: RemoteDebugging | undefined =
 						await deployment?.getDebuggingConfig();
+
 					const status = await this.app.getStatus();
+
 					const state: string | undefined =
 						appProperties?.provisioningState;
+
 					const description =
 						state?.toLowerCase() === "succeeded"
 							? (await runtimeVersion)?.split(/[\s\_]/).join(" ")
 							: state;
+
 					const debugging: string =
 						config?.enabled === undefined
 							? "unknown"
 							: config?.enabled
 								? "enabled"
 								: "disabled";
+
 					const tier: string =
 						(await this.app.service.isEnterpriseTier())
 							? "enterprise"
 							: (await this.app.service.isConsumptionTier())
 								? "consumption"
 								: "other";
+
 					const contextValue = `azureSpringApps.app;status-${status};debugging-${debugging};public-${appProperties?.public};tier-${tier};`;
 					this._stateProperties = {
 						iconPath: utils.getThemedIconPath(
@@ -188,10 +198,12 @@ export class AppItem implements ResourceItemBase {
 	private async loadChildren(): Promise<ResourceItemBase[]> {
 		const activeDeployment: EnhancedDeployment | undefined =
 			await this.app.activeDeployment;
+
 		if (!activeDeployment) {
 			return [];
 		}
 		this._scaleSettingsItem = new AppScaleSettingsItem(this);
+
 		return [
 			new AppInstancesItem(this),
 			new AppEnvVariablesItem(this),

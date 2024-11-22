@@ -24,6 +24,7 @@ export class AppInstancesItem implements ResourceItemBase {
 	async getChildren(): Promise<AppInstanceItem[]> {
 		const deployment: EnhancedDeployment | undefined =
 			await this.parent.app.activeDeployment;
+
 		if (deployment) {
 			return deployment.instances?.then(
 				(instances) =>

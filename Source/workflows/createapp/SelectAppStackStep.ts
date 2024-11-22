@@ -34,6 +34,7 @@ export class SelectAppStackStep extends AzureWizardPromptStep<IAppCreationWizard
 				data: KnownSupportedRuntimeValue.Java8,
 			},
 		];
+
 		const placeHolder: string = localize(
 			"selectRuntime",
 			"Select a Java runtime version",
@@ -41,6 +42,7 @@ export class SelectAppStackStep extends AzureWizardPromptStep<IAppCreationWizard
 		context.newAppRuntime = (
 			await context.ui.showQuickPick(picks, { placeHolder })
 		).data;
+
 		return Promise.resolve(undefined);
 	}
 

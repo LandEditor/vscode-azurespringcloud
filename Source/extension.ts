@@ -59,8 +59,10 @@ export async function activateInternal(
 	instrumentOperation("activation", async () => {
 		registerCommands();
 		void initializeDashboardIntegration(context);
+
 		const rgApiProvider: AzureResourcesExtensionApi =
 			await getAzureResourcesExtensionApi(context, "2.0.0");
+
 		if (rgApiProvider) {
 			ext.experimentationService =
 				await createExperimentationService(context);

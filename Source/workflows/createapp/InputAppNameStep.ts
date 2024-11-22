@@ -32,6 +32,7 @@ export class InputAppNameStep extends AzureNameStep<IAppCreationWizardContext> {
 				validateInput: this.validateAppName,
 			})
 		).trim();
+
 		return Promise.resolve(undefined);
 	}
 
@@ -48,6 +49,7 @@ export class InputAppNameStep extends AzureNameStep<IAppCreationWizardContext> {
 
 	private async validateAppName(name: string): Promise<string | undefined> {
 		name = name.trim();
+
 		if (!name) {
 			return localize("emptyName", "The name is required.");
 		}
@@ -63,6 +65,7 @@ export class InputAppNameStep extends AzureNameStep<IAppCreationWizardContext> {
 			);
 		} else {
 			const apps: EnhancedApp[] = await this.service.getApps();
+
 			if (!apps.every((app) => app.name !== name)) {
 				return localize(
 					"existAppName",

@@ -82,14 +82,17 @@ export class DebugProxy extends EventEmitter {
 								"message",
 								(msg: websocket.Message) => {
 									this._messagesRead = this._messagesRead + 1;
+
 									if (
 										this._messagesRead > 2 &&
 										"binaryData" in msg
 									) {
 										const channel: number =
 											msg.binaryData.readUInt8(0);
+
 										const data: Buffer =
 											msg.binaryData.slice(1);
+
 										if (channel === 1) {
 											const err: Error = new Error(
 												data.toString(),
@@ -179,17 +182,24 @@ export class DebugProxy extends EventEmitter {
 
 	private async connect(serverPort: number): Promise<void> {
 		const deployment: EnhancedDeployment = this._instance.deployment;
+
 		const subContext = createSubscriptionContext(
 			deployment.app.service.subscription,
 		);
+
 		const credential: { token: string } = <{ token: string }>(
 			await subContext.credentials.getToken()
 		);
+
 		const appName: string = deployment.app.name;
+
 		const deploymentName: string = deployment.name;
+
 		const instanceName: string = this._instance.name ?? "unknown-instance";
+
 		const fqdn: string =
 			(await deployment.app.properties)?.fqdn ?? "unknown-host";
+
 		const url: string = `wss://${fqdn}/api/remoteDebugging/apps/${appName}/deployments/${deploymentName}/instances/${instanceName}?port=${serverPort}`;
 		ext.outputChannel.appendLog(
 			`[Proxy Server] connecting server "${url}"`,

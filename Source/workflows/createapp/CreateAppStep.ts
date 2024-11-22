@@ -27,8 +27,10 @@ export class CreateAppStep extends AzureWizardExecuteStep<IAppCreationWizardCont
 			context.newAppName,
 		);
 		progress.report({ message });
+
 		const appName: string = nonNullProp(context, "newAppName");
 		context.newApp = await this.service.createApp(appName);
+
 		return Promise.resolve(undefined);
 	}
 

@@ -69,12 +69,14 @@ export class EnhancedApp {
 	public async getStatus(): Promise<string> {
 		const activeDeployment: EnhancedDeployment | undefined =
 			await this.activeDeployment;
+
 		let _status: string = (
 			((await activeDeployment?.properties)?.status ||
 				(await activeDeployment?.properties)?.provisioningState ||
 				(await this.properties)?.provisioningState) ??
 			"Unknown"
 		).toLowerCase();
+
 		if (_status.endsWith("ing") && _status !== "running") {
 			_status = "pending";
 		}
@@ -87,9 +89,11 @@ export class EnhancedApp {
 
 	public async start(): Promise<void> {
 		ext.outputChannel.appendLog(`[App] starting app ${this.name}.`);
+
 		const activeDeploymentName: string | undefined = (
 			await this.activeDeployment
 		)?.name;
+
 		if (!activeDeploymentName) {
 			throw new Error(`app ${this.name} has no active deployment.`);
 		}
@@ -104,9 +108,11 @@ export class EnhancedApp {
 
 	public async stop(): Promise<void> {
 		ext.outputChannel.appendLog(`[App] stopping app ${this.name}.`);
+
 		const activeDeploymentName: string | undefined = (
 			await this.activeDeployment
 		)?.name;
+
 		if (!activeDeploymentName) {
 			throw new Error(`app ${this.name} has no active deployment.`);
 		}
@@ -121,9 +127,11 @@ export class EnhancedApp {
 
 	public async restart(): Promise<void> {
 		ext.outputChannel.appendLog(`[App] restarting app ${this.name}.`);
+
 		const activeDeploymentName: string | undefined = (
 			await this.activeDeployment
 		)?.name;
+
 		if (!activeDeploymentName) {
 			throw new Error(`app ${this.name} has no active deployment.`);
 		}
@@ -153,6 +161,7 @@ export class EnhancedApp {
 			this.name,
 		);
 		this._activeDeployment = this.loadActiveDeployment();
+
 		return Promise.all([this._remote, this._activeDeployment]).then(
 			() => this,
 		);
@@ -160,12 +169,14 @@ export class EnhancedApp {
 
 	public async getDeployments(): Promise<EnhancedDeployment[]> {
 		const deployments: DeploymentResource[] = [];
+
 		const pagedResources: AsyncIterable<DeploymentResource> =
 			this.client.deployments.list(
 				this.service.resourceGroup,
 				this.service.name,
 				this.name,
 			);
+
 		for await (const deployment of pagedResources) {
 			deployments.push(deployment);
 		}
@@ -177,17 +188,20 @@ export class EnhancedApp {
 	> {
 		let activeDeployment: Promise<EnhancedDeployment | undefined> =
 			Promise.resolve(undefined);
+
 		const deploymentResources: AsyncIterable<DeploymentResource> =
 			this.client.deployments.list(
 				this.service.resourceGroup,
 				this.service.name,
 				this.name,
 			);
+
 		for await (const deploymentResource of deploymentResources) {
 			if (deploymentResource.properties?.active) {
 				activeDeployment = Promise.resolve(
 					new EnhancedDeployment(this, deploymentResource),
 				);
+
 				break;
 			}
 		}
@@ -220,6 +234,7 @@ export class EnhancedApp {
 		ext.outputChannel.appendLog(
 			`[Deployment] creating deployment (${name}) of app (${this.name}).`,
 		);
+
 		if (await this.service.isEnterpriseTier()) {
 			source = { type: "BuildResult", buildResultId: "<default>" };
 		} else {
@@ -262,6 +277,7 @@ export class EnhancedApp {
 		ext.outputChannel.appendLog(
 			`[Deployment] new deployment (${name}) of app (${this.name}) is created.`,
 		);
+
 		return new EnhancedDeployment(this, deployment);
 	}
 
@@ -294,11 +310,13 @@ export class EnhancedApp {
 			);
 		}
 		const testKeys: TestKeys | undefined = await this.getTestKeys();
+
 		return `${testKeys.primaryTestEndpoint}/${this.name}/default`;
 	}
 
 	public async getPublicEndpoint(): Promise<string | undefined> {
 		const p = await this.properties;
+
 		if (p?.url && p?.url !== "None") {
 			return p?.url;
 		}
@@ -333,18 +351,21 @@ export class EnhancedApp {
 
 	public async getLiveViewUrl(): Promise<string | undefined> {
 		const url: string | undefined = await this.service.getLiveViewUrl();
+
 		return url ? `${url}/apps/${this.name}` : undefined;
 	}
 
 	public async uploadArtifact(path: string): Promise<string | undefined> {
 		const uploadDefinition: ResourceUploadDefinition =
 			await this.getUploadDefinition();
+
 		if (!uploadDefinition.uploadUrl) {
 			throw new Error(`faild to get upload url of app ${this.name}.`);
 		}
 		ext.outputChannel.appendLog(
 			`[App] uploading artifact (${path}) to app ${this.name}.`,
 		);
+
 		const fileClient: ShareFileClient = new ShareFileClient(
 			uploadDefinition.uploadUrl,
 			new AnonymousCredential(),
@@ -353,6 +374,7 @@ export class EnhancedApp {
 		ext.outputChannel.appendLog(
 			`[App] artifact (${path}) is uploaded to app ${this.name}.`,
 		);
+
 		return uploadDefinition.relativePath;
 	}
 
@@ -373,12 +395,17 @@ export class EnhancedApp {
 					},
 				},
 			);
+
 		const buildResultId: string | undefined =
 			build.properties?.triggeredBuildResult?.id;
+
 		const buildResultName: string | undefined =
 			build.properties?.triggeredBuildResult?.id?.split("/").pop();
+
 		let status: BuildResultProvisioningState | undefined;
+
 		const start: number = Date.now();
+
 		while (status !== "Succeeded") {
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			const result: BuildResult =
@@ -390,6 +417,7 @@ export class EnhancedApp {
 					buildResultName!,
 				);
 			status = result.properties?.provisioningState;
+
 			if (status === "Succeeded") {
 				break;
 			} else if (status === "Queuing" || status === "Building") {

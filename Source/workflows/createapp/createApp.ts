@@ -24,13 +24,17 @@ export async function createApp(
 	item: ServiceItem,
 ): Promise<AppItem> {
 	const service: EnhancedService = item.service;
+
 	const subContext = createSubscriptionContext(service.subscription);
+
 	const wizardContext: IAppCreationWizardContext = Object.assign(
 		context,
 		subContext,
 		{ service },
 	);
+
 	const promptSteps: AzureWizardPromptStep<IAppCreationWizardContext>[] = [];
+
 	const executeSteps: AzureWizardExecuteStep<IAppCreationWizardContext>[] =
 		[];
 	promptSteps.push(new InputAppNameStep(service));
@@ -39,16 +43,19 @@ export async function createApp(
 	executeSteps.push(new VerifyProvidersStep(["Microsoft.AppPlatform"]));
 	executeSteps.push(new CreateAppStep(service));
 	executeSteps.push(new CreateAppDeploymentStep());
+
 	const creating: string = utils.localize(
 		"creatingSpringCouldApp",
 		"Creating new Spring app in Azure",
 	);
+
 	const wizard: AzureWizard<IAppCreationWizardContext> = new AzureWizard(
 		wizardContext,
 		{ promptSteps, executeSteps, title: creating },
 	);
 
 	await wizard.prompt();
+
 	const appName: string = utils.nonNullProp(wizardContext, "newAppName");
 	await ext.state.showCreatingChild(
 		service.id,
@@ -63,11 +70,13 @@ export async function createApp(
 			}
 		},
 	);
+
 	const created: string = utils.localize(
 		"createdSpringCouldApp",
 		'Successfully created Spring app "{0}".',
 		appName,
 	);
 	void window.showInformationMessage(created);
+
 	return new AppItem(item, utils.nonNullProp(wizardContext, "newApp"));
 }

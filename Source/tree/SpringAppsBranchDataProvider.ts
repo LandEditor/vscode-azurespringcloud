@@ -24,6 +24,7 @@ import ServiceItem from "./ServiceItem";
 
 export interface ResourceItemBase extends AzureResourceModel {
 	getChildren?(): vscode.ProviderResult<ResourceItemBase[]>;
+
 	getTreeItem(): vscode.TreeItem | Thenable<vscode.TreeItem>;
 	refresh(): Promise<void>;
 }
@@ -70,18 +71,22 @@ export class SpringAppsBranchDataProvider
 			"getResourceItem",
 			async (context: IActionContext) => {
 				context.errorHandling.rethrow = true;
+
 				const subContext = createSubscriptionContext(
 					element.subscription,
 				);
+
 				const client: AppPlatformManagementClient = createAzureClient(
 					[context, subContext],
 					AppPlatformManagementClient,
 				);
+
 				const service: EnhancedService = new EnhancedService(
 					client,
 					element.subscription,
 					element,
 				);
+
 				return new ServiceItem(service);
 			},
 		);

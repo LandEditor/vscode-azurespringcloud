@@ -31,7 +31,9 @@ export class StartDebugConfigurationStep extends AzureWizardExecuteStep<IRemoteD
 		progress.report({ message });
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		const instanceName: string = this.instance.name!;
+
 		const configurationName: string = `Attach "${instanceName}"`;
+
 		const started: boolean = await debug.startDebugging(undefined, {
 			type: "java",
 			name: configurationName,
@@ -40,6 +42,7 @@ export class StartDebugConfigurationStep extends AzureWizardExecuteStep<IRemoteD
 			hostName: "localhost",
 			port: context.proxy?.port,
 		});
+
 		if (started) {
 			context.configurationName = configurationName;
 			ext.outputChannel.appendLog(

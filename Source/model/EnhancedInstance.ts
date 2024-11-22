@@ -44,12 +44,15 @@ export class EnhancedInstance implements DeploymentInstance {
 	get properties(): {} {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { deployment: _, ...properties } = this;
+
 		return properties;
 	}
 
 	get streamingLogConnected(): boolean {
 		const logStreamId: string = getLogStreamId(this);
+
 		const logStream: ILogStream | undefined = logStreams.get(logStreamId);
+
 		return logStream?.isConnected ?? false;
 	}
 

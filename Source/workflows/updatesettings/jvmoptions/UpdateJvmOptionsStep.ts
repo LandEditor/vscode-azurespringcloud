@@ -29,6 +29,7 @@ export class UpdateJvmOptionsStep extends AzureWizardExecuteStep<IJvmOptionsUpda
 		progress.report({ message });
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		await this.deployment.updateJvmOptions(context.newJvmOptions!);
+
 		return Promise.resolve(undefined);
 	}
 

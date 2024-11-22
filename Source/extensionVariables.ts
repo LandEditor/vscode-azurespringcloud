@@ -17,13 +17,18 @@ import { TreeItemStateStore } from "./tree/TreeItemState";
 // tslint:disable-next-line: export-name
 export namespace ext {
 	export let context: ExtensionContext;
+
 	export let outputChannel: IAzExtOutputChannel;
+
 	export let ignoreBundle: boolean | undefined;
+
 	export const prefix: string = "springApps";
 
 	export let experimentationService: IExperimentationServiceAdapter;
+
 	export let rgApiV2: AzureResourcesExtensionApi;
 
 	export let state: TreeItemStateStore;
+
 	export let branchDataProvider: SpringAppsBranchDataProvider;
 }

@@ -19,8 +19,11 @@ import { ext } from "./extensionVariables";
 import { ResourceItemBase } from "./tree/SpringAppsBranchDataProvider";
 
 let EXTENSION_PUBLISHER: string;
+
 let EXTENSION_NAME: string;
+
 let EXTENSION_VERSION: string;
+
 let EXTENSION_AI_KEY: string;
 
 export const localize: nls.LocalizeFunc = nls.loadMessageBundle();
@@ -41,6 +44,7 @@ export function createGenericItem(
 	options: GenericItemOptions,
 ): ResourceItemBase {
 	let commandArgs = options.commandArgs;
+
 	const item = {
 		id: options.id,
 		getTreeItem(): vscode.TreeItem {
@@ -74,6 +78,7 @@ export async function runInBackground(
 		{ location: ProgressLocation.Notification, title: doing },
 		async (): Promise<void> => {
 			await task();
+
 			done && void window.showInformationMessage(done);
 		},
 	);
@@ -90,6 +95,7 @@ export function nonNullProp<TSource, TKey extends keyof TSource>(
 	const value: NonNullable<TSource[TKey]> = <NonNullable<TSource[TKey]>>(
 		source[name]
 	);
+
 	return nonNullValue(value, <string>name);
 }
 
@@ -113,6 +119,7 @@ export function nonNullValue<T>(
 
 export function getThemedIconPath(iconName: string): TreeItemIconPath {
 	const resources: string = ext.context.asAbsolutePath("resources");
+
 	return {
 		light: path.join(resources, "light", `${iconName}.svg`),
 		dark: path.join(resources, "dark", `${iconName}.svg`),
@@ -132,6 +139,7 @@ export function createPortalUrl(
 ): vscode.Uri {
 	const queryPrefix: string =
 		options && options.queryPrefix ? `?${options.queryPrefix}` : "";
+
 	const url: string = `${subscription.environment.portalUrl}/${queryPrefix}#@${subscription.tenantId}/resource${id}`;
 
 	return vscode.Uri.parse(url);

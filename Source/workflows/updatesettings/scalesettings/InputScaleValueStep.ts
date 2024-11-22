@@ -30,8 +30,10 @@ export class InputScaleValueStep extends AzureWizardPromptStep<IScaleSettingsUpd
 			'Enter new value of "{0}".',
 			IScaleSettings.LABELS[this.key],
 		);
+
 		const settings: IScaleSettings =
 			await this.deployment.getScaleSettings();
+
 		const value: string = `${settings[this.key]}`;
 		context.newSettings[this.key] = Number(
 			(
@@ -42,6 +44,7 @@ export class InputScaleValueStep extends AzureWizardPromptStep<IScaleSettingsUpd
 				})
 			).trim(),
 		);
+
 		return Promise.resolve(undefined);
 	}
 
@@ -51,16 +54,20 @@ export class InputScaleValueStep extends AzureWizardPromptStep<IScaleSettingsUpd
 
 	private async validateInput(val: string): Promise<string | undefined> {
 		const numVal: number = Number(val);
+
 		const tier: string | undefined = (await this.deployment.app.service.sku)
 			?.tier;
+
 		const scope: { max: number; min: number } =
 			IScaleSettings.SCOPES[tier ?? "Basic"][this.key];
+
 		if (this.key === "cpu") {
 			const valid: boolean =
 				numVal === 0.5 ||
 				(Number.isInteger(numVal) &&
 					numVal <= scope.max &&
 					numVal >= scope.min);
+
 			if (!valid) {
 				if (tier === "Basic") {
 					return localize(
@@ -81,6 +88,7 @@ export class InputScaleValueStep extends AzureWizardPromptStep<IScaleSettingsUpd
 				(Number.isInteger(numVal) &&
 					numVal <= scope.max &&
 					numVal >= scope.min);
+
 			if (!valid) {
 				return localize(
 					"invalidScaleSettingValue",
@@ -93,6 +101,7 @@ export class InputScaleValueStep extends AzureWizardPromptStep<IScaleSettingsUpd
 				Number.isInteger(numVal) &&
 				numVal <= scope.max &&
 				numVal >= scope.min;
+
 			if (!valid) {
 				return localize(
 					"invalidCapacitySettingValue",

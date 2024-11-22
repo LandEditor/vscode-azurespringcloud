@@ -24,8 +24,10 @@ export class InputConsumptionPlanScaleOutValueStep extends AzureWizardPromptStep
 		context: IScaleSettingsUpdateWizardContext,
 	): Promise<void> {
 		const prompt: string = `Enter new value of "Max replicas" that'll be deployed in response to a trigger event.`;
+
 		const settings: IScaleSettings =
 			await this.deployment.getScaleSettings();
+
 		const value: string = `${settings.capacity}`;
 		context.newSettings.capacity = Number(
 			(
@@ -36,6 +38,7 @@ export class InputConsumptionPlanScaleOutValueStep extends AzureWizardPromptStep
 				})
 			).trim(),
 		);
+
 		return Promise.resolve(undefined);
 	}
 
@@ -45,8 +48,10 @@ export class InputConsumptionPlanScaleOutValueStep extends AzureWizardPromptStep
 
 	private async validateInput(val: string): Promise<string | undefined> {
 		const numVal: number = Number(val);
+
 		const valid: boolean =
 			Number.isInteger(numVal) && numVal <= 30 && numVal >= 1;
+
 		if (!valid) {
 			return localize(
 				"invalidCapacitySettingValue",

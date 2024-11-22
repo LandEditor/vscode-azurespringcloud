@@ -57,6 +57,7 @@ export default class ServiceItem implements ResourceItemBase {
 			label: this.service.name,
 			getData: async () => {
 				const r = await this.service.remote;
+
 				return r.properties ?? {};
 			},
 		};
@@ -96,15 +97,18 @@ export default class ServiceItem implements ResourceItemBase {
 					const state: string | undefined = (
 						await this.service.properties
 					)?.provisioningState;
+
 					const description =
 						state?.toLowerCase() === "succeeded"
 							? undefined
 							: state;
+
 					const tier: string = (await this.service.isEnterpriseTier())
 						? "enterprise"
 						: (await this.service.isConsumptionTier())
 							? "consumption"
 							: "other";
+
 					const contextValue = `azureSpringApps.apps;tier-${tier};`;
 					this._stateProperties = { description, contextValue };
 
@@ -116,6 +120,7 @@ export default class ServiceItem implements ResourceItemBase {
 
 	private async loadChildren(): Promise<AppItem[]> {
 		const apps: EnhancedApp[] = await this.service.getApps();
+
 		return apps.map((ca) => new AppItem(this, ca));
 	}
 }

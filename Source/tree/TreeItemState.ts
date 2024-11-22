@@ -50,6 +50,7 @@ export class TreeItemStateStore implements vscode.Disposable {
 		) as typeof item.getTreeItem;
 		item.getTreeItem = async () => {
 			const treeItem = await getTreeItem();
+
 			if (item.id) {
 				return this.applyToTreeItem({ ...treeItem, id: item.id });
 			}
@@ -64,6 +65,7 @@ export class TreeItemStateStore implements vscode.Disposable {
 				const children = (await getChildren()) ?? [];
 
 				const state = this.getState(item.id);
+
 				if (state.temporaryChildren) {
 					const newChildren = state.temporaryChildren.filter(
 						(c) => !children.includes(c),
@@ -97,6 +99,7 @@ export class TreeItemStateStore implements vscode.Disposable {
 			temporaryDescription: description,
 			spinner: true,
 		});
+
 		try {
 			result = await callback();
 		} finally {
@@ -116,6 +119,7 @@ export class TreeItemStateStore implements vscode.Disposable {
 	): Promise<T> {
 		let result: T;
 		this.update(id, { ...this.getState(id), temporaryChildren: [child] });
+
 		try {
 			result = await callback();
 		} finally {
@@ -174,6 +178,7 @@ export class TreeItemStateStore implements vscode.Disposable {
 		treeItem: vscode.TreeItem & { id: string },
 	): vscode.TreeItem {
 		const state = this.getState(treeItem.id);
+
 		return this.applyStateToTreeItem(state, { ...treeItem });
 	}
 

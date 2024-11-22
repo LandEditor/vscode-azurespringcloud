@@ -19,6 +19,7 @@ export class InputJvmOptionsStep extends AzureWizardPromptStep<IJvmOptionsUpdate
 		context: IJvmOptionsUpdateWizardContext,
 	): Promise<void> {
 		const jvmOptions: string = await this.deployment.getJvmOptions();
+
 		const prompt: string = localize(
 			"jvmOptionsPrompt",
 			"Enter new JVM options for the Spring app.",
@@ -30,6 +31,7 @@ export class InputJvmOptionsStep extends AzureWizardPromptStep<IJvmOptionsUpdate
 				value: jvmOptions ?? "",
 			})
 		).trim();
+
 		return Promise.resolve(undefined);
 	}
 

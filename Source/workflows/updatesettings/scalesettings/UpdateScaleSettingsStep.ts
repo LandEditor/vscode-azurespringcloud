@@ -23,7 +23,9 @@ export class UpdateScaleSettingsStep extends AzureWizardExecuteStep<IScaleSettin
 		progress: Progress<{ message?: string; increment?: number }>,
 	): Promise<void> {
 		const o: IScaleSettings = await this.deployment.getScaleSettings();
+
 		const n: IScaleSettings = context.newSettings;
+
 		if (
 			n.capacity === o.capacity &&
 			n.memory === o.memory &&
@@ -35,6 +37,7 @@ export class UpdateScaleSettingsStep extends AzureWizardExecuteStep<IScaleSettin
 					"No setting is changed",
 				),
 			});
+
 			return Promise.resolve(undefined);
 		}
 		const message: string = localize(
@@ -44,6 +47,7 @@ export class UpdateScaleSettingsStep extends AzureWizardExecuteStep<IScaleSettin
 		);
 		progress.report({ message });
 		await this.deployment.updateScaleSettings(context.newSettings);
+
 		return Promise.resolve(undefined);
 	}
 

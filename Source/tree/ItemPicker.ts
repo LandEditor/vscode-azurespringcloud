@@ -90,6 +90,7 @@ function getPickAppsSteps(
 		return [];
 	}
 	const types = [AzExtResourceType.SpringApps];
+
 	return [
 		new QuickPickAzureSubscriptionStep(tdp),
 		new QuickPickGroupStep(tdp, {

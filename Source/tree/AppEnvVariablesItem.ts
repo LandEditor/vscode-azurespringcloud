@@ -41,9 +41,11 @@ export class AppEnvVariablesItem extends AppSettingsItem {
 		return (async () => {
 			const deployment: EnhancedDeployment | undefined =
 				await this.parent.app.activeDeployment;
+
 			const rawEnvVars: { [p: string]: string } =
 				(await deployment?.properties)?.deploymentSettings
 					?.environmentVariables ?? {};
+
 			if (!rawEnvVars.JAVA_OPTS) {
 				delete rawEnvVars.JAVA_OPTS;
 			}
@@ -56,6 +58,7 @@ export class AppEnvVariablesItem extends AppSettingsItem {
 			prompt: "Enter new environment variable key",
 			validateInput: EnhancedDeployment.validateKey,
 		});
+
 		const newVal: string = await context.ui.showInputBox({
 			prompt: `Enter value for "${newKey}"`,
 			validateInput: EnhancedDeployment.validateVal,
@@ -75,6 +78,7 @@ export class AppEnvVariablesItem extends AppSettingsItem {
 				}
 			},
 		);
+
 		return new AppSettingItem(
 			this,
 			newKey.trim(),
@@ -96,6 +100,7 @@ export class AppEnvVariablesItem extends AppSettingsItem {
 			...(await this.variables),
 			[node.key.trim()]: newVal.trim(),
 		});
+
 		return newVal;
 	}
 
@@ -114,6 +119,7 @@ export class AppEnvVariablesItem extends AppSettingsItem {
 	): Promise<void> {
 		const deployment: EnhancedDeployment | undefined =
 			await this.parent.app.activeDeployment;
+
 		if (deployment) {
 			const description = utils.localize("updating", "Updating...");
 			await ext.state.runWithTemporaryDescription(
@@ -125,6 +131,7 @@ export class AppEnvVariablesItem extends AppSettingsItem {
 						'Updating environment variables of "{0}"...',
 						deployment.app.name,
 					);
+
 					const updated: string = utils.localize(
 						"updatedEnvVar",
 						"Successfully updated environment variables of {0}.",

@@ -20,7 +20,9 @@ export abstract class AppSettingsItem implements ResourceItemBase {
 		const settings: AppSettingItem[] = <AppSettingItem[]>(
 			await this.getChildren()
 		);
+
 		const hidden: boolean = settings.every((s) => s.hidden);
+
 		for (const s of settings) {
 			if (s.toggleVisibility !== undefined) {
 				await s.toggleVisibility(context, !hidden);

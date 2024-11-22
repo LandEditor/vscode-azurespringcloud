@@ -115,6 +115,7 @@ export class EnhancedDeployment {
 			this.app.name,
 			this.name,
 		);
+
 		return Promise.all([this._remote]).then(() => this);
 	}
 
@@ -122,6 +123,7 @@ export class EnhancedDeployment {
 		relativePathOrBuildId: string,
 	): Promise<void> {
 		let properties: DeploymentResourceProperties | undefined;
+
 		if (await this.app.service.isEnterpriseTier()) {
 			properties = {
 				source: {
@@ -151,10 +153,15 @@ export class EnhancedDeployment {
 
 	public async updateScaleSettings(settings: IScaleSettings): Promise<void> {
 		const rawMem: number = settings.memory ?? 1;
+
 		const rawCpu: number = settings.cpu ?? 1;
+
 		const sku: Sku | undefined = await this.app.service.sku;
+
 		const cpu: string = `${rawCpu * 1000}m`;
+
 		const memory: string = `${rawMem * 1024}Mi`;
+
 		const resource: DeploymentResource = {
 			properties: {
 				deploymentSettings: {
@@ -166,6 +173,7 @@ export class EnhancedDeployment {
 				capacity: settings.capacity ?? sku?.capacity,
 			},
 		};
+
 		if (await this.app.service.isConsumptionTier()) {
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			resource.properties!.deploymentSettings!.scale = {
@@ -213,9 +221,11 @@ export class EnhancedDeployment {
 	public async getJvmOptions(): Promise<string> {
 		const enterpriseOptionsStr: string | undefined = (await this.properties)
 			?.deploymentSettings?.environmentVariables?.JAVA_OPTS;
+
 		const oldOptionsStr: string | undefined = (<JarUploadedUserSourceInfo>(
 			(await this.properties)?.source
 		))?.jvmOptions;
+
 		return enterpriseOptionsStr ?? oldOptionsStr?.trim() ?? "";
 	}
 
@@ -223,6 +233,7 @@ export class EnhancedDeployment {
 		ext.outputChannel.appendLog(
 			`[Deployment] update JVM options of deployment (${this.name}).`,
 		);
+
 		if (await this.app.service.isEnterpriseTier()) {
 			const environmentVariables: { [p: string]: string } =
 				(await this.properties)?.deploymentSettings
@@ -263,23 +274,28 @@ export class EnhancedDeployment {
 	public async getScaleSettings(): Promise<IScaleSettings> {
 		const settings: DeploymentSettings | undefined = (await this.properties)
 			?.deploymentSettings;
+
 		const resourceRequests: ResourceRequests | undefined =
 			settings?.resourceRequests;
+
 		const cpu: number = resourceRequests?.cpu
 			? resourceRequests?.cpu?.endsWith("m")
 				? parseInt(resourceRequests?.cpu) / 1000
 				: parseInt(resourceRequests?.cpu)
 			: 1;
+
 		const memory: number = resourceRequests?.memory
 			? resourceRequests?.memory?.endsWith("Mi")
 				? parseInt(resourceRequests?.memory) / 1024
 				: parseInt(resourceRequests?.memory)
 			: 1;
+
 		const capacity: number = (await this.app.service.isConsumptionTier())
 			? // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 				(((await this.properties)?.deploymentSettings?.scale
 					?.maxReplicas as number) ?? 0)
 			: ((await this.properties)?.instances?.length ?? 0);
+
 		return { cpu, memory, capacity };
 	}
 
@@ -301,6 +317,7 @@ export class EnhancedDeployment {
 		ext.outputChannel.appendLog(
 			`[Deployment] enable remote debugging of deployment (${this.name}).`,
 		);
+
 		return this.client.deployments.beginEnableRemoteDebuggingAndWait(
 			this.app.service.resourceGroup,
 			this.app.service.name,

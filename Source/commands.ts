@@ -164,6 +164,7 @@ function registerCommandWithTelemetryWrapper(
 				await callback(context, ...args);
 			} catch (error) {
 				const e: IParsedError = parseError(error);
+
 				if (!e.isUserCancelledError) {
 					// tslint:disable-next-line: no-unsafe-any
 					showError(commandId, error);
@@ -203,17 +204,20 @@ export async function deleteService(
 	n?: ServiceItem,
 ): Promise<void> {
 	const item: ServiceItem = await getAppsItem(context, n);
+
 	const service: EnhancedService = item.service;
 	await context.ui.showWarningMessage(
 		`Are you sure to delete "${item.service.name}"?`,
 		{ modal: true },
 		DialogResponses.deleteResponse,
 	);
+
 	const deleting: string = utils.localize(
 		"deletingSpringCLoudService",
 		'Deleting Azure Spring Apps "{0}"...',
 		service.name,
 	);
+
 	const deleted: string = utils.localize(
 		"deletedSpringCloudService",
 		'Successfully deleted Azure Spring Apps "{0}".',
@@ -227,7 +231,9 @@ export async function openAppsLiveView(
 	n?: ServiceItem,
 ): Promise<void> {
 	const item: ServiceItem = await getAppsItem(context, n);
+
 	const service: EnhancedService = item.service;
+
 	if (
 		!(await service.isDevToolsPublic()) ||
 		!(await service.isLiveViewEnabled())
@@ -237,6 +243,7 @@ export async function openAppsLiveView(
 			{ modal: true },
 			DialogResponses.learnMore,
 		);
+
 		if (response === DialogResponses.learnMore) {
 			return openUrl(
 				"https://learn.microsoft.com/en-us/azure/spring-apps/how-to-use-application-live-view?tabs=Portal",
@@ -245,6 +252,7 @@ export async function openAppsLiveView(
 		return;
 	}
 	const endpoint: string | undefined = await service.getLiveViewUrl();
+
 	if (endpoint && endpoint.toLowerCase() !== "none") {
 		await openUrl(endpoint);
 	}
@@ -255,7 +263,9 @@ export async function openAppLiveView(
 	n?: AppItem,
 ): Promise<void> {
 	const item: AppItem = await getAppItem(context, n);
+
 	const app: EnhancedApp = item.app;
+
 	if (
 		!(await app.service.isDevToolsPublic()) ||
 		!(await app.service.isLiveViewEnabled())
@@ -265,6 +275,7 @@ export async function openAppLiveView(
 			{ modal: true },
 			DialogResponses.learnMore,
 		);
+
 		if (response === DialogResponses.learnMore) {
 			return openUrl(
 				"https://learn.microsoft.com/en-us/azure/spring-apps/how-to-use-application-live-view?tabs=Portal",
@@ -273,6 +284,7 @@ export async function openAppLiveView(
 		return;
 	}
 	const endpoint: string | undefined = await app.getLiveViewUrl();
+
 	if (endpoint && endpoint.toLowerCase() !== "none") {
 		await openUrl(endpoint);
 	}
@@ -283,7 +295,9 @@ export async function openAppAccelerator(
 	n?: ServiceItem,
 ): Promise<void> {
 	const item: ServiceItem = await getAppsItem(context, n);
+
 	const service: EnhancedService = item.service;
+
 	if (
 		!(await service.isDevToolsPublic()) ||
 		!(await service.isAppAcceleratorEnabled())
@@ -293,6 +307,7 @@ export async function openAppAccelerator(
 			{ modal: true },
 			DialogResponses.learnMore,
 		);
+
 		if (response === DialogResponses.learnMore) {
 			return openUrl(
 				"https://learn.microsoft.com/en-us/azure/spring-apps/how-to-use-accelerator?tabs=Portal",
@@ -303,13 +318,16 @@ export async function openAppAccelerator(
 	let acceleratorExt = vscode.extensions.getExtension(
 		"vmware.tanzu-app-accelerator",
 	);
+
 	if (!acceleratorExt) {
 		await context.ui.showWarningMessage(
 			`This feature depends on extension "Tanzu App Accelerator" provided by VMWare, do you want to install it?`,
 			{ modal: true },
 			DialogResponses.yes,
 		);
+
 		const installing = 'Installing extension "Tanzu App Accelerator".';
+
 		const installed =
 			'Extension "Tanzu App Accelerator" is successfully installed.';
 		await utils.runInBackground(installing, installed, async () => {
@@ -322,7 +340,9 @@ export async function openAppAccelerator(
 			acceleratorExt = vscode.extensions.getExtension(
 				"vmware.tanzu-app-accelerator",
 			);
+
 			let rounds: number = 0;
+
 			while (!acceleratorExt && rounds++ < 15) {
 				await utils.wait(1000);
 				acceleratorExt = vscode.extensions.getExtension(
@@ -337,6 +357,7 @@ export async function openAppAccelerator(
 		});
 	}
 	const config = await service.getAppAcceleratorConfig();
+
 	if (config) {
 		await vscode.workspace
 			.getConfiguration("tanzu-app-accelerator")
@@ -375,7 +396,9 @@ export async function openPublicEndpoint(
 	n?: AppItem,
 ): Promise<void> {
 	const item: AppItem = await getAppItem(context, n);
+
 	const app: EnhancedApp = item.app;
+
 	if (!(await app.properties)?.public) {
 		await context.ui.showWarningMessage(
 			`App "${app.name}" is not publicly accessible. Do you want to assign it a public endpoint?`,
@@ -385,6 +408,7 @@ export async function openPublicEndpoint(
 		await assignEndpoint(context, item);
 	}
 	const endpoint: string | undefined = await app.getPublicEndpoint();
+
 	if (endpoint && endpoint.toLowerCase() !== "none") {
 		await openUrl(endpoint);
 	}
@@ -395,14 +419,18 @@ export async function openTestEndpoint(
 	n?: AppItem,
 ): Promise<void> {
 	const item: AppItem = await getAppItem(context, n);
+
 	const app: EnhancedApp = item.app;
+
 	if (await app.service.isConsumptionTier()) {
 		void window.showErrorMessage(
 			`Test endpoint is not supported for Azure Spring apps of consumption plan for now.`,
 		);
+
 		return;
 	}
 	const endpoint: string | undefined = await app.getTestEndpoint();
+
 	if (endpoint && endpoint.toLowerCase() !== "none") {
 		await openUrl(endpoint);
 	}
@@ -413,8 +441,11 @@ export async function assignEndpoint(
 	n?: AppItem,
 ): Promise<void> {
 	const item: AppItem = await getAppItem(context, n);
+
 	const app: EnhancedApp = item.app;
+
 	const doing: string = `Assigning public endpoint to "${app.name}".`;
+
 	const done: string = `Successfully assigned public endpoint to "${app.name}".`;
 	await ext.state.runWithTemporaryDescription(item.id, "Updating...", () => {
 		return utils.runInBackground(doing, done, () => app.setPublic(true));
@@ -426,8 +457,11 @@ export async function unassignEndpoint(
 	n?: AppItem,
 ): Promise<void> {
 	const item: AppItem = await getAppItem(context, n);
+
 	const app: EnhancedApp = item.app;
+
 	const doing: string = `Unassigning public endpoint to "${app.name}".`;
+
 	const done: string = `Successfully unassigned public endpoint to "${app.name}".`;
 	await ext.state.runWithTemporaryDescription(item.id, "Updating...", () => {
 		return utils.runInBackground(doing, done, () => app.setPublic(false));
@@ -463,17 +497,20 @@ export async function deleteApp(
 	n?: AppItem,
 ): Promise<void> {
 	const item: AppItem = await getAppItem(context, n);
+
 	const app: EnhancedApp = item.app;
 	await context.ui.showWarningMessage(
 		`Are you sure to delete "${app.name}"?`,
 		{ modal: true },
 		DialogResponses.deleteResponse,
 	);
+
 	const deleting: string = utils.localize(
 		"deletingSpringCLoudApp",
 		'Deleting Spring app "{0}"...',
 		app.name,
 	);
+
 	const deleted: string = utils.localize(
 		"deletedSpringCLoudApp",
 		'Successfully deleted Spring app "{0}".',
@@ -487,7 +524,9 @@ export async function deploy(
 	n?: AppItem,
 ): Promise<void> {
 	const item: AppItem = await getAppItem(context, n);
+
 	const defaultUri: Uri | undefined = await getTargetOrWorkspacePath();
+
 	const options: OpenDialogOptions = {
 		defaultUri,
 		canSelectMany: false,
@@ -496,7 +535,9 @@ export async function deploy(
 			"Jar files": ["jar"],
 		},
 	};
+
 	const fileUri: Uri[] | undefined = await window.showOpenDialog(options);
+
 	if (fileUri && fileUri[0] !== undefined) {
 		const artifactPath: string = fileUri[0].fsPath;
 		await deployArtifact(context, item, artifactPath);
@@ -509,7 +550,9 @@ export async function deployFromFile(
 	_arg2?: Uri[],
 ): Promise<void> {
 	let jarFile: Uri | undefined = undefined;
+
 	defaultUri = defaultUri ?? (await getTargetOrWorkspacePath());
+
 	if (!defaultUri || !defaultUri.fsPath.endsWith(".jar")) {
 		const options: OpenDialogOptions = {
 			defaultUri,
@@ -519,6 +562,7 @@ export async function deployFromFile(
 				"Jar files": ["jar"],
 			},
 		};
+
 		const fileUri: Uri[] | undefined = await window.showOpenDialog(options);
 		jarFile = fileUri ? fileUri[0] : undefined;
 	} else {
@@ -527,6 +571,7 @@ export async function deployFromFile(
 
 	if (jarFile) {
 		const item: AppItem = await getAppItem(context, undefined);
+
 		const artifactPath: string = jarFile.fsPath;
 		await deployArtifact(context, item, artifactPath);
 	}
@@ -548,7 +593,9 @@ export async function enableRemoteDebugging(
 	confirmation?: string,
 ): Promise<AppItem> {
 	const item: AppItem = await getAppItem(context, n);
+
 	let result: MessageItem | undefined;
+
 	if (confirmation) {
 		const actionResponse: MessageItem = { title: "Enable" };
 		result = await context.ui.showWarningMessage(
@@ -557,8 +604,10 @@ export async function enableRemoteDebugging(
 			actionResponse,
 			DialogResponses.learnMore,
 		);
+
 		if (result === DialogResponses.learnMore) {
 			void openUrl("https://aka.ms/asa-remotedebug");
+
 			return item;
 		}
 	}
@@ -570,10 +619,12 @@ export async function enableRemoteDebugging(
 			await utils.runInBackground(doing, null, async () => {
 				const deployment: EnhancedDeployment | undefined =
 					await item.app.activeDeployment;
+
 				if (!deployment) {
 					void window.showWarningMessage(
 						`Failed to enable remote debugging for app "${item.app.name}", because it has no active deployment.`,
 					);
+
 					return;
 				}
 				await deployment.enableDebugging();
@@ -581,12 +632,14 @@ export async function enableRemoteDebugging(
 				ext.state.notifyChildrenChanged(item.id);
 				void (async () => {
 					const msg: string = `Successfully enabled remote debugging for app "${item.app.name}".`;
+
 					const action: string | undefined =
 						await window.showInformationMessage(
 							msg,
 							"Start Debugging",
 							"Learn More",
 						);
+
 					if (action === "Learn More") {
 						void openUrl("https://aka.ms/asa-remotedebug");
 					} else if (action) {
@@ -596,6 +649,7 @@ export async function enableRemoteDebugging(
 			});
 		},
 	);
+
 	return item;
 }
 
@@ -604,7 +658,9 @@ export async function disableRemoteDebugging(
 	n?: AppItem,
 ): Promise<AppItem> {
 	const item: AppItem = await getAppItem(context, n);
+
 	const doing: string = `Disabling remote debugging for app "${item.app.name}".`;
+
 	const done: string = `Successfully disabled remote debugging for app "${item.app.name}".`;
 	await ext.state.runWithTemporaryDescription(
 		item.id,
@@ -613,10 +669,12 @@ export async function disableRemoteDebugging(
 			await utils.runInBackground(doing, done, async () => {
 				const deployment: EnhancedDeployment | undefined =
 					await item.app.activeDeployment;
+
 				if (!deployment) {
 					void window.showWarningMessage(
 						`Disable Remote Debugging: App "${item.app.name}" has no active deployment.`,
 					);
+
 					return;
 				}
 				await deployment.disableDebugging();
@@ -625,6 +683,7 @@ export async function disableRemoteDebugging(
 			});
 		},
 	);
+
 	return item;
 }
 
@@ -633,6 +692,7 @@ export async function startRemoteDebugging(
 	n?: ResourceItemBase,
 ): Promise<void> {
 	const item: AppInstanceItem = await getInstanceItem(context, n);
+
 	const description = utils.localize(
 		"startRemoteDebugging",
 		"Attaching debugger...",
@@ -647,7 +707,9 @@ export async function startStreamingLogs(
 	n?: AppInstanceItem,
 ): Promise<void> {
 	const item: AppInstanceItem = await getInstanceItem(context, n);
+
 	const doing: string = `Starting log streaming for instance "${item.instance.name}".`;
+
 	const done: string = `Successfully started log streaming for instance "${item.instance.name}".`;
 	await utils.runInBackground(doing, done, async () => {
 		await item.instance.startStreamingLogs(context);
@@ -660,7 +722,9 @@ export async function stopStreamingLogs(
 	n?: AppInstanceItem,
 ): Promise<void> {
 	const item: AppInstanceItem = await getInstanceItem(context, n);
+
 	const doing: string = `Stopping log streaming for instance "${item.instance.name}".`;
+
 	const done: string = `Successfully stopped log streaming for instance "${item.instance.name}".`;
 	await utils.runInBackground(doing, done, async () => {
 		await item.instance.stopStreamingLogs();
@@ -675,6 +739,7 @@ export async function viewInstanceProperties(
 	const item: AppInstanceItem = await getInstanceItem(context, n);
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const { deployment, ...instance } = item.instance;
+
 	const fullId: string = item.instance.id;
 	await openReadOnlyJson({ label: item.instance.name, fullId }, instance);
 }
@@ -722,6 +787,7 @@ export async function deleteSetting(
 		{ modal: true },
 		DialogResponses.deleteResponse,
 	);
+
 	const description = utils.localize("deleting", "Deleting...");
 	await ext.state.runWithTemporaryDescription(item.id, description, () =>
 		item.remove(context),
@@ -760,7 +826,9 @@ async function getInstanceItem(
 
 async function getTargetOrWorkspacePath(): Promise<Uri | undefined> {
 	const editor: TextEditor | undefined = window.activeTextEditor;
+
 	let root: WorkspaceFolder | undefined = workspace.workspaceFolders?.[0];
+
 	if (editor && editor.document.uri.scheme === "file") {
 		root = workspace.getWorkspaceFolder(editor.document.uri) ?? root;
 	}

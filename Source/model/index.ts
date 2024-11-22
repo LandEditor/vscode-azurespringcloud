@@ -13,6 +13,7 @@ export namespace IScaleSettings {
 		memory: "Memory/GB",
 		capacity: "Instance count",
 	};
+
 	export const SCOPES: {
 		[key: string]: { [key: string]: { max: number; min: number } };
 	} = {

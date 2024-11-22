@@ -32,6 +32,7 @@ export class UploadArtifactStep extends AzureWizardExecuteStep<IAppDeploymentWiz
 		context.relativePathOrBuildResultId = await this.app.uploadArtifact(
 			this.artifactPath,
 		);
+
 		if (await this.app?.service.isEnterpriseTier()) {
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			context.relativePathOrBuildResultId = await this.app.enqueueBuild(

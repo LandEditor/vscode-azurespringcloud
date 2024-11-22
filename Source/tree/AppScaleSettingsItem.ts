@@ -53,12 +53,14 @@ export class AppScaleSettingsItem extends AppSettingsItem {
 	): Promise<string> {
 		const deployment: EnhancedDeployment | undefined =
 			await this.parent.app.activeDeployment;
+
 		if (deployment) {
 			const scaling: string = localize(
 				"scaling",
 				'Scaling "{0}"',
 				deployment.app.name,
 			);
+
 			const scaled: string = localize(
 				"scaled",
 				'Successfully scaled "{0}".',
@@ -68,11 +70,14 @@ export class AppScaleSettingsItem extends AppSettingsItem {
 			const newSettings: IScaleSettings = {
 				...(await deployment.getScaleSettings()),
 			};
+
 			const subContext = createSubscriptionContext(
 				this.parent.app.subscription,
 			);
+
 			const wizardContext: IScaleSettingsUpdateWizardContext =
 				Object.assign(context, subContext, { newSettings });
+
 			const steps: AzureWizardPromptStep<IScaleSettingsUpdateWizardContext>[] =
 				(await this.parent.app.service.isConsumptionTier())
 					? [
@@ -88,10 +93,13 @@ export class AppScaleSettingsItem extends AppSettingsItem {
 							new InputScaleValueStep(deployment, "memory"),
 							new InputScaleValueStep(deployment, "cpu"),
 						];
+
 			const promptSteps: AzureWizardPromptStep<IScaleSettingsUpdateWizardContext>[] =
 				[];
+
 			const executeSteps: AzureWizardExecuteStep<IScaleSettingsUpdateWizardContext>[] =
 				[];
+
 			if (!key) {
 				promptSteps.push(...steps);
 			} else {
@@ -104,6 +112,7 @@ export class AppScaleSettingsItem extends AppSettingsItem {
 				}
 			}
 			executeSteps.push(new UpdateScaleSettingsStep(deployment));
+
 			const wizard: AzureWizard<IScaleSettingsUpdateWizardContext> =
 				new AzureWizard(wizardContext, {
 					promptSteps,
@@ -118,6 +127,7 @@ export class AppScaleSettingsItem extends AppSettingsItem {
 			);
 			void window.showInformationMessage(scaled);
 			void this.parent.refresh();
+
 			return `${wizardContext.newSettings[key ?? "capacity"]}`;
 		}
 		return "";
@@ -140,12 +150,15 @@ export class AppScaleSettingsItem extends AppSettingsItem {
 	protected async loadChildren(): Promise<AppSettingItem[] | undefined> {
 		const deployment: EnhancedDeployment | undefined =
 			await this.parent.app.activeDeployment;
+
 		const settings: IScaleSettings =
 			(await deployment?.getScaleSettings()) ?? {};
+
 		const capacityLabel: string =
 			(await this.parent.app.service.isConsumptionTier())
 				? "Max replicas"
 				: "Instance count";
+
 		return [
 			new AppSettingItem(
 				this,

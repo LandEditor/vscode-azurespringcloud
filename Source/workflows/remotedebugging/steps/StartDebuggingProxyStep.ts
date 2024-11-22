@@ -27,6 +27,7 @@ export class StartDebuggingProxyStep extends AzureWizardExecuteStep<IRemoteDebug
 		progress: Progress<{ message?: string; increment?: number }>,
 	): Promise<void> {
 		const proxyPort: number = await findFreePort();
+
 		const message: string = localize(
 			"startDebuggingProxy",
 			'Starting debugging proxy at port "{0}"...',

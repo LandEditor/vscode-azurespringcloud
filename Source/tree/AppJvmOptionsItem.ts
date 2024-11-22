@@ -52,16 +52,21 @@ export class AppJvmOptionsItem extends AppSettingsItem {
 		return (async () => {
 			const deployment: EnhancedDeployment | undefined =
 				await this.parent.app.activeDeployment;
+
 			const enterpriseOptionsStr: string | undefined = (
 				await deployment?.properties
 			)?.deploymentSettings?.environmentVariables?.JAVA_OPTS;
+
 			const source: JarUploadedUserSourceInfo = <
 				JarUploadedUserSourceInfo
 			>(await deployment?.properties)?.source;
+
 			const oldOptionsStr: string | undefined =
 				source?.jvmOptions?.trim();
+
 			const optionsStr: string | undefined =
 				enterpriseOptionsStr ?? oldOptionsStr;
+
 			if (optionsStr) {
 				return ` ${optionsStr}`
 					.split(/\s+-/)
@@ -93,6 +98,7 @@ export class AppJvmOptionsItem extends AppSettingsItem {
 				}
 			},
 		);
+
 		return new AppSettingItem(
 			this,
 			"".trim(),
@@ -111,10 +117,13 @@ export class AppJvmOptionsItem extends AppSettingsItem {
 			placeHolder: "e.g. -Xmx2048m",
 			validateInput: this.validateJvmOption,
 		});
+
 		const options: string[] = [...(await this.options)];
+
 		const index: number = options.indexOf(node.value.trim());
 		options.splice(index, 1, newVal.trim());
 		await this.updateSettingsValue(context, options);
+
 		return newVal;
 	}
 
@@ -123,6 +132,7 @@ export class AppJvmOptionsItem extends AppSettingsItem {
 		context: IActionContext,
 	): Promise<void> {
 		const tempOptions: string[] = [...(await this.options)];
+
 		const index: number = tempOptions.indexOf(node.value);
 		tempOptions.splice(index, 1);
 		await this.updateSettingsValue(context, tempOptions);
@@ -134,12 +144,14 @@ export class AppJvmOptionsItem extends AppSettingsItem {
 	): Promise<void> {
 		const deployment: EnhancedDeployment | undefined =
 			await this.parent.app.activeDeployment;
+
 		if (deployment) {
 			const updating: string = localize(
 				"updatingJvmOptions",
 				'Updating JVM options of "{0}"',
 				deployment.app.name,
 			);
+
 			const updated: string = localize(
 				"updatedJvmOptions",
 				'Successfully updated JVM options of "{0}".',
@@ -149,6 +161,7 @@ export class AppJvmOptionsItem extends AppSettingsItem {
 			const subContext = createSubscriptionContext(
 				this.parent.app.subscription,
 			);
+
 			const wizardContext: IJvmOptionsUpdateWizardContext = Object.assign(
 				context,
 				subContext,
@@ -159,10 +172,12 @@ export class AppJvmOptionsItem extends AppSettingsItem {
 
 			const promptSteps: AzureWizardPromptStep<IJvmOptionsUpdateWizardContext>[] =
 				[];
+
 			const executeSteps: AzureWizardExecuteStep<IJvmOptionsUpdateWizardContext>[] =
 				[];
 			promptSteps.push(new InputJvmOptionsStep(deployment));
 			executeSteps.push(new UpdateJvmOptionsStep(deployment));
+
 			const wizard: AzureWizard<IJvmOptionsUpdateWizardContext> =
 				new AzureWizard(wizardContext, {
 					promptSteps,
