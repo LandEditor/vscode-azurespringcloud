@@ -23,6 +23,7 @@ export interface ILogStream extends vscode.Disposable {
 }
 
 const primaryName: string = "primary";
+
 export const logStreams: Map<string, ILogStream> = new Map();
 
 export async function startStreamingLogs(
