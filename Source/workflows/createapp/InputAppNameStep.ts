@@ -12,10 +12,12 @@ export class InputAppNameStep extends AzureNameStep<IAppCreationWizardContext> {
 	//refer: https://dev.azure.com/msazure/AzureDMSS/_git/AzureDMSS-PortalExtension?path=%2Fsrc%2FSpringCloudPortalExt%2FClient%2FCreateApplication%2FCreateApplicationBlade.ts&version=GBdev&line=463&lineEnd=463&lineStartColumn=25&lineEndColumn=55&lineStyle=plain&_a=contents
 	private static readonly VALID_NAME_REGEX: RegExp =
 		/^[a-z][a-z0-9-]{2,30}[a-z0-9]$/;
+
 	private readonly service: EnhancedService;
 
 	constructor(service: EnhancedService) {
 		super();
+
 		this.service = service;
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		this.validateAppName = this.validateAppName.bind(this);
@@ -26,6 +28,7 @@ export class InputAppNameStep extends AzureNameStep<IAppCreationWizardContext> {
 			"appNamePrompt",
 			"Enter a globally unique name for the new Spring app.",
 		);
+
 		context.newAppName = (
 			await context.ui.showInputBox({
 				prompt,
@@ -53,6 +56,7 @@ export class InputAppNameStep extends AzureNameStep<IAppCreationWizardContext> {
 		if (!name) {
 			return localize("emptyName", "The name is required.");
 		}
+
 		if (!InputAppNameStep.VALID_NAME_REGEX.test(name)) {
 			return localize(
 				"invalidName",
@@ -73,6 +77,7 @@ export class InputAppNameStep extends AzureNameStep<IAppCreationWizardContext> {
 				);
 			}
 		}
+
 		return undefined;
 	}
 }

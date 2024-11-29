@@ -16,12 +16,16 @@ import StreamZip = require("node-stream-zip");
 
 export class ValidateRuntimeStep extends AzureWizardExecuteStep<IAppDeploymentWizardContext> {
 	public priority: number = 130;
+
 	private readonly deployment: EnhancedDeployment;
+
 	private readonly artifactPath: string;
 
 	constructor(deployment: EnhancedDeployment, artifactPath: string) {
 		super();
+
 		this.deployment = deployment;
+
 		this.artifactPath = artifactPath;
 	}
 
@@ -34,6 +38,7 @@ export class ValidateRuntimeStep extends AzureWizardExecuteStep<IAppDeploymentWi
 			'Validating class bytecode version of artifact "{0}" to runtime version of target app...',
 			this.artifactPath,
 		);
+
 		progress.report({ message });
 
 		const versionStr = (await this.deployment.runtimeVersion)?.split(
@@ -47,6 +52,7 @@ export class ValidateRuntimeStep extends AzureWizardExecuteStep<IAppDeploymentWi
 
 			return;
 		}
+
 		const artifactVersion: number = await this.getClassByteCodeVersion(
 			this.artifactPath,
 		);
@@ -80,6 +86,7 @@ export class ValidateRuntimeStep extends AzureWizardExecuteStep<IAppDeploymentWi
 				`invalid jar file: ${jarFilePath}, \`META-INF/MANIFEST.MF\` is not found.`,
 			);
 		}
+
 		const manifestStream: NodeJS.ReadableStream =
 			await zip.stream(manifestEntry);
 
@@ -97,6 +104,7 @@ export class ValidateRuntimeStep extends AzureWizardExecuteStep<IAppDeploymentWi
 				`invalid jar file: ${jarFilePath}, \`Main-Class\` is not found in \`META-INF/MANIFEST.MF\`.`,
 			);
 		}
+
 		const mainClassEntry: ZipEntry | undefined = await zip.entry(mainClass);
 
 		if (!mainClassEntry) {
@@ -104,6 +112,7 @@ export class ValidateRuntimeStep extends AzureWizardExecuteStep<IAppDeploymentWi
 				`invalid jar file: ${jarFilePath}, the specified \`Main-Class: ${manifest["Main-Class"]}\` is not found.`,
 			);
 		}
+
 		const mainClassVersion: number = (await zip.entryData(mainClassEntry))
 			.slice(6, 8)
 			.readUInt16BE();
@@ -124,6 +133,7 @@ export class ValidateRuntimeStep extends AzureWizardExecuteStep<IAppDeploymentWi
 					`invalid jar file: ${jarFilePath}, the specified \`Start-Class: ${manifest["Start-Class"]}\` is not found.`,
 				);
 			}
+
 			const startClassVersion: number = (
 				await zip.entryData(startClassEntry)
 			)
@@ -132,6 +142,7 @@ export class ValidateRuntimeStep extends AzureWizardExecuteStep<IAppDeploymentWi
 
 			return Math.max(startClassVersion, mainClassVersion);
 		}
+
 		return mainClassVersion;
 	}
 
@@ -150,8 +161,10 @@ export class ValidateRuntimeStep extends AzureWizardExecuteStep<IAppDeploymentWi
 				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 				l = lines.pop()!.concat(l.substring(1));
 			}
+
 			lines.push(l);
 		}
+
 		rl.close();
 
 		return lines

@@ -37,11 +37,15 @@ export async function createApp(
 
 	const executeSteps: AzureWizardExecuteStep<IAppCreationWizardContext>[] =
 		[];
+
 	promptSteps.push(new InputAppNameStep(service));
 	!(await service.isEnterpriseTier()) &&
 		promptSteps.push(new SelectAppStackStep(service));
+
 	executeSteps.push(new VerifyProvidersStep(["Microsoft.AppPlatform"]));
+
 	executeSteps.push(new CreateAppStep(service));
+
 	executeSteps.push(new CreateAppDeploymentStep());
 
 	const creating: string = utils.localize(
@@ -57,6 +61,7 @@ export async function createApp(
 	await wizard.prompt();
 
 	const appName: string = utils.nonNullProp(wizardContext, "newAppName");
+
 	await ext.state.showCreatingChild(
 		service.id,
 		utils.localize("createApp", 'Create App "{0}"...', appName),
@@ -66,6 +71,7 @@ export async function createApp(
 			} finally {
 				// refresh this node even if create fails because container app provision failure throws an error, but still creates a container app
 				await item.refresh();
+
 				ext.state.notifyChildrenChanged(service.id);
 			}
 		},
@@ -76,6 +82,7 @@ export async function createApp(
 		'Successfully created Spring app "{0}".',
 		appName,
 	);
+
 	void window.showInformationMessage(created);
 
 	return new AppItem(item, utils.nonNullProp(wizardContext, "newApp"));

@@ -28,9 +28,12 @@ type ResourceGroupsItem = ResourceItemBase & { id: string };
 export class TreeItemStateStore implements vscode.Disposable {
 	private readonly store: Record<string, Partial<TreeItemState> | undefined> =
 		{};
+
 	private readonly disposables: vscode.Disposable[] = [];
+
 	private readonly onDidUpdateStateEmitter =
 		new vscode.EventEmitter<string>();
+
 	private readonly onDidUpdateStateEvent: vscode.Event<string> =
 		this.onDidUpdateStateEmitter.event;
 
@@ -48,12 +51,14 @@ export class TreeItemStateStore implements vscode.Disposable {
 		const getTreeItem = item.getTreeItem.bind(
 			item,
 		) as typeof item.getTreeItem;
+
 		item.getTreeItem = async () => {
 			const treeItem = await getTreeItem();
 
 			if (item.id) {
 				return this.applyToTreeItem({ ...treeItem, id: item.id });
 			}
+
 			return treeItem;
 		};
 
@@ -61,6 +66,7 @@ export class TreeItemStateStore implements vscode.Disposable {
 			const getChildren = item.getChildren.bind(
 				item,
 			) as typeof item.getChildren;
+
 			item.getChildren = async () => {
 				const children = (await getChildren()) ?? [];
 
@@ -70,6 +76,7 @@ export class TreeItemStateStore implements vscode.Disposable {
 					const newChildren = state.temporaryChildren.filter(
 						(c) => !children.includes(c),
 					);
+
 					children.unshift(...newChildren);
 				}
 
@@ -94,6 +101,7 @@ export class TreeItemStateStore implements vscode.Disposable {
 		callback: () => Promise<T>,
 	): Promise<T> {
 		let result: T;
+
 		this.update(id, {
 			...this.getState(id),
 			temporaryDescription: description,
@@ -109,6 +117,7 @@ export class TreeItemStateStore implements vscode.Disposable {
 				spinner: false,
 			});
 		}
+
 		return result;
 	}
 
@@ -118,6 +127,7 @@ export class TreeItemStateStore implements vscode.Disposable {
 		callback: () => Promise<T>,
 	): Promise<T> {
 		let result: T;
+
 		this.update(id, { ...this.getState(id), temporaryChildren: [child] });
 
 		try {
@@ -128,6 +138,7 @@ export class TreeItemStateStore implements vscode.Disposable {
 				temporaryChildren: undefined,
 			});
 		}
+
 		return result;
 	}
 
@@ -188,6 +199,7 @@ export class TreeItemStateStore implements vscode.Disposable {
 
 	private update(id: string, state: Partial<TreeItemState>): void {
 		this.store[id] = { ...this.getState(id), ...state };
+
 		this.onDidUpdateStateEmitter.fire(id);
 	}
 }

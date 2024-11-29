@@ -8,6 +8,8 @@ import { DebugProxy } from "../DebugProxy";
 
 export interface IRemoteDebuggingContext extends IResourceGroupWizardContext {
 	config: RemoteDebugging;
+
 	proxy?: DebugProxy;
+
 	configurationName?: string;
 }

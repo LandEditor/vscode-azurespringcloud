@@ -19,8 +19,11 @@ export class AppEnvVariablesItem extends AppSettingsItem {
 		hidden: true,
 		contextValue: "azureSpringApps.app.envVariable",
 	};
+
 	public readonly contextValue: string = AppEnvVariablesItem.contextValue;
+
 	public readonly label: string = "Environment Variables";
+
 	public readonly id: string = `${this.parent.id}/envVariables`;
 
 	public constructor(public readonly parent: AppItem) {
@@ -49,6 +52,7 @@ export class AppEnvVariablesItem extends AppSettingsItem {
 			if (!rawEnvVars.JAVA_OPTS) {
 				delete rawEnvVars.JAVA_OPTS;
 			}
+
 			return rawEnvVars;
 		})();
 	}
@@ -63,6 +67,7 @@ export class AppEnvVariablesItem extends AppSettingsItem {
 			prompt: `Enter value for "${newKey}"`,
 			validateInput: EnhancedDeployment.validateVal,
 		});
+
 		await ext.state.showCreatingChild(
 			this.id,
 			utils.localize("addSettingItem", 'Add Item "{0}"...', newKey),
@@ -96,6 +101,7 @@ export class AppEnvVariablesItem extends AppSettingsItem {
 			value: node.value,
 			validateInput: EnhancedDeployment.validateVal,
 		});
+
 		await this.updateSettingsValue(context, {
 			...(await this.variables),
 			[node.key.trim()]: newVal.trim(),
@@ -109,7 +115,9 @@ export class AppEnvVariablesItem extends AppSettingsItem {
 		context: IActionContext,
 	): Promise<void> {
 		const tempVars: { [p: string]: string } = { ...(await this.variables) };
+
 		delete tempVars[node.key.trim()];
+
 		await this.updateSettingsValue(context, tempVars);
 	}
 
@@ -122,6 +130,7 @@ export class AppEnvVariablesItem extends AppSettingsItem {
 
 		if (deployment) {
 			const description = utils.localize("updating", "Updating...");
+
 			await ext.state.runWithTemporaryDescription(
 				this.id,
 				description,
@@ -137,9 +146,11 @@ export class AppEnvVariablesItem extends AppSettingsItem {
 						"Successfully updated environment variables of {0}.",
 						deployment.app.name,
 					);
+
 					await utils.runInBackground(updating, updated, () =>
 						deployment.updateEnvironmentVariables(newVars ?? {}),
 					);
+
 					void this.refresh();
 				},
 			);

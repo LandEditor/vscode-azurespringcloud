@@ -26,11 +26,13 @@ export interface ResourceItemBase extends AzureResourceModel {
 	getChildren?(): vscode.ProviderResult<ResourceItemBase[]>;
 
 	getTreeItem(): vscode.TreeItem | Thenable<vscode.TreeItem>;
+
 	refresh(): Promise<void>;
 }
 
 export interface SpringAppItem extends ResourceItemBase {
 	subscription: AzureSubscription;
+
 	springApp: EnhancedService;
 }
 
@@ -62,6 +64,7 @@ export class SpringAppsBranchDataProvider
 					() => this.refresh(child),
 				);
 			}
+
 			return child;
 		});
 	}

@@ -55,6 +55,7 @@ export class DebugController {
 
 			return;
 		}
+
 		const subContext = createSubscriptionContext(
 			instance.deployment.app.service.subscription,
 		);
@@ -73,17 +74,21 @@ export class DebugController {
 				"confirmRemoteDebug",
 				"Remote debugging should be enabled first before debugging. Do you want to enable it?",
 			);
+
 			void enableRemoteDebugging(context, node.parent.parent, confirmMsg);
 
 			return;
 		}
+
 		executeSteps.push(new StartDebuggingProxyStep(instance));
+
 		executeSteps.push(new StartDebugConfigurationStep(instance));
 
 		const wizard: AzureWizard<IRemoteDebuggingContext> = new AzureWizard(
 			wizardContext,
 			{ executeSteps, title: attaching },
 		);
+
 		await wizard.execute();
 
 		const task: () => void = async () => {
@@ -96,6 +101,7 @@ export class DebugController {
 
 			if (action) {
 				const appTreeItem: AppItem = node.parent.parent;
+
 				action === AppItem.ACCESS_PUBLIC_ENDPOINT
 					? void openPublicEndpoint(context, appTreeItem)
 					: void openTestEndpoint(context, appTreeItem);

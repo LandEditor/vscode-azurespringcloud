@@ -10,10 +10,12 @@ import { IAppDeploymentWizardContext } from "./IAppDeploymentWizardContext";
 
 export class OpenLogStreamStep extends AzureWizardExecuteStep<IAppDeploymentWizardContext> {
 	public priority: number = 145;
+
 	private readonly deployment: EnhancedDeployment;
 
 	constructor(deployment: EnhancedDeployment) {
 		super();
+
 		this.deployment = deployment;
 	}
 
@@ -25,7 +27,9 @@ export class OpenLogStreamStep extends AzureWizardExecuteStep<IAppDeploymentWiza
 			"openLogStream",
 			"Opening application log stream...",
 		);
+
 		progress.report({ message });
+
 		await this.deployment.latestInstance.then((i) =>
 			i.startStreamingLogs(context),
 		);

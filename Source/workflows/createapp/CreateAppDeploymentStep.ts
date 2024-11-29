@@ -20,12 +20,14 @@ export class CreateAppDeploymentStep extends AzureWizardExecuteStep<IAppCreation
 			"creatingNewAppDeployment",
 			"Creating default deployment...",
 		);
+
 		progress.report({ message });
 
 		const appRuntime: KnownSupportedRuntimeValue | undefined =
 			context.newAppRuntime;
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		const app: EnhancedApp = context.newApp!;
+
 		context.newDeployment = await app.createDeployment(
 			EnhancedApp.DEFAULT_DEPLOYMENT,
 			appRuntime,

@@ -28,11 +28,13 @@ export abstract class AppSettingsItem implements ResourceItemBase {
 				await s.toggleVisibility(context, !hidden);
 			}
 		}
+
 		ext.state.notifyChildrenChanged(this.id);
 	}
 
 	public async refresh(): Promise<void> {
 		this._children = this.loadChildren();
+
 		ext.state.notifyChildrenChanged(this.id);
 	}
 

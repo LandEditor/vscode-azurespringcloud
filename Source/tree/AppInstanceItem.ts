@@ -12,6 +12,7 @@ import { ResourceItemBase } from "./SpringAppsBranchDataProvider";
 export class AppInstanceItem implements ResourceItemBase {
 	public static contextValue: RegExp =
 		/^azureSpringApps\.app\.instance;status-.+;streaming-.+;/i;
+
 	public readonly id: string = `${this.parent.id}/${this.instance.name}`;
 
 	public constructor(

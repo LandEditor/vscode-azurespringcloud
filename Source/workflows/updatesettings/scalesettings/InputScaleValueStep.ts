@@ -11,12 +11,16 @@ import { IScaleSettingsUpdateWizardContext } from "./IScaleSettingsUpdateWizardC
 export class InputScaleValueStep extends AzureWizardPromptStep<IScaleSettingsUpdateWizardContext> {
 	// refer https://github.com/microsoft/vscode-azuretools/issues/789
 	public supportsDuplicateSteps: boolean = true;
+
 	private readonly key: string;
+
 	private readonly deployment: EnhancedDeployment;
 
 	constructor(deployment: EnhancedDeployment, key: string) {
 		super();
+
 		this.deployment = deployment;
+
 		this.key = key;
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		this.validateInput = this.validateInput.bind(this);
@@ -35,6 +39,7 @@ export class InputScaleValueStep extends AzureWizardPromptStep<IScaleSettingsUpd
 			await this.deployment.getScaleSettings();
 
 		const value: string = `${settings[this.key]}`;
+
 		context.newSettings[this.key] = Number(
 			(
 				await context.ui.showInputBox({
@@ -111,6 +116,7 @@ export class InputScaleValueStep extends AzureWizardPromptStep<IScaleSettingsUpd
 				);
 			}
 		}
+
 		return undefined;
 	}
 }

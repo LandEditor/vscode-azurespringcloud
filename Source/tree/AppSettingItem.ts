@@ -11,9 +11,13 @@ import { ResourceItemBase } from "./SpringAppsBranchDataProvider";
 
 export interface IOptions {
 	hidden?: boolean;
+
 	deletable?: boolean;
+
 	label?: string;
+
 	readonly?: boolean;
+
 	contextValue?: string;
 }
 
@@ -95,6 +99,7 @@ export class AppSettingItem implements ResourceItemBase {
 		hidden?: boolean,
 	): Promise<void> {
 		this.options.hidden = hidden ?? !this.options.hidden;
+
 		ext.state.notifyChildrenChanged(this.id);
 	}
 

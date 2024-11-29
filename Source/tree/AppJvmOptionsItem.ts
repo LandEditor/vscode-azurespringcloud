@@ -26,12 +26,17 @@ import { AppSettingsItem } from "./AppSettingsItem";
 
 export class AppJvmOptionsItem extends AppSettingsItem {
 	public static contextValue: string = "azureSpringApps.app.jvmOptions";
+
 	private static readonly _options: IOptions = {
 		contextValue: "azureSpringApps.app.jvmOption",
 	};
+
 	private static readonly JVM_OPTION_PATTERN: RegExp = /^-[a-zA-Z_]+\S*$/;
+
 	public readonly contextValue: string = AppJvmOptionsItem.contextValue;
+
 	public readonly label: string = "JVM Options";
+
 	public readonly id: string = `${this.parent.id}/jvmOptions`;
 
 	public constructor(public readonly parent: AppItem) {
@@ -73,6 +78,7 @@ export class AppJvmOptionsItem extends AppSettingsItem {
 					.filter((s) => s.trim())
 					.map((s) => `-${s}`);
 			}
+
 			return [];
 		})();
 	}
@@ -83,6 +89,7 @@ export class AppJvmOptionsItem extends AppSettingsItem {
 			placeHolder: "e.g. -Xmx2048m",
 			validateInput: this.validateJvmOption,
 		});
+
 		await ext.state.showCreatingChild(
 			this.id,
 			utils.localize("addSettingItem", 'Add Item "{0}"...', newVal),
@@ -121,7 +128,9 @@ export class AppJvmOptionsItem extends AppSettingsItem {
 		const options: string[] = [...(await this.options)];
 
 		const index: number = options.indexOf(node.value.trim());
+
 		options.splice(index, 1, newVal.trim());
+
 		await this.updateSettingsValue(context, options);
 
 		return newVal;
@@ -134,7 +143,9 @@ export class AppJvmOptionsItem extends AppSettingsItem {
 		const tempOptions: string[] = [...(await this.options)];
 
 		const index: number = tempOptions.indexOf(node.value);
+
 		tempOptions.splice(index, 1);
+
 		await this.updateSettingsValue(context, tempOptions);
 	}
 
@@ -175,7 +186,9 @@ export class AppJvmOptionsItem extends AppSettingsItem {
 
 			const executeSteps: AzureWizardExecuteStep<IJvmOptionsUpdateWizardContext>[] =
 				[];
+
 			promptSteps.push(new InputJvmOptionsStep(deployment));
+
 			executeSteps.push(new UpdateJvmOptionsStep(deployment));
 
 			const wizard: AzureWizard<IJvmOptionsUpdateWizardContext> =
@@ -184,13 +197,17 @@ export class AppJvmOptionsItem extends AppSettingsItem {
 					executeSteps,
 					title: updating,
 				});
+
 			await wizard.prompt();
+
 			await ext.state.runWithTemporaryDescription(
 				this.id,
 				"Updating...",
 				() => wizard.execute(),
 			);
+
 			void window.showInformationMessage(updated);
+
 			void this.refresh();
 		}
 	}
@@ -203,6 +220,7 @@ export class AppJvmOptionsItem extends AppSettingsItem {
 		} else if ((await this.options).includes(v)) {
 			return `${v} is already set`;
 		}
+
 		return undefined;
 	}
 

@@ -19,6 +19,7 @@ import { localize } from "../../utils";
 
 export interface ILogStream extends vscode.Disposable {
 	isConnected: boolean;
+
 	outputChannel: vscode.OutputChannel;
 }
 
@@ -36,6 +37,7 @@ export async function startStreamingLogs(
 
 	if (logStream && logStream.isConnected) {
 		logStream.outputChannel.show();
+
 		void context.ui.showWarningMessage(
 			localize(
 				"logStreamAlreadyActive",
@@ -55,8 +57,11 @@ export async function startStreamingLogs(
 						instance.name,
 					),
 				);
+
 		ext.context.subscriptions.push(outputChannel);
+
 		outputChannel.show();
+
 		outputChannel.appendLine(
 			localize(
 				"connectingToLogStream",
@@ -70,19 +75,23 @@ export async function startStreamingLogs(
 			outputChannel,
 			response,
 		);
+
 		response
 			.on("data", (chunk: Buffer | string) => {
 				outputChannel.append(chunk.toString());
 			})
 			.on("error", (err: Error) => {
 				newLogStream.isConnected = false;
+
 				outputChannel.show();
+
 				outputChannel.appendLine(
 					localize(
 						"logStreamError",
 						"Error connecting to log-streaming service:",
 					),
 				);
+
 				outputChannel.appendLine(parseError(err).message);
 			})
 			.on("close", () => {
@@ -91,6 +100,7 @@ export async function startStreamingLogs(
 			.on("end", () => {
 				newLogStream.dispose();
 			});
+
 		logStreams.set(logStreamId, newLogStream);
 
 		return Promise.resolve(newLogStream);
@@ -123,14 +133,18 @@ function createLogStream(
 	const newLogStream: ILogStream = {
 		dispose: (): void => {
 			response.removeAllListeners();
+
 			response.destroy();
+
 			outputChannel.show();
+
 			outputChannel.appendLine(
 				localize(
 					"logStreamDisconnected",
 					"Disconnected from log-streaming service.",
 				),
 			);
+
 			newLogStream.isConnected = false;
 		},
 		isConnected: true,

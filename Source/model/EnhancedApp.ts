@@ -27,13 +27,19 @@ import { EnhancedService } from "./EnhancedService";
 export class EnhancedApp {
 	public static readonly DEFAULT_RUNTIME: KnownSupportedRuntimeValue =
 		KnownSupportedRuntimeValue.Java17;
+
 	public static readonly DEFAULT_DEPLOYMENT: string = "default";
+
 	public static readonly DEFAULT_TANZU_COMPONENT_NAME: string = "default";
 
 	public readonly name: string;
+
 	public readonly id: string;
+
 	public readonly service: EnhancedService;
+
 	private _remote: Promise<AppResource>;
+
 	private _activeDeployment: Promise<EnhancedDeployment | undefined>;
 
 	public constructor(service: EnhancedService, resource: AppResource) {
@@ -41,8 +47,11 @@ export class EnhancedApp {
 		this.name = resource.name!;
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		this.id = resource.id!;
+
 		this.service = service;
+
 		this._remote = Promise.resolve(resource);
+
 		this._activeDeployment = this.loadActiveDeployment();
 	}
 
@@ -80,10 +89,12 @@ export class EnhancedApp {
 		if (_status.endsWith("ing") && _status !== "running") {
 			_status = "pending";
 		}
+
 		if (_status === "succeeded") {
 			// inactive
 			_status = "unknown";
 		}
+
 		return _status;
 	}
 
@@ -97,12 +108,14 @@ export class EnhancedApp {
 		if (!activeDeploymentName) {
 			throw new Error(`app ${this.name} has no active deployment.`);
 		}
+
 		await this.client.deployments.beginStartAndWait(
 			this.service.resourceGroup,
 			this.service.name,
 			this.name,
 			activeDeploymentName,
 		);
+
 		ext.outputChannel.appendLog(`[App] app ${this.name} is started.`);
 	}
 
@@ -116,12 +129,14 @@ export class EnhancedApp {
 		if (!activeDeploymentName) {
 			throw new Error(`app ${this.name} has no active deployment.`);
 		}
+
 		await this.client.deployments.beginStopAndWait(
 			this.service.resourceGroup,
 			this.service.name,
 			this.name,
 			activeDeploymentName,
 		);
+
 		ext.outputChannel.appendLog(`[App] app ${this.name} is stopped.`);
 	}
 
@@ -135,22 +150,26 @@ export class EnhancedApp {
 		if (!activeDeploymentName) {
 			throw new Error(`app ${this.name} has no active deployment.`);
 		}
+
 		await this.client.deployments.beginRestartAndWait(
 			this.service.resourceGroup,
 			this.service.name,
 			this.name,
 			activeDeploymentName,
 		);
+
 		ext.outputChannel.appendLog(`[App] app ${this.name} is restarted.`);
 	}
 
 	public async remove(): Promise<void> {
 		ext.outputChannel.appendLog(`[App] deleting app ${this.name}.`);
+
 		await this.client.apps.beginDeleteAndWait(
 			this.service.resourceGroup,
 			this.service.name,
 			this.name,
 		);
+
 		ext.outputChannel.appendLog(`[App] app ${this.name} is deleted.`);
 	}
 
@@ -160,6 +179,7 @@ export class EnhancedApp {
 			this.service.name,
 			this.name,
 		);
+
 		this._activeDeployment = this.loadActiveDeployment();
 
 		return Promise.all([this._remote, this._activeDeployment]).then(
@@ -180,6 +200,7 @@ export class EnhancedApp {
 		for await (const deployment of pagedResources) {
 			deployments.push(deployment);
 		}
+
 		return deployments.map((a) => new EnhancedDeployment(this, a));
 	}
 
@@ -205,6 +226,7 @@ export class EnhancedApp {
 				break;
 			}
 		}
+
 		return activeDeployment;
 	}
 
@@ -212,6 +234,7 @@ export class EnhancedApp {
 		ext.outputChannel.appendLog(
 			`[App] setting (${deploymentName}) as the new active deployment of app (${this.name}).`,
 		);
+
 		this._remote = this.client.apps.beginSetActiveDeploymentsAndWait(
 			this.service.resourceGroup,
 			this.service.name,
@@ -220,7 +243,9 @@ export class EnhancedApp {
 				activeDeploymentNames: [deploymentName],
 			},
 		);
+
 		this._activeDeployment = this.loadActiveDeployment();
+
 		ext.outputChannel.appendLog(
 			`[App] (${deploymentName}) is set as new active deployment of app (${this.name}).`,
 		);
@@ -231,6 +256,7 @@ export class EnhancedApp {
 		runtime?: KnownSupportedRuntimeValue,
 	): Promise<EnhancedDeployment> {
 		let source: UserSourceInfoUnion | undefined;
+
 		ext.outputChannel.appendLog(
 			`[Deployment] creating deployment (${name}) of app (${this.name}).`,
 		);
@@ -274,6 +300,7 @@ export class EnhancedApp {
 					},
 				},
 			);
+
 		ext.outputChannel.appendLog(
 			`[Deployment] new deployment (${name}) of app (${this.name}) is created.`,
 		);
@@ -285,12 +312,14 @@ export class EnhancedApp {
 		ext.outputChannel.appendLog(
 			`[Deployment] starting deployment (${name}) of app (${this.name}).`,
 		);
+
 		await this.client.deployments.beginStartAndWait(
 			this.service.resourceGroup,
 			this.service.name,
 			this.name,
 			name,
 		);
+
 		ext.outputChannel.appendLog(
 			`[Deployment] deployment (${name}) of app (${this.name}) is started.`,
 		);
@@ -309,6 +338,7 @@ export class EnhancedApp {
 				`Test endpoint is not supported for apps of consumption plan.`,
 			);
 		}
+
 		const testKeys: TestKeys | undefined = await this.getTestKeys();
 
 		return `${testKeys.primaryTestEndpoint}/${this.name}/default`;
@@ -320,11 +350,13 @@ export class EnhancedApp {
 		if (p?.url && p?.url !== "None") {
 			return p?.url;
 		}
+
 		return undefined;
 	}
 
 	public async setPublic(isPublic: boolean): Promise<void> {
 		ext.outputChannel.appendLog(`[App] setting app (${this.name}) public.`);
+
 		this._remote = this.client.apps.beginCreateOrUpdateAndWait(
 			this.service.resourceGroup,
 			this.service.name,
@@ -333,11 +365,13 @@ export class EnhancedApp {
 				properties: { public: isPublic },
 			},
 		);
+
 		ext.outputChannel.appendLog(`[App] app (${this.name}) is set public.`);
 	}
 
 	public async togglePublic(): Promise<void> {
 		const isPublic: boolean = (await this.properties)?.public ?? false;
+
 		await this.setPublic(!isPublic);
 	}
 
@@ -362,6 +396,7 @@ export class EnhancedApp {
 		if (!uploadDefinition.uploadUrl) {
 			throw new Error(`faild to get upload url of app ${this.name}.`);
 		}
+
 		ext.outputChannel.appendLog(
 			`[App] uploading artifact (${path}) to app ${this.name}.`,
 		);
@@ -370,7 +405,9 @@ export class EnhancedApp {
 			uploadDefinition.uploadUrl,
 			new AnonymousCredential(),
 		);
+
 		await fileClient.uploadFile(path);
+
 		ext.outputChannel.appendLog(
 			`[App] artifact (${path}) is uploaded to app ${this.name}.`,
 		);
@@ -416,6 +453,7 @@ export class EnhancedApp {
 					this.name,
 					buildResultName!,
 				);
+
 			status = result.properties?.provisioningState;
 
 			if (status === "Succeeded") {
@@ -432,6 +470,7 @@ export class EnhancedApp {
 				throw new Error(`Build failed for buildId: ${buildResultId}`);
 			}
 		}
+
 		return build.properties?.triggeredBuildResult?.id;
 	}
 }

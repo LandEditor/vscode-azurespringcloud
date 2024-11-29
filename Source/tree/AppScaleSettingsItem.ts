@@ -25,12 +25,15 @@ import { AppSettingsItem } from "./AppSettingsItem";
 
 export class AppScaleSettingsItem extends AppSettingsItem {
 	public static contextValue: string = "azureSpringApps.app.scaleSettings";
+
 	private static readonly _options: IOptions = {
 		contextValue: "azureSpringApps.app.scaleSetting",
 	};
 
 	public readonly contextValue: string = AppScaleSettingsItem.contextValue;
+
 	public readonly label: string = "Scale Settings";
+
 	public readonly id: string = `${this.parent.id}/scaleSettings`;
 
 	public constructor(parent: AppItem) {
@@ -111,6 +114,7 @@ export class AppScaleSettingsItem extends AppSettingsItem {
 					);
 				}
 			}
+
 			executeSteps.push(new UpdateScaleSettingsStep(deployment));
 
 			const wizard: AzureWizard<IScaleSettingsUpdateWizardContext> =
@@ -119,17 +123,22 @@ export class AppScaleSettingsItem extends AppSettingsItem {
 					executeSteps,
 					title: scaling,
 				});
+
 			await wizard.prompt();
+
 			await ext.state.runWithTemporaryDescription(
 				this.id,
 				"Scaling...",
 				() => wizard.execute(),
 			);
+
 			void window.showInformationMessage(scaled);
+
 			void this.parent.refresh();
 
 			return `${wizardContext.newSettings[key ?? "capacity"]}`;
 		}
+
 		return "";
 	}
 

@@ -11,10 +11,12 @@ import { IScaleSettingsUpdateWizardContext } from "./IScaleSettingsUpdateWizardC
 export class InputConsumptionPlanScaleOutValueStep extends AzureWizardPromptStep<IScaleSettingsUpdateWizardContext> {
 	// refer https://github.com/microsoft/vscode-azuretools/issues/789
 	public supportsDuplicateSteps: boolean = true;
+
 	private readonly deployment: EnhancedDeployment;
 
 	constructor(deployment: EnhancedDeployment) {
 		super();
+
 		this.deployment = deployment;
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		this.validateInput = this.validateInput.bind(this);
@@ -29,6 +31,7 @@ export class InputConsumptionPlanScaleOutValueStep extends AzureWizardPromptStep
 			await this.deployment.getScaleSettings();
 
 		const value: string = `${settings.capacity}`;
+
 		context.newSettings.capacity = Number(
 			(
 				await context.ui.showInputBox({
@@ -60,6 +63,7 @@ export class InputConsumptionPlanScaleOutValueStep extends AzureWizardPromptStep
 				30,
 			);
 		}
+
 		return undefined;
 	}
 }

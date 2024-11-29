@@ -31,6 +31,7 @@ export async function deployArtifact(
 	if (!deployment) {
 		throw new Error(`App "${app.name}" has no active deployment.`);
 	}
+
 	const deploying: string = utils.localize(
 		"deploying",
 		'Deploying artifact to "{0}".',
@@ -60,8 +61,11 @@ export async function deployArtifact(
 	) {
 		executeSteps.push(new ValidateRuntimeStep(deployment, artifactPath));
 	}
+
 	executeSteps.push(new UploadArtifactStep(app, artifactPath));
+
 	executeSteps.push(new UpdateDeploymentStep(deployment));
+
 	executeSteps.push(new OpenLogStreamStep(deployment));
 
 	const wizard: AzureWizard<IAppDeploymentWizardContext> = new AzureWizard(
@@ -70,6 +74,7 @@ export async function deployArtifact(
 	);
 
 	const description = utils.localize("deploying", "Deploying...");
+
 	await ext.state.runWithTemporaryDescription(app.id, description, () =>
 		wizard.execute(),
 	);

@@ -12,6 +12,7 @@ export class InputJvmOptionsStep extends AzureWizardPromptStep<IJvmOptionsUpdate
 
 	constructor(deployment: EnhancedDeployment) {
 		super();
+
 		this.deployment = deployment;
 	}
 
@@ -24,6 +25,7 @@ export class InputJvmOptionsStep extends AzureWizardPromptStep<IJvmOptionsUpdate
 			"jvmOptionsPrompt",
 			"Enter new JVM options for the Spring app.",
 		);
+
 		context.newJvmOptions = (
 			await context.ui.showInputBox({
 				prompt,

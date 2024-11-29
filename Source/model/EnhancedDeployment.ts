@@ -20,11 +20,15 @@ import { EnhancedInstance } from "./EnhancedInstance";
 
 export class EnhancedDeployment {
 	private static readonly VALID_ENV_VAR_KEY: RegExp = /^[a-zA-Z_][\w.-]*$/;
+
 	private static readonly DEFAULT_DEPLOYMENT_NAME: string = "default";
 
 	public readonly name: string;
+
 	public readonly id: string;
+
 	public readonly app: EnhancedApp;
+
 	private _remote: Promise<DeploymentResource>;
 
 	public constructor(app: EnhancedApp, resource: DeploymentResource) {
@@ -32,7 +36,9 @@ export class EnhancedDeployment {
 		this.name = resource.name!;
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		this.id = resource.id!;
+
 		this.app = app;
+
 		this._remote = Promise.resolve(resource);
 	}
 
@@ -60,6 +66,7 @@ export class EnhancedDeployment {
 				4000,
 			);
 		}
+
 		return undefined;
 	}
 
@@ -73,6 +80,7 @@ export class EnhancedDeployment {
 				4000,
 			);
 		}
+
 		return undefined;
 	}
 
@@ -136,9 +144,11 @@ export class EnhancedDeployment {
 				source: { type: "Jar", relativePath: relativePathOrBuildId },
 			};
 		}
+
 		ext.outputChannel.appendLog(
 			`[Deployment] update artifact path of deployment (${this.name}) to ${relativePathOrBuildId}.`,
 		);
+
 		this._remote = this.client.deployments.beginUpdateAndWait(
 			this.app.service.resourceGroup,
 			this.app.service.name,
@@ -146,6 +156,7 @@ export class EnhancedDeployment {
 			this.name || EnhancedDeployment.DEFAULT_DEPLOYMENT_NAME,
 			{ properties },
 		);
+
 		ext.outputChannel.appendLog(
 			`[Deployment] artifact path of deployment (${this.name}) is updated.`,
 		);
@@ -183,9 +194,11 @@ export class EnhancedDeployment {
 				maxReplicas: settings.capacity ?? sku?.capacity ?? 10,
 			};
 		}
+
 		ext.outputChannel.appendLog(
 			`[Deployment] update scale settings of deployment (${this.name}).`,
 		);
+
 		this._remote = this.client.deployments.beginUpdateAndWait(
 			this.app.service.resourceGroup,
 			this.app.service.name,
@@ -193,6 +206,7 @@ export class EnhancedDeployment {
 			this.name,
 			resource,
 		);
+
 		ext.outputChannel.appendLog(
 			`[Deployment] scale settings of deployment (${this.name}) is updated.`,
 		);
@@ -204,6 +218,7 @@ export class EnhancedDeployment {
 		ext.outputChannel.appendLog(
 			`[Deployment] update environment variables of deployment (${this.name}).`,
 		);
+
 		this._remote = this.client.deployments.beginUpdateAndWait(
 			this.app.service.resourceGroup,
 			this.app.service.name,
@@ -213,6 +228,7 @@ export class EnhancedDeployment {
 				properties: { deploymentSettings: { environmentVariables } },
 			},
 		);
+
 		ext.outputChannel.appendLog(
 			`[Deployment] environment variables of deployment (${this.name}) is updated.`,
 		);
@@ -238,7 +254,9 @@ export class EnhancedDeployment {
 			const environmentVariables: { [p: string]: string } =
 				(await this.properties)?.deploymentSettings
 					?.environmentVariables ?? {};
+
 			environmentVariables.JAVA_OPTS = jvmOptions;
+
 			this._remote = this.client.deployments.beginUpdateAndWait(
 				this.app.service.resourceGroup,
 				this.app.service.name,
@@ -266,6 +284,7 @@ export class EnhancedDeployment {
 				},
 			);
 		}
+
 		ext.outputChannel.appendLog(
 			`[Deployment] JVM options of deployment (${this.name}) is updated.`,
 		);
@@ -303,6 +322,7 @@ export class EnhancedDeployment {
 		if (await this.app.service.isConsumptionTier()) {
 			return undefined;
 		}
+
 		return this.client.deployments.getRemoteDebuggingConfig(
 			this.app.service.resourceGroup,
 			this.app.service.name,
@@ -333,6 +353,7 @@ export class EnhancedDeployment {
 		ext.outputChannel.appendLog(
 			`[Deployment] disable remote debugging of deployment (${this.name}).`,
 		);
+
 		await this.client.deployments.beginDisableRemoteDebuggingAndWait(
 			this.app.service.resourceGroup,
 			this.app.service.name,

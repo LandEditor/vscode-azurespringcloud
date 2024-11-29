@@ -11,10 +11,12 @@ import { IRemoteDebuggingContext } from "./IRemoteDebuggingContext";
 
 export class StartDebugConfigurationStep extends AzureWizardExecuteStep<IRemoteDebuggingContext> {
 	public priority: number = 145;
+
 	private readonly instance: EnhancedInstance;
 
 	constructor(instance: EnhancedInstance) {
 		super();
+
 		this.instance = instance;
 	}
 
@@ -27,7 +29,9 @@ export class StartDebugConfigurationStep extends AzureWizardExecuteStep<IRemoteD
 			'Attaching debugger to instance "{0}"...',
 			this.instance.name,
 		);
+
 		ext.outputChannel.appendLog(message);
+
 		progress.report({ message });
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		const instanceName: string = this.instance.name!;
@@ -45,6 +49,7 @@ export class StartDebugConfigurationStep extends AzureWizardExecuteStep<IRemoteD
 
 		if (started) {
 			context.configurationName = configurationName;
+
 			ext.outputChannel.appendLog(
 				localize(
 					"startDebuggerSuccess",
@@ -57,6 +62,7 @@ export class StartDebugConfigurationStep extends AzureWizardExecuteStep<IRemoteD
 				`Failed to attach debugger to instance "${this.instance.name}".`,
 			);
 		}
+
 		this.disposeProxyAtTermination(context);
 	}
 
@@ -71,6 +77,7 @@ export class StartDebugConfigurationStep extends AzureWizardExecuteStep<IRemoteD
 					if (context.proxy !== undefined) {
 						context.proxy.dispose();
 					}
+
 					listener.dispose();
 				}
 			},

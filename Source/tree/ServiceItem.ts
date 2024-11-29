@@ -16,11 +16,14 @@ import { ResourceItemBase } from "./SpringAppsBranchDataProvider";
 
 export default class ServiceItem implements ResourceItemBase {
 	private _deleted: boolean;
+
 	private _children: Promise<AppItem[] | undefined>;
+
 	private _stateProperties: {} | undefined = undefined;
 
 	constructor(public readonly service: EnhancedService) {
 		this.service = service;
+
 		this._children = this.loadChildren();
 	}
 
@@ -31,10 +34,12 @@ export default class ServiceItem implements ResourceItemBase {
 	async getTreeItem(): Promise<TreeItem> {
 		if (this._stateProperties === undefined) {
 			void this.refresh();
+
 			this._stateProperties = {
 				contextValue: `azureSpringApps.apps;tier-other;`,
 			};
 		}
+
 		return {
 			id: this.id,
 			label: this.service.name,
@@ -73,12 +78,15 @@ export default class ServiceItem implements ResourceItemBase {
 
 	public async remove(_context: IActionContext): Promise<void> {
 		const description = utils.localize("deleting", "Deleting...");
+
 		await ext.state.runWithTemporaryDescription(
 			this.id,
 			description,
 			async () => {
 				await this.service.remove();
+
 				this._deleted = true;
+
 				ext.branchDataProvider.refresh();
 			},
 		);
@@ -87,11 +95,13 @@ export default class ServiceItem implements ResourceItemBase {
 	public async refresh(): Promise<void> {
 		if (!this._deleted) {
 			this._stateProperties = undefined;
+
 			await ext.state.runWithTemporaryDescription(
 				this.id,
 				utils.localize("loading", "Loading..."),
 				async () => {
 					await this.service.refresh();
+
 					this._children = this.loadChildren();
 
 					const state: string | undefined = (
@@ -110,6 +120,7 @@ export default class ServiceItem implements ResourceItemBase {
 							: "other";
 
 					const contextValue = `azureSpringApps.apps;tier-${tier};`;
+
 					this._stateProperties = { description, contextValue };
 
 					ext.state.notifyChildrenChanged(this.id);

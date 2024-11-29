@@ -11,10 +11,12 @@ import { IScaleSettingsUpdateWizardContext } from "./IScaleSettingsUpdateWizardC
 
 export class UpdateScaleSettingsStep extends AzureWizardExecuteStep<IScaleSettingsUpdateWizardContext> {
 	public readonly priority: number = 145;
+
 	private readonly deployment: EnhancedDeployment;
 
 	constructor(deployment: EnhancedDeployment) {
 		super();
+
 		this.deployment = deployment;
 	}
 
@@ -40,12 +42,15 @@ export class UpdateScaleSettingsStep extends AzureWizardExecuteStep<IScaleSettin
 
 			return Promise.resolve(undefined);
 		}
+
 		const message: string = localize(
 			"updatingScaleSetting",
 			'Updating scale settings of "{0}"...',
 			this.deployment.app.name,
 		);
+
 		progress.report({ message });
+
 		await this.deployment.updateScaleSettings(context.newSettings);
 
 		return Promise.resolve(undefined);

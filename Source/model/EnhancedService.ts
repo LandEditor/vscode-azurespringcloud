@@ -18,10 +18,15 @@ export class EnhancedService {
 	public readonly client: AppPlatformManagementClient;
 
 	public readonly id: string;
+
 	public readonly name: string;
+
 	public readonly subscription: AzureSubscription;
+
 	public readonly resourceGroup: string;
+
 	private _remote: Promise<ServiceResource>;
+
 	private _devToolsPortal: Promise<DevToolPortalResource | undefined>;
 
 	public constructor(
@@ -30,13 +35,17 @@ export class EnhancedService {
 		resource: ServiceResource,
 	) {
 		this.client = client;
+
 		this.subscription = subscription;
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		this.name = resource.name!;
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		this.id = resource.id!;
+
 		this.resourceGroup = this.id.split("/")[4];
+
 		this._remote = Promise.resolve(resource);
+
 		this._devToolsPortal = this.initDevTools();
 	}
 
@@ -70,6 +79,7 @@ export class EnhancedService {
 					},
 				},
 			);
+
 		ext.outputChannel.appendLog(`[App] app (${this.name}) is created.`);
 
 		return new EnhancedApp(this, app);
@@ -86,6 +96,7 @@ export class EnhancedService {
 		for await (const app of pagedApps) {
 			apps.push(app);
 		}
+
 		return apps.map((app) => new EnhancedApp(this, app));
 	}
 
@@ -101,6 +112,7 @@ export class EnhancedService {
 				return portal;
 			}
 		}
+
 		return undefined;
 	}
 
@@ -111,6 +123,7 @@ export class EnhancedService {
 		if (devToolsPortal && (await this.isLiveViewEnabled())) {
 			return `https://${devToolsPortal.properties?.url}/${devToolsPortal.properties?.features?.applicationLiveView?.route}`;
 		}
+
 		return undefined;
 	}
 
@@ -132,6 +145,7 @@ export class EnhancedService {
 				guiUrl: `https://${devToolsPortal.properties?.url}`,
 			};
 		}
+
 		return undefined;
 	}
 
@@ -152,6 +166,7 @@ export class EnhancedService {
 					},
 				},
 			);
+
 		await this._devToolsPortal;
 	}
 
@@ -195,6 +210,7 @@ export class EnhancedService {
 
 	public async refresh(): Promise<EnhancedService> {
 		this._remote = this.client.services.get(this.resourceGroup, this.name);
+
 		this._devToolsPortal = this.initDevTools();
 
 		return Promise.all([this._remote, this._devToolsPortal]).then(
@@ -204,10 +220,12 @@ export class EnhancedService {
 
 	public async remove(): Promise<void> {
 		ext.outputChannel.appendLog(`[Apps] deleting apps (${this.name}).`);
+
 		await this.client.services.beginDeleteAndWait(
 			this.resourceGroup,
 			this.name,
 		);
+
 		ext.outputChannel.appendLog(`[Apps] apps (${this.name}) is deleted.`);
 	}
 

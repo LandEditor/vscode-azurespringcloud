@@ -39,6 +39,7 @@ export class SelectAppStackStep extends AzureWizardPromptStep<IAppCreationWizard
 			"selectRuntime",
 			"Select a Java runtime version",
 		);
+
 		context.newAppRuntime = (
 			await context.ui.showQuickPick(picks, { placeHolder })
 		).data;

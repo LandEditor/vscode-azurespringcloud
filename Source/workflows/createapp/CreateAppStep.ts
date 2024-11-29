@@ -10,10 +10,12 @@ import { IAppCreationWizardContext } from "./IAppCreationWizardContext";
 
 export class CreateAppStep extends AzureWizardExecuteStep<IAppCreationWizardContext> {
 	public priority: number = 135;
+
 	private readonly service: EnhancedService;
 
 	constructor(service: EnhancedService) {
 		super();
+
 		this.service = service;
 	}
 
@@ -26,9 +28,11 @@ export class CreateAppStep extends AzureWizardExecuteStep<IAppCreationWizardCont
 			'Creating and provisioning new app "{0}"...',
 			context.newAppName,
 		);
+
 		progress.report({ message });
 
 		const appName: string = nonNullProp(context, "newAppName");
+
 		context.newApp = await this.service.createApp(appName);
 
 		return Promise.resolve(undefined);

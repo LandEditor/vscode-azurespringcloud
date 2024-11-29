@@ -10,12 +10,16 @@ import { IAppDeploymentWizardContext } from "./IAppDeploymentWizardContext";
 
 export class UploadArtifactStep extends AzureWizardExecuteStep<IAppDeploymentWizardContext> {
 	public priority: number = 135;
+
 	private readonly app: EnhancedApp;
+
 	private readonly artifactPath: string;
 
 	constructor(app: EnhancedApp, artifactPath: string) {
 		super();
+
 		this.app = app;
+
 		this.artifactPath = artifactPath;
 	}
 
@@ -28,7 +32,9 @@ export class UploadArtifactStep extends AzureWizardExecuteStep<IAppDeploymentWiz
 			'Uploading artifact "{0}" to Azure...',
 			this.artifactPath,
 		);
+
 		progress.report({ message });
+
 		context.relativePathOrBuildResultId = await this.app.uploadArtifact(
 			this.artifactPath,
 		);

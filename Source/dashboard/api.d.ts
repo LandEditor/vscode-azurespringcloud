@@ -15,7 +15,9 @@ export interface DashboardExtensionApi {
 		provider: RemoteBootAppDataProvider,
 		options?: RemoteBootAppDataProviderOptions,
 	);
+
 	connectRemoteApp: (appData: RemoteBootAppData) => void;
+
 	disconnectRemoteApp: (appData: RemoteBootAppData) => void;
 }
 
@@ -24,7 +26,9 @@ export interface DashboardExtensionApi {
  */
 export interface RemoteBootAppData {
 	name: string;
+
 	group?: string;
+
 	description?: string;
 
 	/**
@@ -38,6 +42,7 @@ export interface RemoteBootAppData {
 
 	// required data for live conncetion
 	host: string;
+
 	jmxurl: string;
 }
 
@@ -54,5 +59,6 @@ export interface RemoteBootAppDataProviderOptions {
 
 export interface RemoteBootAppDataProvider {
 	onDidChangeData?: Event<void>;
+
 	provide(): Thenable<RemoteBootAppData[]> | RemoteBootAppData[];
 }

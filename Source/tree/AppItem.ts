@@ -20,13 +20,19 @@ import { ResourceItemBase } from "./SpringAppsBranchDataProvider";
 export class AppItem implements ResourceItemBase {
 	public static contextValue: RegExp =
 		/^azureSpringApps\.app;status-.+;debugging-.+;public-.+;/i;
+
 	public static readonly ACCESS_PUBLIC_ENDPOINT: string =
 		"Access public endpoint";
+
 	public static readonly ACCESS_TEST_ENDPOINT: string =
 		"Access test endpoint";
+
 	private _children: Promise<ResourceItemBase[] | undefined>;
+
 	private _scaleSettingsItem: AppScaleSettingsItem;
+
 	private deleted: boolean;
+
 	private _stateProperties: {} | undefined = undefined;
 
 	constructor(
@@ -69,12 +75,14 @@ export class AppItem implements ResourceItemBase {
 	public async getTreeItem(): Promise<TreeItem> {
 		if (this._stateProperties === undefined) {
 			void this.refresh();
+
 			this._stateProperties = {
 				iconPath: utils.getThemedIconPath(`app-status-loading`),
 				contextValue: `azureSpringApps.app;status-loading;debugging-disabled;public-false;tier-other;`,
 				description: "loading",
 			};
 		}
+
 		return {
 			id: this.id,
 			label: this.app.name,
@@ -90,11 +98,13 @@ export class AppItem implements ResourceItemBase {
 	public async refresh(): Promise<void> {
 		if (!this.deleted) {
 			this._stateProperties = undefined;
+
 			await ext.state.runWithTemporaryDescription(
 				this.app.id,
 				utils.localize("loading", "Loading..."),
 				async () => {
 					await this.app.refresh();
+
 					this._children = this.loadChildren();
 
 					const appProperties = await this.app.properties;
@@ -132,6 +142,7 @@ export class AppItem implements ResourceItemBase {
 								: "other";
 
 					const contextValue = `azureSpringApps.app;status-${status};debugging-${debugging};public-${appProperties?.public};tier-${tier};`;
+
 					this._stateProperties = {
 						iconPath: utils.getThemedIconPath(
 							`app-status-${status}`,
@@ -148,11 +159,13 @@ export class AppItem implements ResourceItemBase {
 
 	async start(): Promise<void> {
 		const description = utils.localize("start", "Starting...");
+
 		await ext.state.runWithTemporaryDescription(
 			this.id,
 			description,
 			async () => {
 				await this.app.start();
+
 				await this.refresh();
 			},
 		);
@@ -160,11 +173,13 @@ export class AppItem implements ResourceItemBase {
 
 	async stop(): Promise<void> {
 		const description = utils.localize("stop", "Stopping...");
+
 		await ext.state.runWithTemporaryDescription(
 			this.id,
 			description,
 			async () => {
 				await this.app.stop();
+
 				await this.refresh();
 			},
 		);
@@ -172,11 +187,13 @@ export class AppItem implements ResourceItemBase {
 
 	async restart(): Promise<void> {
 		const description = utils.localize("restart", "Restarting...");
+
 		await ext.state.runWithTemporaryDescription(
 			this.id,
 			description,
 			async () => {
 				await this.app.restart();
+
 				await this.refresh();
 			},
 		);
@@ -184,12 +201,15 @@ export class AppItem implements ResourceItemBase {
 
 	public async remove(): Promise<void> {
 		const description = utils.localize("deleting", "Deleting...");
+
 		await ext.state.runWithTemporaryDescription(
 			this.id,
 			description,
 			async () => {
 				await this.app.remove();
+
 				this.deleted = true;
+
 				void this.parent.refresh();
 			},
 		);
@@ -202,6 +222,7 @@ export class AppItem implements ResourceItemBase {
 		if (!activeDeployment) {
 			return [];
 		}
+
 		this._scaleSettingsItem = new AppScaleSettingsItem(this);
 
 		return [

@@ -48,11 +48,13 @@ export async function initialize(
 
 			if (!inited) {
 				const api = dashboardExt.exports;
+
 				api.registerRemoteBootAppDataProvider(
 					"Azure",
 					provider,
 					options,
 				);
+
 				inited = true;
 			}
 		};
@@ -84,12 +86,15 @@ export async function initialize(
 					if (!choice) {
 						return;
 					}
+
 					await vscode.commands.executeCommand(
 						"azureSpringApps.app.assignEndpoint",
 						appNode,
 					);
+
 					endpoint = await app.getPublicEndpoint();
 				}
+
 				if (endpoint) {
 					await ensureProviderRegistered();
 
@@ -100,6 +105,7 @@ export async function initialize(
 					if (appData) {
 						dashboardExt.exports.connectRemoteApp(appData);
 					}
+
 					await vscode.commands.executeCommand("spring.apps.focus");
 				}
 			},
@@ -114,12 +120,14 @@ class AzureSpringAppsProvider implements RemoteBootAppDataProvider {
 	store: Map<string, RemoteBootAppData>;
 
 	iconPathForApps: { light: string | vscode.Uri; dark: string | vscode.Uri };
+
 	onDidChangeDataEmitter: vscode.EventEmitter<void>;
 
 	onDidChangeData: vscode.Event<void>;
 
 	constructor(context: vscode.ExtensionContext) {
 		this.store = new Map();
+
 		this.iconPathForApps = {
 			dark: vscode.Uri.joinPath(
 				context.extensionUri,
@@ -134,7 +142,9 @@ class AzureSpringAppsProvider implements RemoteBootAppDataProvider {
 				"app.svg",
 			),
 		};
+
 		this.onDidChangeDataEmitter = new vscode.EventEmitter<void>();
+
 		this.onDidChangeData = this.onDidChangeDataEmitter.event;
 	}
 
@@ -147,6 +157,7 @@ class AzureSpringAppsProvider implements RemoteBootAppDataProvider {
 
 		if (appData) {
 			this.store.set(appData.name, appData);
+
 			this.onDidChangeDataEmitter.fire();
 		}
 	}
@@ -185,9 +196,11 @@ async function waitUntilDashboardActivated(
 		if (dashboardExt.isActive) {
 			return resolve();
 		}
+
 		const id = setInterval(() => {
 			if (dashboardExt.isActive) {
 				clearInterval(id);
+
 				resolve();
 			}
 		}, pollingIntervalMillis);

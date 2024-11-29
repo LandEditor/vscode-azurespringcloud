@@ -10,10 +10,12 @@ import { IJvmOptionsUpdateWizardContext } from "./IJvmOptionsUpdateWizardContext
 
 export class UpdateJvmOptionsStep extends AzureWizardExecuteStep<IJvmOptionsUpdateWizardContext> {
 	public readonly priority: number = 145;
+
 	private readonly deployment: EnhancedDeployment;
 
 	constructor(deployment: EnhancedDeployment) {
 		super();
+
 		this.deployment = deployment;
 	}
 
@@ -26,6 +28,7 @@ export class UpdateJvmOptionsStep extends AzureWizardExecuteStep<IJvmOptionsUpda
 			'Updating JVM Options of "{0}"...',
 			this.deployment.app.name,
 		);
+
 		progress.report({ message });
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		await this.deployment.updateJvmOptions(context.newJvmOptions!);

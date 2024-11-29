@@ -89,6 +89,7 @@ function getPickAppsSteps(
 	if (startingNode instanceof ServiceItem) {
 		return [];
 	}
+
 	const types = [AzExtResourceType.SpringApps];
 
 	return [
@@ -116,6 +117,7 @@ function getPickAppSteps(
 	if (startingNode instanceof AppItem) {
 		return [];
 	}
+
 	return [
 		...getPickAppsSteps(tdp, startingNode),
 		new ContextValueQuickPickStep(

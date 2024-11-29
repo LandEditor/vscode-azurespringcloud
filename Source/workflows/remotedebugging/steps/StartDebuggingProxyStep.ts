@@ -15,10 +15,12 @@ import { IRemoteDebuggingContext } from "./IRemoteDebuggingContext";
 
 export class StartDebuggingProxyStep extends AzureWizardExecuteStep<IRemoteDebuggingContext> {
 	public priority: number = 140;
+
 	private readonly instance: EnhancedInstance;
 
 	constructor(instance: EnhancedInstance) {
 		super();
+
 		this.instance = instance;
 	}
 
@@ -33,20 +35,27 @@ export class StartDebuggingProxyStep extends AzureWizardExecuteStep<IRemoteDebug
 			'Starting debugging proxy at port "{0}"...',
 			proxyPort,
 		);
+
 		ext.outputChannel.appendLog(message);
+
 		progress.report({ message });
 
 		const proxy: DebugProxy = new DebugProxy(this.instance, proxyPort);
+
 		proxy.on("error", (err: Error) => {
 			proxy.dispose();
+
 			void window.showErrorMessage(err.message);
 		});
+
 		await new Promise((resolve, _reject) => {
 			proxy.on("start", resolve);
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			proxy.start(context.config.port!);
 		});
+
 		context.proxy = proxy;
+
 		ext.outputChannel.appendLog(
 			localize(
 				"startDebuggingProxySuccess",

@@ -9,7 +9,10 @@ import { EnhancedDeployment } from "../../model/EnhancedDeployment";
 
 export interface IAppCreationWizardContext extends IResourceGroupWizardContext {
 	newAppName?: string;
+
 	newAppRuntime?: KnownSupportedRuntimeValue;
+
 	newApp?: EnhancedApp;
+
 	newDeployment?: EnhancedDeployment;
 }

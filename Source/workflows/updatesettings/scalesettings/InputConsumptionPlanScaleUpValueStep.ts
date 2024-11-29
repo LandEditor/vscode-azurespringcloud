@@ -14,7 +14,9 @@ import { IScaleSettingsUpdateWizardContext } from "./IScaleSettingsUpdateWizardC
 export class InputConsumptionPlanScaleUpValueStep extends AzureWizardPromptStep<IScaleSettingsUpdateWizardContext> {
 	// refer https://github.com/microsoft/vscode-azuretools/issues/789
 	public supportsDuplicateSteps: boolean = true;
+
 	private readonly deployment: EnhancedDeployment;
+
 	private picks: IAzureQuickPickItem<[number, number]>[] = [
 		{ label: "vCPU: 0.25, Memory: 512Mi", data: [0.25, 0.5] },
 		{ label: "vCPU: 0.50, Memory: 1.0Gi", data: [0.5, 1] },
@@ -28,6 +30,7 @@ export class InputConsumptionPlanScaleUpValueStep extends AzureWizardPromptStep<
 
 	constructor(deployment: EnhancedDeployment) {
 		super();
+
 		this.deployment = deployment;
 	}
 
@@ -38,6 +41,7 @@ export class InputConsumptionPlanScaleUpValueStep extends AzureWizardPromptStep<
 			await this.deployment.getScaleSettings();
 
 		const current = this.picks.find((p) => p.data[1] === settings.memory);
+
 		current && (current.description = "current");
 
 		const placeHolder: string = `Scale your application by selecting one of the following combinations of the vCPU and memory allocation.`;
@@ -47,7 +51,9 @@ export class InputConsumptionPlanScaleUpValueStep extends AzureWizardPromptStep<
 		const selection: [number, number] = (
 			await context.ui.showQuickPick(this.picks, options)
 		).data;
+
 		context.newSettings.cpu = selection[0];
+
 		context.newSettings.memory = selection[1];
 
 		return Promise.resolve(undefined);

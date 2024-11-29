@@ -39,14 +39,18 @@ export async function activateInternal(
 	ignoreBundle?: boolean,
 ): Promise<void> {
 	ext.context = context;
+
 	ext.ignoreBundle = ignoreBundle;
+
 	ext.outputChannel = createAzExtOutputChannel(
 		"Azure Spring Apps",
 		ext.prefix,
 	);
+
 	context.subscriptions.push(ext.outputChannel);
 
 	registerUIExtensionVariables(ext);
+
 	registerAzureUtilsExtensionVariables(ext);
 
 	await loadPackageInfo(context);
@@ -56,8 +60,10 @@ export async function activateInternal(
 			firstParty: true,
 		});
 	}
+
 	instrumentOperation("activation", async () => {
 		registerCommands();
+
 		void initializeDashboardIntegration(context);
 
 		const rgApiProvider: AzureResourcesExtensionApi =
@@ -68,8 +74,11 @@ export async function activateInternal(
 				await createExperimentationService(context);
 
 			ext.state = new TreeItemStateStore();
+
 			ext.rgApiV2 = await getAzureResourcesExtensionApi(context, "2.0.0");
+
 			ext.branchDataProvider = new SpringAppsBranchDataProvider();
+
 			ext.rgApiV2.resources.registerAzureResourceBranchDataProvider(
 				AzExtResourceType.SpringApps,
 				ext.branchDataProvider,

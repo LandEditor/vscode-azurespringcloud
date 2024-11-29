@@ -10,10 +10,12 @@ import { IAppDeploymentWizardContext } from "./IAppDeploymentWizardContext";
 
 export class UpdateDeploymentStep extends AzureWizardExecuteStep<IAppDeploymentWizardContext> {
 	public priority: number = 140;
+
 	private readonly deployment: EnhancedDeployment;
 
 	constructor(deployment: EnhancedDeployment) {
 		super();
+
 		this.deployment = deployment;
 	}
 
@@ -25,6 +27,7 @@ export class UpdateDeploymentStep extends AzureWizardExecuteStep<IAppDeploymentW
 			"updateDeployment",
 			"Updating deployment...",
 		);
+
 		progress.report({ message });
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		await this.deployment.updateArtifactPath(

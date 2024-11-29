@@ -49,101 +49,129 @@ export function registerCommands(): void {
 		"azureSpringApps.common.refresh",
 		refreshNode,
 	);
+
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.common.toggleVisibility",
 		toggleVisibility,
 	);
+
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.apps.createInPortal",
 		createServiceInPortal,
 	);
+
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.app.create",
 		createSpringApp,
 	);
+
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.apps.delete",
 		deleteService,
 	);
+
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.apps.openLiveView",
 		openAppsLiveView,
 	);
+
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.apps.openAppAccelerator",
 		openAppAccelerator,
 	);
+
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.app.openPublicEndpoint",
 		openPublicEndpoint,
 	);
+
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.app.openTestEndpoint",
 		openTestEndpoint,
 	);
+
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.app.assignEndpoint",
 		assignEndpoint,
 	);
+
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.app.unassignEndpoint",
 		unassignEndpoint,
 	);
+
 	registerCommandWithTelemetryWrapper("azureSpringApps.app.start", startApp);
+
 	registerCommandWithTelemetryWrapper("azureSpringApps.app.stop", stopApp);
+
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.app.restart",
 		restartApp,
 	);
+
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.app.delete",
 		deleteApp,
 	);
+
 	registerCommandWithTelemetryWrapper("azureSpringApps.app.deploy", deploy);
+
 	registerCommandWithTelemetryWrapper("azureSpringApps.app.scale", scale);
+
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.app.openLiveView",
 		openAppLiveView,
 	);
+
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.app.enableRemoteDebugging",
 		enableRemoteDebugging,
 	);
+
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.app.disableRemoteDebugging",
 		disableRemoteDebugging,
 	);
+
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.app.instance.startRemoteDebugging",
 		startRemoteDebugging,
 	);
+
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.app.instance.startStreamingLog",
 		startStreamingLogs,
 	);
+
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.app.instance.stopStreamingLog",
 		stopStreamingLogs,
 	);
+
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.app.settings.add",
 		addSetting,
 	);
+
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.app.settings.edit",
 		editSettings,
 	);
+
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.app.setting.edit",
 		editSetting,
 	);
+
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.app.setting.delete",
 		deleteSetting,
 	);
 	// Suppress "Report an Issue" button for all errors in favor of the command
 	registerErrorHandler((c) => (c.errorHandling.suppressReportIssue = true));
+
 	registerReportIssueCommand("springApps.reportIssue");
+
 	registerCommandWithTelemetryWrapper(
 		"azureSpringApps.file.deploy",
 		deployFromFile,
@@ -169,9 +197,11 @@ function registerCommandWithTelemetryWrapper(
 					// tslint:disable-next-line: no-unsafe-any
 					showError(commandId, error);
 				}
+
 				throw error;
 			}
 		})();
+
 	registerCommandWithTreeNodeUnwrapping(
 		commandId,
 		callbackWithTroubleshooting,
@@ -196,6 +226,7 @@ export async function createSpringApp(
 	n?: ServiceItem,
 ): Promise<void> {
 	const item: ServiceItem = await getAppsItem(context, n);
+
 	await createApp(context, item);
 }
 
@@ -206,6 +237,7 @@ export async function deleteService(
 	const item: ServiceItem = await getAppsItem(context, n);
 
 	const service: EnhancedService = item.service;
+
 	await context.ui.showWarningMessage(
 		`Are you sure to delete "${item.service.name}"?`,
 		{ modal: true },
@@ -223,6 +255,7 @@ export async function deleteService(
 		'Successfully deleted Azure Spring Apps "{0}".',
 		service.name,
 	);
+
 	await utils.runInBackground(deleting, deleted, () => item.remove(context));
 }
 
@@ -249,8 +282,10 @@ export async function openAppsLiveView(
 				"https://learn.microsoft.com/en-us/azure/spring-apps/how-to-use-application-live-view?tabs=Portal",
 			);
 		}
+
 		return;
 	}
+
 	const endpoint: string | undefined = await service.getLiveViewUrl();
 
 	if (endpoint && endpoint.toLowerCase() !== "none") {
@@ -281,8 +316,10 @@ export async function openAppLiveView(
 				"https://learn.microsoft.com/en-us/azure/spring-apps/how-to-use-application-live-view?tabs=Portal",
 			);
 		}
+
 		return;
 	}
+
 	const endpoint: string | undefined = await app.getLiveViewUrl();
 
 	if (endpoint && endpoint.toLowerCase() !== "none") {
@@ -313,8 +350,10 @@ export async function openAppAccelerator(
 				"https://learn.microsoft.com/en-us/azure/spring-apps/how-to-use-accelerator?tabs=Portal",
 			);
 		}
+
 		return;
 	}
+
 	let acceleratorExt = vscode.extensions.getExtension(
 		"vmware.tanzu-app-accelerator",
 	);
@@ -330,6 +369,7 @@ export async function openAppAccelerator(
 
 		const installed =
 			'Extension "Tanzu App Accelerator" is successfully installed.';
+
 		await utils.runInBackground(installing, installed, async () => {
 			// install directly
 			await vscode.commands.executeCommand(
@@ -337,6 +377,7 @@ export async function openAppAccelerator(
 				"vmware.tanzu-app-accelerator",
 			);
 			// void vscode.commands.executeCommand('workbench.extensions.action.installExtensions', 'vmware.tanzu-app-accelerator');
+
 			acceleratorExt = vscode.extensions.getExtension(
 				"vmware.tanzu-app-accelerator",
 			);
@@ -345,10 +386,12 @@ export async function openAppAccelerator(
 
 			while (!acceleratorExt && rounds++ < 15) {
 				await utils.wait(1000);
+
 				acceleratorExt = vscode.extensions.getExtension(
 					"vmware.tanzu-app-accelerator",
 				);
 			}
+
 			if (!acceleratorExt) {
 				throw new Error(
 					'"Tanzu App Accelerator" is not ready, try later please.',
@@ -356,6 +399,7 @@ export async function openAppAccelerator(
 			}
 		});
 	}
+
 	const config = await service.getAppAcceleratorConfig();
 
 	if (config) {
@@ -366,6 +410,7 @@ export async function openAppAccelerator(
 				config.guiUrl,
 				vscode.ConfigurationTarget.Global,
 			);
+
 		config.authClientId &&
 			(await vscode.workspace
 				.getConfiguration("tanzu-app-accelerator")
@@ -374,6 +419,7 @@ export async function openAppAccelerator(
 					config.authClientId,
 					vscode.ConfigurationTarget.Global,
 				));
+
 		config.authIssuerUrl &&
 			(await vscode.workspace
 				.getConfiguration("tanzu-app-accelerator")
@@ -382,9 +428,11 @@ export async function openAppAccelerator(
 					config.authIssuerUrl,
 					vscode.ConfigurationTarget.Global,
 				));
+
 		await vscode.commands.executeCommand(
 			"tanzu-app-accelerator.AcceleratorList.focus",
 		);
+
 		await vscode.commands.executeCommand(
 			"tanzu-app-accelerator.refreshAccelerators",
 		);
@@ -405,8 +453,10 @@ export async function openPublicEndpoint(
 			{ modal: true },
 			DialogResponses.yes,
 		);
+
 		await assignEndpoint(context, item);
 	}
+
 	const endpoint: string | undefined = await app.getPublicEndpoint();
 
 	if (endpoint && endpoint.toLowerCase() !== "none") {
@@ -429,6 +479,7 @@ export async function openTestEndpoint(
 
 		return;
 	}
+
 	const endpoint: string | undefined = await app.getTestEndpoint();
 
 	if (endpoint && endpoint.toLowerCase() !== "none") {
@@ -447,6 +498,7 @@ export async function assignEndpoint(
 	const doing: string = `Assigning public endpoint to "${app.name}".`;
 
 	const done: string = `Successfully assigned public endpoint to "${app.name}".`;
+
 	await ext.state.runWithTemporaryDescription(item.id, "Updating...", () => {
 		return utils.runInBackground(doing, done, () => app.setPublic(true));
 	});
@@ -463,6 +515,7 @@ export async function unassignEndpoint(
 	const doing: string = `Unassigning public endpoint to "${app.name}".`;
 
 	const done: string = `Successfully unassigned public endpoint to "${app.name}".`;
+
 	await ext.state.runWithTemporaryDescription(item.id, "Updating...", () => {
 		return utils.runInBackground(doing, done, () => app.setPublic(false));
 	});
@@ -473,6 +526,7 @@ export async function startApp(
 	n?: AppItem,
 ): Promise<void> {
 	const item: AppItem = await getAppItem(context, n);
+
 	await item.start();
 }
 
@@ -481,6 +535,7 @@ export async function stopApp(
 	n?: AppItem,
 ): Promise<void> {
 	const item: AppItem = await getAppItem(context, n);
+
 	await item.stop();
 }
 
@@ -489,6 +544,7 @@ export async function restartApp(
 	n?: AppItem,
 ): Promise<void> {
 	const item: AppItem = await getAppItem(context, n);
+
 	await item.restart();
 }
 
@@ -499,6 +555,7 @@ export async function deleteApp(
 	const item: AppItem = await getAppItem(context, n);
 
 	const app: EnhancedApp = item.app;
+
 	await context.ui.showWarningMessage(
 		`Are you sure to delete "${app.name}"?`,
 		{ modal: true },
@@ -516,6 +573,7 @@ export async function deleteApp(
 		'Successfully deleted Spring app "{0}".',
 		app.name,
 	);
+
 	await utils.runInBackground(deleting, deleted, () => item.remove());
 }
 
@@ -540,6 +598,7 @@ export async function deploy(
 
 	if (fileUri && fileUri[0] !== undefined) {
 		const artifactPath: string = fileUri[0].fsPath;
+
 		await deployArtifact(context, item, artifactPath);
 	}
 }
@@ -564,6 +623,7 @@ export async function deployFromFile(
 		};
 
 		const fileUri: Uri[] | undefined = await window.showOpenDialog(options);
+
 		jarFile = fileUri ? fileUri[0] : undefined;
 	} else {
 		jarFile = defaultUri;
@@ -573,6 +633,7 @@ export async function deployFromFile(
 		const item: AppItem = await getAppItem(context, undefined);
 
 		const artifactPath: string = jarFile.fsPath;
+
 		await deployArtifact(context, item, artifactPath);
 	}
 }
@@ -582,6 +643,7 @@ export async function scale(
 	n?: AppItem,
 ): Promise<void> {
 	const item: AppItem = await getAppItem(context, n);
+
 	await ext.state.runWithTemporaryDescription(item.id, "Updating...", () => {
 		return item.scaleInstances(context);
 	});
@@ -598,6 +660,7 @@ export async function enableRemoteDebugging(
 
 	if (confirmation) {
 		const actionResponse: MessageItem = { title: "Enable" };
+
 		result = await context.ui.showWarningMessage(
 			confirmation,
 			{ modal: true },
@@ -611,11 +674,13 @@ export async function enableRemoteDebugging(
 			return item;
 		}
 	}
+
 	await ext.state.runWithTemporaryDescription(
 		item.id,
 		"Updating...",
 		async () => {
 			const doing: string = `Enabling remote debugging for app "${item.app.name}".`;
+
 			await utils.runInBackground(doing, null, async () => {
 				const deployment: EnhancedDeployment | undefined =
 					await item.app.activeDeployment;
@@ -627,9 +692,13 @@ export async function enableRemoteDebugging(
 
 					return;
 				}
+
 				await deployment.enableDebugging();
+
 				await item.refresh();
+
 				ext.state.notifyChildrenChanged(item.id);
+
 				void (async () => {
 					const msg: string = `Successfully enabled remote debugging for app "${item.app.name}".`;
 
@@ -662,6 +731,7 @@ export async function disableRemoteDebugging(
 	const doing: string = `Disabling remote debugging for app "${item.app.name}".`;
 
 	const done: string = `Successfully disabled remote debugging for app "${item.app.name}".`;
+
 	await ext.state.runWithTemporaryDescription(
 		item.id,
 		"Updating...",
@@ -677,8 +747,11 @@ export async function disableRemoteDebugging(
 
 					return;
 				}
+
 				await deployment.disableDebugging();
+
 				await item.refresh();
+
 				ext.state.notifyChildrenChanged(item.id);
 			});
 		},
@@ -697,6 +770,7 @@ export async function startRemoteDebugging(
 		"startRemoteDebugging",
 		"Attaching debugger...",
 	);
+
 	await ext.state.runWithTemporaryDescription(item.id, description, () =>
 		DebugController.attachDebugger(context, item),
 	);
@@ -711,8 +785,10 @@ export async function startStreamingLogs(
 	const doing: string = `Starting log streaming for instance "${item.instance.name}".`;
 
 	const done: string = `Successfully started log streaming for instance "${item.instance.name}".`;
+
 	await utils.runInBackground(doing, done, async () => {
 		await item.instance.startStreamingLogs(context);
+
 		ext.state.notifyChildrenChanged(item.id);
 	});
 }
@@ -726,8 +802,10 @@ export async function stopStreamingLogs(
 	const doing: string = `Stopping log streaming for instance "${item.instance.name}".`;
 
 	const done: string = `Successfully stopped log streaming for instance "${item.instance.name}".`;
+
 	await utils.runInBackground(doing, done, async () => {
 		await item.instance.stopStreamingLogs();
+
 		ext.state.notifyChildrenChanged(item.id);
 	});
 }
@@ -741,6 +819,7 @@ export async function viewInstanceProperties(
 	const { deployment, ...instance } = item.instance;
 
 	const fullId: string = item.instance.id;
+
 	await openReadOnlyJson({ label: item.instance.name, fullId }, instance);
 }
 
@@ -763,6 +842,7 @@ export async function editSettings(
 	item: AppSettingsItem,
 ): Promise<void> {
 	const description = utils.localize("editing", "Editing...");
+
 	await ext.state.runWithTemporaryDescription(item.id, description, () =>
 		item.updateSettingsValue(context),
 	);
@@ -773,6 +853,7 @@ export async function editSetting(
 	item: AppSettingItem,
 ): Promise<void> {
 	const description = utils.localize("editing", "Editing...");
+
 	await ext.state.runWithTemporaryDescription(item.id, description, () =>
 		item.updateValue(context),
 	);
@@ -789,6 +870,7 @@ export async function deleteSetting(
 	);
 
 	const description = utils.localize("deleting", "Deleting...");
+
 	await ext.state.runWithTemporaryDescription(item.id, description, () =>
 		item.remove(context),
 	);
@@ -801,6 +883,7 @@ async function getAppsItem(
 	if (item instanceof ServiceItem) {
 		return item;
 	}
+
 	return await pickApps(context, item);
 }
 
@@ -811,6 +894,7 @@ async function getAppItem(
 	if (item instanceof AppItem) {
 		return item;
 	}
+
 	return await pickApp(context, item);
 }
 
@@ -821,6 +905,7 @@ async function getInstanceItem(
 	if (item instanceof AppInstanceItem) {
 		return item;
 	}
+
 	return await pickAppInstance(context, item);
 }
 
@@ -832,5 +917,6 @@ async function getTargetOrWorkspacePath(): Promise<Uri | undefined> {
 	if (editor && editor.document.uri.scheme === "file") {
 		root = workspace.getWorkspaceFolder(editor.document.uri) ?? root;
 	}
+
 	return root ? Uri.joinPath(root.uri, "target") : undefined;
 }
