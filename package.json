@@ -463,11 +463,11 @@
 	},
 	"devDependencies": {
 		"@types/fs-extra": "11.0.4",
-		"@types/node": "22.10.5",
+		"@types/node": "22.10.6",
 		"@types/request": "2.48.12",
 		"@types/websocket": "1.0.10",
 		"fs-extra": "11.2.0",
-		"glob": "11.0.0",
+		"glob": "11.0.1",
 		"json": "11.0.0"
 	},
 	"optionalDependencies": {
